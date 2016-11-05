@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_check_pulse"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/gradient_background"
+    tools:context="com.example.healthmonitoring.CheckPulseActivity"
+    android:elevation="4dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pulse"
+        android:layout_marginBottom="20dp"
+        android:layout_above="@+id/tv_Heart_Rate"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/img_pulse" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_Heart_Rate"
+        android:text="0"
+        android:textSize="108dp"
+        android:fontFamily="sans-serif-thin"
+        android:textColor="@color/colorAccent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_bpm"
+        android:layout_below="@+id/tv_Heart_Rate"
+        android:text="BPM"
+        android:textSize="20dp"
+        android:fontFamily="sans-serif-black"
+        android:textColor="@color/colorAccent"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_check_my_pulse"
+        android:text="@string/check_my_pulse"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/tv_bpm"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

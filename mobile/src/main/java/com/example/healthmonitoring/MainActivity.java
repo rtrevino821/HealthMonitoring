@@ -1,5 +1,6 @@
 package com.example.healthmonitoring;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,9 +10,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Button btnHRHistory;
+    private Button btnViewProfile;
+    private Button btnCheckMyPulse;
+    private Button btnContactDoctor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +27,46 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        toolbar.setTitle("Home");
+
+        btnHRHistory = (Button) findViewById(R.id.btn_hr_history);
+        btnViewProfile = (Button) findViewById(R.id.btn_view_profile);
+        btnCheckMyPulse = (Button) findViewById(R.id.btn_check_my_pulse);
+        btnContactDoctor = (Button) findViewById(R.id.btn_contact_doctor);
+
+        btnHRHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent heartRateHistoryIntent = new Intent(MainActivity.this, HeartHistoryActivity.class);
+                startActivity(heartRateHistoryIntent);
+            }
+        });
+
+        btnViewProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent viewProfileIntent = new Intent(MainActivity.this, ViewProfileActivity.class);
+                startActivity(viewProfileIntent);
+
+            }
+        });
+
+        btnCheckMyPulse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent checkPulseIntent = new Intent(MainActivity.this, CheckPulseActivity.class);
+                startActivity(checkPulseIntent);
+            }
+        });
+
+        btnContactDoctor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent contactIntent = new Intent(MainActivity.this, ContactActivity.class);
+                startActivity(contactIntent);
+            }
+        });
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -95,4 +143,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

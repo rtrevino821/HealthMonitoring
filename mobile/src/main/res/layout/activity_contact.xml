@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_contact"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    tools:context="com.example.healthmonitoring.ContactActivity">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        app:srcCompat="@drawable/maxresdefault"
+        android:scaleType="fitCenter" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/imageView2"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/office_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="@string/office_label"
+            android:textColor="@color/colorAccent"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/office_ph_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
+            android:text="(239) 262-4639"
+            android:textColor="#ffffff"
+            android:textSize="22dp" />
+
+        <TextView
+            android:id="@+id/email_our_office"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="@string/email_our_office"
+            android:textColor="@color/colorAccent"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/email_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
+            android:text="Contact@HealthMonitor.com"
+            android:textColor="#ffffff"
+            android:textSize="22dp" />
+
+        <TextView
+            android:id="@+id/disclaimer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="@string/disclaimer"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="12dp" />
+
+    </LinearLayout>
+</RelativeLayout>
