@@ -19,4 +19,13 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="hr_history">Heart Rate History</string>
+    <string name="view_profile">View Profile</string>
+    <string name="check_my_pulse">Check My Pulse</string>
+    <string name="contact_doctor">Contact Doctor</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="office_label">Office Phone Number</string>
+    <string name="email_our_office">Email Our Office</string>
+    <string name="disclaimer">Disclaimer: This is not an Emergency Phone Number. If you are in need of urgent attention, please call 911 immediately!</string>
 </resources>
