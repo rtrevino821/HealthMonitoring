@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
+//This is a comment
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -81,8 +81,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
-
     }
 
     private void stopMeasure() {
@@ -98,6 +96,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+
     }
 
     @Override

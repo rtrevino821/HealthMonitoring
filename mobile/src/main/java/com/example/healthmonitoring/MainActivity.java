@@ -11,15 +11,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Button btnHRHistory;
-    private Button btnViewProfile;
-    private Button btnCheckMyPulse;
-    private Button btnContactDoctor;
+    private ImageView btnHRHistory;
+    private ImageView btnViewProfile;
+    private ImageView btnCheckMyPulse;
+    private ImageView btnContactDoctor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +30,10 @@ public class MainActivity extends AppCompatActivity
 
         toolbar.setTitle("Home");
 
-        btnHRHistory = (Button) findViewById(R.id.btn_hr_history);
-        btnViewProfile = (Button) findViewById(R.id.btn_view_profile);
-        btnCheckMyPulse = (Button) findViewById(R.id.btn_check_my_pulse);
-        btnContactDoctor = (Button) findViewById(R.id.btn_contact_doctor);
+        btnHRHistory = (ImageView) findViewById(R.id.btn_hr_history);
+        btnViewProfile = (ImageView) findViewById(R.id.btn_view_profile);
+        btnCheckMyPulse = (ImageView) findViewById(R.id.btn_check_my_pulse);
+        btnContactDoctor = (ImageView) findViewById(R.id.btn_contact_doctor);
 
         btnHRHistory.setOnClickListener(new View.OnClickListener() {
             @Override

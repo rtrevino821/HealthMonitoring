@@ -24,6 +24,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.Wearable;
+import com.skyfishjy.library.RippleBackground;
 
 import static com.example.healthmonitoring.MyService.ACTION_TEXT_CHANGED;
 
@@ -41,11 +42,17 @@ public class CheckPulseActivity extends AppCompatActivity
         setTitle(R.string.check_my_pulse);
         setContentView(R.layout.activity_check_pulse);
 
+        mTeleportClient = new TeleportClient(this);
+
+        final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
+
+
         tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
         getHR = (Button) findViewById(R.id.btn_check_my_pulse);
         getHR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                rippleBackground.startRippleAnimation();
                 startMeasure();
             }
         });
@@ -94,6 +101,7 @@ public class CheckPulseActivity extends AppCompatActivity
 
         mTeleportClient.sendMessage("startActivity", null);
     }
+
     public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
 
         @Override
