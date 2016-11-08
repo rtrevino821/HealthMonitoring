@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,6 +33,7 @@ public class CheckPulseActivity extends AppCompatActivity
     Button getHR;
     private String TAG = "CheckPulseActivity";
     private TextView tvHeartRate;
+    TeleportClient mTeleportClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,21 @@ public class CheckPulseActivity extends AppCompatActivity
 
     private void startMeasure() {
 
+        mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+
+        mTeleportClient.sendMessage("startActivity", null);
+    }
+    public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
+
+        @Override
+        protected void onPostExecute(String path) {
+
+
+            Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
+
+            //let's reset the task (otherwise it will be executed only once)
+            mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+        }
     }
 
     @Override
@@ -95,6 +112,7 @@ public class CheckPulseActivity extends AppCompatActivity
         super.onStart();
         //if (!mResolvingError) {
             mGoogleApiClient.connect();
+        mTeleportClient.connect();
        //}
     }
 
