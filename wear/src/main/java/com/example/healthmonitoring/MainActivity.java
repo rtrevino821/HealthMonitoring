@@ -1,6 +1,7 @@
 package com.example.healthmonitoring;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -41,6 +42,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
@@ -48,7 +51,17 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 mTextView = (TextView) stub.findViewById(R.id.heartRateText);
                 btnStart = (ImageButton) stub.findViewById(R.id.btnStart);
                 btnPause = (ImageButton) stub.findViewById(R.id.btnPause);
+                //gets intent and starts measure
+                Intent intent = getIntent();
+                if(intent.getExtras() != null) {
+                    Log.d("MainActivity", "got intent");
+                    btnStart.setVisibility(ImageButton.GONE);
+                    btnPause.setVisibility(ImageButton.VISIBLE);
+                    mTextView.setText("Please wait...");
+                    startMeasure();
+                } else {
 
+                }
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -40,6 +40,7 @@ public class CheckPulseActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setTitle(R.string.check_my_pulse);
         setContentView(R.layout.activity_check_pulse);
+        mTeleportClient = new TeleportClient(this);
 
         tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
         getHR = (Button) findViewById(R.id.btn_check_my_pulse);
