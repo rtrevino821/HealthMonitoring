@@ -1,6 +1,8 @@
 package com.example.healthmonitoring;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 
 /**
  * Created by Mario on 10/07/2014.
@@ -47,9 +49,14 @@ public class WearService extends TeleportService{
         protected void onPostExecute(String  path) {
 
        if (path.equals("startActivity")){
-
+        // Creating Bundle object
+           Bundle b = new Bundle();
+           // Storing data into bundle
+           b.putString("key", "startActivity");
             Intent startIntent = new Intent(getBaseContext(), MainActivity.class);
             startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+           startIntent.putExtras(b);
+           Log.d("WearService", "sent intent");
             startActivity(startIntent);
          }
 
