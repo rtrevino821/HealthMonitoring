@@ -51,10 +51,25 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".CheckPulseActivity" />
-        <activity android:name=".HeartHistoryActivity" />
-        <activity android:name=".ViewProfileActivity" />
-        <activity android:name=".ContactActivity" />
+        <activity
+            android:name=".CheckPulseActivity"
+            android:label="@string/title_activity_checkPulse"
+            android:parentActivityName=".MainActivity"></activity>
+
+        <activity
+            android:name=".HeartHistoryActivity"
+            android:label="@string/title_activity_heartHistory"
+            android:parentActivityName=".MainActivity"></activity>
+
+        <activity
+            android:name=".ViewProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:parentActivityName=".MainActivity"></activity>
+
+        <activity
+            android:name=".ContactActivity"
+            android:label="@string/title_activity_contactDoctor"
+            android:parentActivityName=".MainActivity"></activity>
 
     </application>
 

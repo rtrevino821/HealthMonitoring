@@ -29,7 +29,7 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/check_my_pulse_button"
+                android:src="@drawable/check_my_pulse_bg"
                 android:tint="@color/colorAccent"
                 android:tintMode="multiply" />
 
@@ -37,12 +37,16 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="right|center_vertical"
+                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:text="@string/check_my_pulse"
-                android:background="#66000000"
                 android:textColor="#ffffff"
                 android:fontFamily="sans-serif-condensed"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:shadowColor="#88000000"
+                android:shadowDx="0"
+                android:shadowDy="10"
+                android:shadowRadius="10"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -58,19 +62,22 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/profile_img"
-                android:tint="@color/colorPrimary"
-                android:tintMode="multiply" />
+                android:src="@drawable/heart_history_bg" />
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:text="@string/hr_history"
                 android:textColor="#ffffff"
                 android:fontFamily="sans-serif-condensed"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:shadowColor="#88000000"
+                android:shadowDx="0"
+                android:shadowDy="10"
+                android:shadowRadius="10"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -85,18 +92,22 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/profile_img" />
+                android:src="@drawable/view_profile_bg" />
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#88000000"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="right|center_vertical"
+                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:text="@string/view_profile"
                 android:textColor="#ffffff"
                 android:fontFamily="sans-serif-condensed"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:shadowColor="#88000000"
+                android:shadowDx="0"
+                android:shadowDy="10"
+                android:shadowRadius="10"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -111,15 +122,19 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/profile_img" />
+                android:src="@drawable/contact_doctor_bg" />
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#88000000"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:text="@string/contact_doctor"
+                android:shadowColor="#88000000"
+                android:shadowDx="0"
+                android:shadowDy="10"
+                android:shadowRadius="10"
                 android:textColor="#ffffff"
                 android:fontFamily="sans-serif-condensed"
                 android:textSize="25sp" />
