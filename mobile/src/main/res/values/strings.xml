@@ -13,7 +13,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Heart Health Monitoring</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -28,4 +28,8 @@
     <string name="office_label">Office Phone Number</string>
     <string name="email_our_office">Email Our Office</string>
     <string name="disclaimer">Disclaimer: This is not an Emergency Phone Number. If you are in need of urgent attention, please call 911 immediately!</string>
+    <string name="title_activity_checkPulse">Check My Pulse</string>
+    <string name="title_activity_heartHistory">Heart History</string>
+    <string name="title_activity_profile">My Profile</string>
+    <string name="title_activity_contactDoctor">Contact Doctor</string>
 </resources>
