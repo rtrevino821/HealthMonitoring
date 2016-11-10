@@ -26,6 +26,10 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.Wearable;
 import com.skyfishjy.library.RippleBackground;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import static com.example.healthmonitoring.MyService.ACTION_TEXT_CHANGED;
 
 public class CheckPulseActivity extends AppCompatActivity
@@ -47,15 +51,11 @@ public class CheckPulseActivity extends AppCompatActivity
         final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
 
 
+
+
         tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
         getHR = (Button) findViewById(R.id.btn_check_my_pulse);
-        getHR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rippleBackground.startRippleAnimation();
-                startMeasure();
-            }
-        });
+
 
         // Custom animation on image
         ImageView myView = (ImageView) findViewById(R.id.img_pulse);
@@ -85,6 +85,23 @@ public class CheckPulseActivity extends AppCompatActivity
                 .build();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(ACTION_TEXT_CHANGED));
+        final Runnable runnable = new Runnable() {
+            public void run() {
+                startMeasure();
+            }
+        };
+        final ScheduledExecutorService service = Executors
+                .newSingleThreadScheduledExecutor();
+
+
+        getHR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rippleBackground.startRippleAnimation();
+                service.scheduleAtFixedRate(runnable, 0, 30, TimeUnit.SECONDS);
+                //startMeasure();
+            }
+        });
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
