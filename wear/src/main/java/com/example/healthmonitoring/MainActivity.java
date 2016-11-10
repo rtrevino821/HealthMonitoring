@@ -81,6 +81,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+        startMeasure();
     }
 
     private void stopMeasure() {
@@ -96,6 +98,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+        startMeasure();
 
     }
 
