@@ -119,6 +119,13 @@ public class CheckPulseActivity extends AppCompatActivity
         mTeleportClient.sendMessage("startActivity", null);
     }
 
+    private void stopMeasure() {
+
+        mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+
+        mTeleportClient.sendMessage("stop", null);
+    }
+
     public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
 
         @Override

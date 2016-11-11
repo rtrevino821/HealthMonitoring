@@ -15,15 +15,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-//This is a comment
+import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+
+//This is a comment
 
 public class MainActivity extends WearableActivity implements SensorEventListener, DataApi.DataListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -35,11 +39,16 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private GoogleApiClient mGoogleApiClient;
     private SensorManager mSensorManager;
     private Sensor mSensor;
+    private TeleportClient mTeleportClient;
+    TeleportClient.OnSyncDataItemTask mOnSyncDataItemTask;
+    TeleportClient.OnGetMessageTask mMessageTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //instantiate the TeleportClient with the application Context
+        mTeleportClient = new TeleportClient(this);
 
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
@@ -81,6 +90,11 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+        //Create and initialize task
+        mOnSyncDataItemTask = new ShowToastOnSyncDataItemTask();
+        mMessageTask = new ShowToastFromOnGetMessageTask();
+
 
         startMeasure();
     }
@@ -172,4 +186,32 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         public void onDataChanged (DataEventBuffer dataEventBuffer){
 
         }
+
+    //Task to show the String from DataMap with key "string" when a DataItem is synced
+    public class ShowToastOnSyncDataItemTask extends TeleportClient.OnSyncDataItemTask {
+
+        protected void onPostExecute(DataMap dataMap) {
+
+            String s = dataMap.getString("string");
+
+            Toast.makeText(getApplicationContext(),"DataItem - "+s,Toast.LENGTH_SHORT).show();
+
+            mTeleportClient.setOnSyncDataItemTask(new ShowToastOnSyncDataItemTask());
+        }
     }
+
+    //Task that shows the path of a received message
+    public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
+
+        @Override
+        protected void onPostExecute(String  path) {
+
+            Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
+
+            //let's reset the task (otherwise it will be executed only once)
+            mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+        }
+    }
+
+
+}
