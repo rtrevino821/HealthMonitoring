@@ -100,8 +100,7 @@ public class CheckPulseActivity extends AppCompatActivity
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(ACTION_TEXT_CHANGED));
     }
 
-    private void stopMeasure() {
-    }
+
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
