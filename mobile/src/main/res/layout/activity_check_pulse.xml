@@ -64,4 +64,17 @@
         android:backgroundTint="@color/colorPrimaryDark"
         android:textColor="@color/colorAccent"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_check_my_pulse_stop"
+        android:text="@string/stop"
+        android:elevation="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/tv_bpm"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:textColor="@color/colorAccent"
+        android:visibility="gone"/>
+
 </RelativeLayout>
