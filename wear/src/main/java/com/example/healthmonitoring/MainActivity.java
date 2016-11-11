@@ -15,17 +15,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEventBuffer;
-import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 //This is a comment
 
@@ -39,16 +40,11 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private GoogleApiClient mGoogleApiClient;
     private SensorManager mSensorManager;
     private Sensor mSensor;
-    private TeleportClient mTeleportClient;
-    TeleportClient.OnSyncDataItemTask mOnSyncDataItemTask;
-    TeleportClient.OnGetMessageTask mMessageTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //instantiate the TeleportClient with the application Context
-        mTeleportClient = new TeleportClient(this);
 
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
@@ -91,15 +87,22 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        //Create and initialize task
-        mOnSyncDataItemTask = new ShowToastOnSyncDataItemTask();
-        mMessageTask = new ShowToastFromOnGetMessageTask();
-
-
         startMeasure();
+        exampleFunction();
+    }
+
+    public void exampleFunction() {
+        ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+        exec.schedule(new Runnable() {
+            public void run() {
+                stopMeasure();
+            }
+        }, 10, TimeUnit.SECONDS);
+        exec.shutdown();
     }
 
     private void stopMeasure() {
+        Log.d("Sensor Status:"," Stopped!");
         mSensorManager.unregisterListener(this);
     }
 
@@ -164,54 +167,26 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
     }
 
-        @Override
-        public void onSensorChanged (SensorEvent event){
-            float mHeartRateFloat = event.values[0];
+    @Override
+    public void onSensorChanged (SensorEvent event){
+        float mHeartRateFloat = event.values[0];
 
-            int mHeartRate = Math.round(mHeartRateFloat);
+        int mHeartRate = Math.round(mHeartRateFloat);
 
-            mTextView.setText(Integer.toString(mHeartRate));
+        mTextView.setText(Integer.toString(mHeartRate));
 
-            String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
+        String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
 
-            logHeartRate(mHeartRate, date);
-        }
-
-        @Override
-        public void onAccuracyChanged (Sensor sensor,int accuracy){
-
-        }
-
-        @Override
-        public void onDataChanged (DataEventBuffer dataEventBuffer){
-
-        }
-
-    //Task to show the String from DataMap with key "string" when a DataItem is synced
-    public class ShowToastOnSyncDataItemTask extends TeleportClient.OnSyncDataItemTask {
-
-        protected void onPostExecute(DataMap dataMap) {
-
-            String s = dataMap.getString("string");
-
-            Toast.makeText(getApplicationContext(),"DataItem - "+s,Toast.LENGTH_SHORT).show();
-
-            mTeleportClient.setOnSyncDataItemTask(new ShowToastOnSyncDataItemTask());
-        }
+        logHeartRate(mHeartRate, date);
     }
 
-    //Task that shows the path of a received message
-    public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
+    @Override
+    public void onAccuracyChanged (Sensor sensor,int accuracy){
 
-        @Override
-        protected void onPostExecute(String  path) {
-
-            Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
-
-            //let's reset the task (otherwise it will be executed only once)
-            mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-        }
     }
 
+    @Override
+    public void onDataChanged (DataEventBuffer dataEventBuffer){
 
+    }
 }
