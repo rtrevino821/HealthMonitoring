@@ -24,7 +24,7 @@
 
             <ImageView
                 android:id="@+id/btn_check_my_pulse"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
@@ -57,7 +57,7 @@
 
             <ImageView
                 android:id="@+id/btn_hr_history"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
@@ -87,7 +87,7 @@
 
             <ImageView
                 android:id="@+id/btn_view_profile"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
@@ -117,7 +117,7 @@
 
             <ImageView
                 android:id="@+id/btn_contact_doctor"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
@@ -139,6 +139,7 @@
                 android:fontFamily="sans-serif-condensed"
                 android:textSize="25sp" />
         </RelativeLayout>
+
     </LinearLayout>
 
 </RelativeLayout>
