@@ -13,6 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -85,6 +90,42 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        testInsert();
+    }
+
+    public void testInsert() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                insert();
+            }
+        }).start();
+    }
+    protected void insert() {
+        String sql = "INSERT INTO Login (UserName, Password) " +
+                " VALUES ('JoyTestInsert', '0987654')";
+        String userName = "root";
+        String password = "Ateamhealth";
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver"); //healthApp?zeroDateTimeBehavior=convertToNull
+            String url = "jdbc:mysql://104.196.134.4/healthApp?account=root&password=Ateamhealth";
+            Connection c = DriverManager.getConnection(url, userName, password);
+            PreparedStatement st = c.prepareStatement(sql);
+
+
+            st.execute();
+            st.close();
+            c.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
