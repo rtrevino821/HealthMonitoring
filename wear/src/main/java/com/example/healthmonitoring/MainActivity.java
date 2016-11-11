@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-//This is a comment
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -24,6 +24,11 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+//This is a comment
 
 public class MainActivity extends WearableActivity implements SensorEventListener, DataApi.DataListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -83,9 +88,21 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 .build();
 
         startMeasure();
+        exampleFunction();
+    }
+
+    public void exampleFunction() {
+        ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+        exec.schedule(new Runnable() {
+            public void run() {
+                stopMeasure();
+            }
+        }, 10, TimeUnit.SECONDS);
+        exec.shutdown();
     }
 
     private void stopMeasure() {
+        Log.d("Sensor Status:"," Stopped!");
         mSensorManager.unregisterListener(this);
     }
 
