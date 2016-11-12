@@ -35,7 +35,8 @@ public class CheckPulseActivity extends AppCompatActivity
     Button stopHR;
     private String TAG = "CheckPulseActivity";
     private TextView tvHeartRate;
-    TeleportClient mTeleportClient;
+    private TeleportClient mTeleportClient;
+    private boolean activityOpened;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,9 +113,18 @@ public class CheckPulseActivity extends AppCompatActivity
 
     private void startMeasure() {
 
+        if(activityOpened == true)
+        {
+            mTeleportClient.sendMessage("start", null);
+            return;
+        }
+        //open wearable's mainActivity
         mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
 
         mTeleportClient.sendMessage("startActivity", null);
+        activityOpened = true;
+
+
     }
 
     private void stopMeasure() {
