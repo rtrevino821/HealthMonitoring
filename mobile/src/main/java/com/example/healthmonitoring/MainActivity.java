@@ -8,18 +8,29 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+
+
+
+import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+//import java.sql.Statement;
+import java.sql.Connection;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Button btnHRHistory;
-    private Button btnViewProfile;
-    private Button btnCheckMyPulse;
-    private Button btnContactDoctor;
+    private ImageView btnHRHistory;
+    private ImageView btnViewProfile;
+    private ImageView btnCheckMyPulse;
+    private ImageView btnContactDoctor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +41,10 @@ public class MainActivity extends AppCompatActivity
 
         toolbar.setTitle("Home");
 
-        btnHRHistory = (Button) findViewById(R.id.btn_hr_history);
-        btnViewProfile = (Button) findViewById(R.id.btn_view_profile);
-        btnCheckMyPulse = (Button) findViewById(R.id.btn_check_my_pulse);
-        btnContactDoctor = (Button) findViewById(R.id.btn_contact_doctor);
+        btnHRHistory = (ImageView) findViewById(R.id.btn_hr_history);
+        btnViewProfile = (ImageView) findViewById(R.id.btn_view_profile);
+        btnCheckMyPulse = (ImageView) findViewById(R.id.btn_check_my_pulse);
+        btnContactDoctor = (ImageView) findViewById(R.id.btn_contact_doctor);
 
         btnHRHistory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +96,48 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        insertDatabase();
+
+
+    }
+
+
+
+
+
+    public void insertDatabase() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                insert();
+            }
+        }).start();
+    }
+    protected void insert()  {
+        String sql = "INSERT INTO Login (UserName, Password)" +
+                " VALUES ('hello', '567')";
+        String userName = "root";
+        String password = "Ateamhealth";
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");  //healthApp?zeroDateTimeBehavior=convertToNull
+            String url = "jdbc:mysql://104.196.134.4/healthApp?account=root&password=Ateamhealth";
+            Connection c = DriverManager.getConnection(url, userName, password);
+            PreparedStatement st = c.prepareStatement(sql);
+
+
+            st.execute();
+            st.close();
+            c.close();
+        } catch (ClassNotFoundException e)  {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
