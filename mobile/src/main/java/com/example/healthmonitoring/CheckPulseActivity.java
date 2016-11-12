@@ -26,19 +26,17 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.Wearable;
 import com.skyfishjy.library.RippleBackground;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import static com.example.healthmonitoring.MyService.ACTION_TEXT_CHANGED;
 
 public class CheckPulseActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, DataApi.DataListener {
     private GoogleApiClient mGoogleApiClient;
     Button getHR;
+    Button stopHR;
     private String TAG = "CheckPulseActivity";
     private TextView tvHeartRate;
-    TeleportClient mTeleportClient;
+    private TeleportClient mTeleportClient;
+    private boolean activityOpened;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +49,27 @@ public class CheckPulseActivity extends AppCompatActivity
         final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
 
 
-
-
         tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
+        stopHR = (Button) findViewById(R.id.btn_check_my_pulse_stop);
+        stopHR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopHR.setVisibility(View.GONE);
+                getHR.setVisibility(View.VISIBLE);
+                rippleBackground.stopRippleAnimation();
+                stopMeasure();
+            }
+        });
         getHR = (Button) findViewById(R.id.btn_check_my_pulse);
-
+        getHR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getHR.setVisibility(View.GONE);
+                stopHR.setVisibility(View.VISIBLE);
+                rippleBackground.startRippleAnimation();
+                startMeasure();
+            }
+        });
 
         // Custom animation on image
         ImageView myView = (ImageView) findViewById(R.id.img_pulse);
@@ -85,24 +99,9 @@ public class CheckPulseActivity extends AppCompatActivity
                 .build();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(ACTION_TEXT_CHANGED));
-        final Runnable runnable = new Runnable() {
-            public void run() {
-                startMeasure();
-            }
-        };
-        final ScheduledExecutorService service = Executors
-                .newSingleThreadScheduledExecutor();
-
-
-        getHR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rippleBackground.startRippleAnimation();
-                service.scheduleAtFixedRate(runnable, 0, 30, TimeUnit.SECONDS);
-                //startMeasure();
-            }
-        });
     }
+
+
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -114,9 +113,25 @@ public class CheckPulseActivity extends AppCompatActivity
 
     private void startMeasure() {
 
+        if(activityOpened == true)
+        {
+            mTeleportClient.sendMessage("start", null);
+            return;
+        }
+        //open wearable's mainActivity
         mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
 
         mTeleportClient.sendMessage("startActivity", null);
+        activityOpened = true;
+
+
+    }
+
+    private void stopMeasure() {
+
+        mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+
+        mTeleportClient.sendMessage("stop", null);
     }
 
     public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
