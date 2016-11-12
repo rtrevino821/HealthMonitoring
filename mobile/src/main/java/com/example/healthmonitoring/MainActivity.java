@@ -96,17 +96,13 @@ public class MainActivity extends AppCompatActivity
 
     public void testInsert() {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
 
                 insert();
-            }
-        }).start();
+
     }
     protected void insert() {
         String sql = "INSERT INTO Login (UserName, Password) " +
-                " VALUES ('JoyTestInsert', '0987654')";
+                " VALUES ('Darth', '0987650)";
         String userName = "root";
         String password = "Ateamhealth";
 
