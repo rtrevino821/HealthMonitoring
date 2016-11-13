@@ -9,7 +9,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/gradient_background"
-
     tools:context="com.example.healthmonitoring.SignupActivity">
 
     <ScrollView
@@ -22,37 +21,48 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="56dp"
+            android:paddingTop="16dp"
             android:paddingLeft="24dp"
             android:paddingRight="24dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="72dp"
-                android:layout_marginBottom="24dp"
-                android:layout_gravity="center_horizontal" />
-
-            <!--  Name Label -->
+            <!--  First Name Label -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp">
 
-                <EditText android:id="@+id/input_name"
+                <EditText
+                    android:id="@+id/input_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapWords"
                     android:textColor="#ffffff"
-                    android:hint="Name" />
+                    android:hint="First Name" />
             </android.support.design.widget.TextInputLayout>
+
+            <!--  Last Name -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp">
+
+                <EditText
+                    android:id="@+id/input_Lname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:hint="Last Name" />
+            </android.support.design.widget.TextInputLayout>
+
 
             <!-- Email Label -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp">
 
                 <EditText
                     android:id="@+id/input_email"
@@ -62,12 +72,89 @@
                     android:hint="Email" />
             </android.support.design.widget.TextInputLayout>
 
+            <!--Age-->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp">
+
+                <EditText
+                    android:id="@+id/input_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Age" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Gender Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp">
+
+                <EditText
+                    android:id="@+id/input_Gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:hint="Gender M/F"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Address Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp">
+
+                <EditText
+                    android:id="@+id/input_Address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:hint="Address"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- City -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp">
+
+                <EditText
+                    android:id="@+id/input_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:hint="City"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- State -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp">
+
+                <EditText
+                    android:id="@+id/input_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:hint="State" />
+            </android.support.design.widget.TextInputLayout>
+
             <!-- Password Label -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="10dp">
 
                 <EditText
                     android:id="@+id/input_password"
@@ -78,13 +165,12 @@
             </android.support.design.widget.TextInputLayout>
 
             <!-- Signup Button -->
-
             <Button
                 android:id="@+id/btn_signup"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="20dp"
                 android:padding="12dp"
                 android:textColor="#ffffff"
                 android:background="@drawable/gradient_background"
@@ -94,7 +180,7 @@
                 android:id="@+id/link_login"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="0dp"
                 android:text="Already a member? Login"
                 android:textColor="#ffffff"
                 android:gravity="center"

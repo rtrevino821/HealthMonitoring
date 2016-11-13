@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-       // insertDatabase();
+       // insertDatabase(); // testing database connection
 
 
     }
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    public void insertDatabase() {
+ /*   public void insertDatabase() {
 
         new Thread(new Runnable() {
             @Override
@@ -139,9 +139,8 @@ public class MainActivity extends AppCompatActivity
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
-
+*/
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
