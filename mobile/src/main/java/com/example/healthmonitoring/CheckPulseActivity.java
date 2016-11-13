@@ -38,7 +38,6 @@ public class CheckPulseActivity extends AppCompatActivity
     private TextView tvHeartRate;
     private TeleportClient mTeleportClient;
 
-    private boolean activityOpened;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,22 +51,21 @@ public class CheckPulseActivity extends AppCompatActivity
 
 
         tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
-        stopHR = (Button) findViewById(R.id.btn_check_my_pulse_stop);
-        stopHR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopHR.setVisibility(View.GONE);
-                getHR.setVisibility(View.VISIBLE);
-                rippleBackground.stopRippleAnimation();
-                stopMeasure();
-            }
-        });
+//        stopHR = (Button) findViewById(R.id.btn_check_my_pulse_stop);
+//        stopHR.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                stopHR.setVisibility(View.GONE);
+//                getHR.setVisibility(View.VISIBLE);
+//                rippleBackground.stopRippleAnimation();
+//            }
+//        });
         getHR = (Button) findViewById(R.id.btn_check_my_pulse);
         getHR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getHR.setVisibility(View.GONE);
-                stopHR.setVisibility(View.VISIBLE);
+//                stopHR.setVisibility(View.VISIBLE);
                 rippleBackground.startRippleAnimation();
                 startMeasure();
             }
@@ -144,41 +142,31 @@ public class CheckPulseActivity extends AppCompatActivity
     };
 
     private void startMeasure() {
-
-        if(activityOpened == true)
-        {
             mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-            mTeleportClient.sendMessage("start", null);
+            Log.d(TAG, "StartPulse");
 
-            return;
-        }
-        else
-            mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-
-            mTeleportClient.sendMessage("startActivity", null);
-            activityOpened = true;
-
-
+        mTeleportClient.sendMessage("startActivity", null);
     }
 
-    private void stopMeasure() {
-        mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-
-        mTeleportClient.sendMessage("stop", null);
-
-
-    }
 
     public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
 
         @Override
         protected void onPostExecute(String path) {
 
+            if (path.equals("Finished")) {
 
-            Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Finished");
 
-            //let's reset the task (otherwise it will be executed only once)
+                Toast.makeText(getApplicationContext(), "Message - " + path, Toast.LENGTH_SHORT).show();
+                //Insert HeartRate in DB
+                //int heartRateInteger = Integer.parseInt(tvHeartRate.getText().toString());
+
+
+
+            }
             mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+
         }
     }
 
