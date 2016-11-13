@@ -108,7 +108,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
 
         initTimer();
-        startMeasure();
+        //startMeasure();
         //exampleFunction();
 
 
@@ -165,7 +165,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         super.onStart();
         mGoogleApiClient.connect();
         mTeleportClient.connect();
-        startMeasure();
+        //startMeasure();
 
     }
 //    @Override
@@ -258,6 +258,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         protected void onPostExecute(String  path) {
 
             if (path.equals("stop")){
+                mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+
                 stopMeasure();
                 Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
                 Log.d(TAG, path);
@@ -269,6 +271,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
             }
             else if (path.equals("start")){
+                mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
                 Log.d(TAG, path);
                 startMeasure();
 
@@ -281,7 +284,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
             }
 
 
-            mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
 
 
         }
