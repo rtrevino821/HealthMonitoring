@@ -248,7 +248,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 btnStart.setVisibility(ImageButton.GONE);
                 btnPause.setVisibility(ImageButton.VISIBLE);
                 mTextView.setText("Please wait...");
-                stopMeasure();
+                startMeasure();
             }
 
 

@@ -7,16 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 /**
  * Created by rtrev on 10/23/2016.
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     Context context;
-
-    private String[] reading = {"120", "80", "69", "78", "95"};
-    private String[] dates = {"Monday, Nov. 20", "Tuesday, Nov.21", "Wednesday, Nov. 22", "Thursday, Nov. 23", "Friday, Nov. 24"};
-    private String[] times = {"12:00 pm", "8:00 pm", "4:30 pm", "2:39 pm", "9:30 am"};
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -34,6 +32,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
+    List<HeartData> heartData;
+
+    RecyclerAdapter(List<HeartData> heartData){
+        this.heartData = heartData;
+    }
+
 
     public RecyclerAdapter(Context context) {
     }
@@ -47,15 +51,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerAdapter.ViewHolder viewHolder, int position) {
-        viewHolder.itemTime.setText(times[position]);
-        viewHolder.itemReading.setText(reading[position]);
-        viewHolder.itemDate.setText(dates[position]);
+        viewHolder.itemTime.setText(heartData.get(position).timestamp);
+        viewHolder.itemReading.setText(heartData.get(position).heartRate);
+        viewHolder.itemDate.setText(heartData.get(position).date);
 
     }
 
     @Override
     public int getItemCount() {
-        return reading.length;
+        return heartData.size();
     }
 
 
