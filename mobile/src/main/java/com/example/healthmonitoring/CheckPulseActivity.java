@@ -1,7 +1,5 @@
 package com.example.healthmonitoring;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
@@ -45,10 +43,25 @@ public class CheckPulseActivity extends AppCompatActivity
         setTitle(R.string.check_my_pulse);
         setContentView(R.layout.activity_check_pulse);
 
+        //initialize text views
+        tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
+        stopHR = (Button) findViewById(R.id.btn_check_my_pulse_stop);
+        getHR = (Button) findViewById(R.id.btn_check_my_pulse);
+
+        //message passing
         mTeleportClient = new TeleportClient(this);
 
+        //Ripple effect Background
         final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
 
+        // Custom animation on image
+        ImageView myView = (ImageView) findViewById(R.id.img_pulse);
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(myView, "alpha",  1f, .2f);
+        fadeOut.setDuration(1000);
+        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(myView, "alpha", .2f, 1f);
+        fadeIn.setDuration(500);
+        final AnimatorSet mAnimationSet = new AnimatorSet();
+        mAnimationSet.play(fadeIn).after(fadeOut);
 
         tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
 //        stopHR = (Button) findViewById(R.id.btn_check_my_pulse_stop);
@@ -71,25 +84,6 @@ public class CheckPulseActivity extends AppCompatActivity
             }
         });
 
-        // Custom animation on image
-        ImageView myView = (ImageView) findViewById(R.id.img_pulse);
-
-        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(myView, "alpha",  1f, .2f);
-        fadeOut.setDuration(1000);
-        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(myView, "alpha", .2f, 1f);
-        fadeIn.setDuration(500);
-
-        final AnimatorSet mAnimationSet = new AnimatorSet();
-
-        mAnimationSet.play(fadeIn).after(fadeOut);
-
-        mAnimationSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                mAnimationSet.start();
-            }
-        });
         mAnimationSet.start();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)

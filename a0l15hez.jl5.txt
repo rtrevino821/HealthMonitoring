@@ -1,0 +1,94 @@
+﻿Merge remote-tracking branch 'refs/remotes/origin/master' into Working-Branch
+
+# Conflicts:
+#	wear/src/main/res/drawable/a_team_stuff.png
+#	wear/src/main/res/drawable/ic_pause_white_24dp.png
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch Working-Branch
+# Your branch is ahead of 'origin/Working-Branch' by 8 commits.
+#   (use "git push" to publish your local commits)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   .idea/misc.xml
+#	modified:   build.gradle
+#	modified:   mobile/build.gradle
+#	modified:   mobile/src/main/AndroidManifest.xml
+#	modified:   mobile/src/main/java/com/example/healthmonitoring/CheckPulseActivity.java
+#	modified:   mobile/src/main/java/com/example/healthmonitoring/LoginActivity.java
+#	modified:   mobile/src/main/java/com/example/healthmonitoring/MainActivity.java
+#	new file:   mobile/src/main/java/com/example/healthmonitoring/SQLConnection.java
+#	new file:   mobile/src/main/java/com/example/healthmonitoring/SignupActivity.java
+#	modified:   mobile/src/main/java/com/example/healthmonitoring/SplashScreenActivity.java
+#	new file:   mobile/src/main/java/com/example/healthmonitoring/TeleportClient.java
+#	new file:   mobile/src/main/java/com/example/healthmonitoring/TeleportService.java
+#	new file:   mobile/src/main/res/drawable-hdpi/check_my_pulse_bg.jpg
+#	new file:   mobile/src/main/res/drawable-hdpi/check_my_pulse_button.jpg
+#	new file:   mobile/src/main/res/drawable-hdpi/contact_doctor_bg.jpg
+#	new file:   mobile/src/main/res/drawable-hdpi/heart_history_bg.jpg
+#	new file:   mobile/src/main/res/drawable-hdpi/history.jpg
+#	new file:   mobile/src/main/res/drawable-hdpi/view_profile_bg.jpg
+#	new file:   mobile/src/main/res/drawable-ldpi/check_my_pulse_bg.jpg
+#	new file:   mobile/src/main/res/drawable-ldpi/check_my_pulse_button.jpg
+#	new file:   mobile/src/main/res/drawable-ldpi/contact_doctor_bg.jpg
+#	new file:   mobile/src/main/res/drawable-ldpi/heart_history_bg.jpg
+#	new file:   mobile/src/main/res/drawable-ldpi/history.jpg
+#	new file:   mobile/src/main/res/drawable-ldpi/view_profile_bg.jpg
+#	new file:   mobile/src/main/res/drawable-mdpi/check_my_pulse_bg.jpg
+#	new file:   mobile/src/main/res/drawable-mdpi/check_my_pulse_button.jpg
+#	new file:   mobile/src/main/res/drawable-mdpi/contact_doctor_bg.jpg
+#	new file:   mobile/src/main/res/drawable-mdpi/heart_history_bg.jpg
+#	new file:   mobile/src/main/res/drawable-mdpi/history.jpg
+#	new file:   mobile/src/main/res/drawable-mdpi/view_profile_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xhdpi/check_my_pulse_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xhdpi/check_my_pulse_button.jpg
+#	new file:   mobile/src/main/res/drawable-xhdpi/contact_doctor_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xhdpi/heart_history_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xhdpi/history.jpg
+#	new file:   mobile/src/main/res/drawable-xhdpi/view_profile_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xxhdpi/check_my_pulse_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xxhdpi/check_my_pulse_button.jpg
+#	new file:   mobile/src/main/res/drawable-xxhdpi/contact_doctor_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xxhdpi/heart_history_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xxhdpi/history.jpg
+#	new file:   mobile/src/main/res/drawable-xxhdpi/view_profile_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xxxhdpi/check_my_pulse_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xxxhdpi/check_my_pulse_button.jpg
+#	new file:   mobile/src/main/res/drawable-xxxhdpi/contact_doctor_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xxxhdpi/heart_history_bg.jpg
+#	new file:   mobile/src/main/res/drawable-xxxhdpi/history.jpg
+#	new file:   mobile/src/main/res/drawable-xxxhdpi/view_profile_bg.jpg
+#	modified:   mobile/src/main/res/layout/activity_check_pulse.xml
+#	modified:   mobile/src/main/res/layout/activity_contact.xml
+#	modified:   mobile/src/main/res/layout/activity_login.xml
+#	new file:   mobile/src/main/res/layout/activity_signup.xml
+#	modified:   mobile/src/main/res/layout/content_main.xml
+#	modified:   mobile/src/main/res/values/colors.xml
+#	modified:   mobile/src/main/res/values/strings.xml
+#	modified:   mobile/src/main/res/values/styles.xml
+#	deleted:    mysql-connector-java-5.0.8-bin/build.gradle
+#	deleted:    mysql-connector-java-5.0.8-bin/mysql-connector-java-5.0.8-bin.jar
+#	modified:   wear/src/main/AndroidManifest.xml
+#	modified:   wear/src/main/java/com/example/healthmonitoring/MainActivity.java
+#	new file:   wear/src/main/java/com/example/healthmonitoring/TeleportClient.java
+#	new file:   wear/src/main/java/com/example/healthmonitoring/TeleportService.java
+#	new file:   wear/src/main/java/com/example/healthmonitoring/WearService.java
+#	new file:   wear/src/main/res/drawable/Thumbs.db
+#	new file:   wear/src/main/res/drawable/ic_launcher.png
+#	new file:   wear/src/main/res/layout/drawable/Thumbs.db
+#	new file:   wear/src/main/res/layout/drawable/a_team_stuff.png
+#	new file:   wear/src/main/res/layout/drawable/ic_launcher.png
+#	new file:   wear/src/main/res/layout/drawable/ic_pause_white_24dp.png
+#	new file:   wear/src/main/res/layout/drawable/ic_play_arrow_white_24dp.png
+#	modified:   wear/src/main/res/layout/round_activity_main.xml
+#
+

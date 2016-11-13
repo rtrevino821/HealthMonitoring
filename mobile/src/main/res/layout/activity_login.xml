@@ -82,6 +82,16 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/account_SignUp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="No account? Create one!"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:textSize="16dip"/>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
