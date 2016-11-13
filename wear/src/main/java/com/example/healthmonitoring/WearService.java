@@ -1,6 +1,7 @@
 //package com.example.healthmonitoring;
 //
 //import android.content.Intent;
+//import android.util.Log;
 //
 ///**
 // * Created by Mario on 10/07/2014.
@@ -47,14 +48,16 @@
 //        protected void onPostExecute(String  path) {
 //
 //       if (path.equals("startActivity")){
+//           Log.d("WearService", path);
 //
 //            Intent startIntent = new Intent(getBaseContext(), MainActivity.class);
 //            startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            startActivity(startIntent);
+//           //let's reset the task (otherwise it will be executed only once)
+//           setOnGetMessageTask(new StartActivityTask());
 //         }
 //
-//            //let's reset the task (otherwise it will be executed only once)
-//            setOnGetMessageTask(new StartActivityTask());
+//
 //        }
 //    }
 //

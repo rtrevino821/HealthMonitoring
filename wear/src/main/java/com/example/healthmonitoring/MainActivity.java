@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.WatchViewStub;
@@ -45,6 +46,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private TeleportClient mTeleportClient;
     TeleportClient.OnSyncDataItemTask mOnSyncDataItemTask;
     TeleportClient.OnGetMessageTask mMessageTask;
+    private CountDownTimer timer;
+    private int mHeartRate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,18 +98,46 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         mTeleportClient = new TeleportClient(this);
 
         //Create and initialize task
-       // mOnSyncDataItemTask = new ShowToastOnSyncDataItemTask();
+        //mOnSyncDataItemTask = new ShowToastOnSyncDataItemTask();
         mMessageTask = new ShowToastFromOnGetMessageTask();
 
 
         //let's set the two task to be executed when an item is synced or a message is received
-       // mTeleportClient.setOnSyncDataItemTask(mOnSyncDataItemTask);
+        //mTeleportClient.setOnSyncDataItemTask(mOnSyncDataItemTask);
         mTeleportClient.setOnGetMessageTask(mMessageTask);
 
+
+        initTimer();
         startMeasure();
         //exampleFunction();
+
+
     }
 
+    private void initTimer()
+    {
+        timer = new CountDownTimer(10000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                Log.d(TAG,"seconds remaining: " + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                Log.d(TAG," Timer done");
+                //let's reset the task (otherwise it will be executed only once)
+//                mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+//                mTeleportClient.sendMessage("Finished"+mHeartRate,null);
+
+//                syncDataItem(mHeartRate);
+//                mTeleportClient.setOnSyncDataItemTask(mOnSyncDataItemTask);
+
+
+
+
+            }
+        };
+
+    }
     public void exampleFunction() {
         ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
         exec.schedule(new Runnable() {
@@ -120,11 +151,13 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private void stopMeasure() {
         Log.d("Sensor Status:"," Stopped!");
         mSensorManager.unregisterListener(this);
+        timer.cancel();
     }
 
     private void startMeasure() {
         boolean sensorRegistered = mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
         Log.d("Sensor Status:", " Sensor registered: " + (sensorRegistered ? "yes" : "no"));
+        timer.start();
     }
 
     @Override
@@ -135,6 +168,12 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         startMeasure();
 
     }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        mGoogleApiClient.disconnect();
+//        mTeleportClient.disconnect();
+//    }
 
     @Override
     protected void onPause() {
@@ -188,14 +227,13 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     public void onSensorChanged (SensorEvent event){
         float mHeartRateFloat = event.values[0];
 
-        int mHeartRate = Math.round(mHeartRateFloat);
+        mHeartRate = Math.round(mHeartRateFloat);
 
         if(mTextView != null)
         {
             mTextView.setText(Integer.toString(mHeartRate));
             String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
 
-            logHeartRate(mHeartRate, date);
 
         }
 
@@ -213,19 +251,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     }
 
 
-    //Task to show the String from DataMap with key "string" when a DataItem is synced
-    public class ShowToastOnSyncDataItemTask extends TeleportClient.OnSyncDataItemTask {
-
-        protected void onPostExecute(DataMap dataMap) {
-
-            String s = dataMap.getString("string");
-
-            Toast.makeText(getApplicationContext(),"DataItem - "+s,Toast.LENGTH_SHORT).show();
-
-            mTeleportClient.setOnSyncDataItemTask(new ShowToastOnSyncDataItemTask());
-        }
-    }
-
     //Task that shows the path of a received message
     public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
 
@@ -233,29 +258,56 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         protected void onPostExecute(String  path) {
 
             if (path.equals("stop")){
-
+                stopMeasure();
                 Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
                 Log.d(TAG, path);
                 btnPause.setVisibility(ImageButton.GONE);
                 btnStart.setVisibility(ImageButton.VISIBLE);
                 mTextView.setText("--");
-                stopMeasure();
+                //let's reset the task (otherwise it will be executed only once)
+                //mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+
             }
             else if (path.equals("start")){
                 Log.d(TAG, path);
+                startMeasure();
 
                 Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
                 btnStart.setVisibility(ImageButton.GONE);
                 btnPause.setVisibility(ImageButton.VISIBLE);
                 mTextView.setText("Please wait...");
-                stopMeasure();
+                //let's reset the task (otherwise it will be executed only once)
+                //mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
             }
 
 
-
-            //let's reset the task (otherwise it will be executed only once)
             mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+
+
         }
 
         }
+
+    public void syncDataItem(int heartData) {
+
+        //set the AsyncTask to execute when the Data is Synced
+        mTeleportClient.setOnSyncDataItemTask(new ShowToastOnSyncDataItemTask());
+
+        //Let's sync a String!
+        mTeleportClient.syncInt("heartData", heartData);
+
+    }
+
+    //Task to show the String from DataMap with key "string" when a DataItem is synced
+    public class ShowToastOnSyncDataItemTask extends TeleportClient.OnSyncDataItemTask {
+
+        protected void onPostExecute(DataMap dataMap) {
+
+            String s = dataMap.getString("heartData");
+
+            Toast.makeText(getApplicationContext(),"DataItem - "+s,Toast.LENGTH_SHORT).show();
+
+            mTeleportClient.setOnSyncDataItemTask(new ShowToastOnSyncDataItemTask());
+        }
+    }
     }
