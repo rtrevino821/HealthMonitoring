@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +20,7 @@ import java.sql.SQLException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
@@ -30,6 +30,14 @@ public class SignupActivity extends AppCompatActivity {
     @InjectView(R.id.input_password) EditText _passwordText;
     @InjectView(R.id.btn_signup) Button _signupButton;
     @InjectView(R.id.link_login) TextView _loginLink;
+
+    @InjectView(R.id.input_Lname) EditText _lname;
+    @InjectView(R.id.input_age) EditText _age;
+    @InjectView(R.id.input_Gender) EditText _gender;
+    @InjectView(R.id.input_Address) EditText _address;
+    @InjectView(R.id.input_city) EditText _city;
+    @InjectView(R.id.input_state) EditText _state;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +71,7 @@ public class SignupActivity extends AppCompatActivity {
    // String email = _emailText.getText().toString();
    // String password = _passwordText.getText().toString();
 
-
+    //@OnClick(R.id.btn_signup)
     public void insertDatabase() {
 
        final String Username = _nameText.getText().toString();
@@ -82,8 +90,6 @@ public class SignupActivity extends AppCompatActivity {
 
         String sql = "INSERT INTO Login (UserName, Password)" +
                 " VALUES ('"+ Username +"' , '"+ Userpassword+ "');";
-
-
 
         String dbuserName = "root";
         String dbpassword = "Ateamhealth";
@@ -108,7 +114,7 @@ public class SignupActivity extends AppCompatActivity {
 
 
 
-
+    //@OnClick(R.id.btn_signup)
     public void signup() {
         Log.d(TAG, "Signup");
 
