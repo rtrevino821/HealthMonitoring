@@ -34,7 +34,7 @@ import java.util.List;
 public abstract class TeleportService extends WearableListenerService {
 
     private GoogleApiClient mGoogleApiClient;
-    private static final String TAG = "TeleportService";
+    private static final String TAG = "TeleportServiceDUPLICATE";
 
 
     //    private AsyncTask<?,?,?> asyncTask;

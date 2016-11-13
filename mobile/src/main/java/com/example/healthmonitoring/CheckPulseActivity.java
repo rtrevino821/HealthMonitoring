@@ -21,6 +21,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.Wearable;
 import com.skyfishjy.library.RippleBackground;
 
@@ -34,7 +35,7 @@ public class CheckPulseActivity extends AppCompatActivity
     private String TAG = "CheckPulseActivity";
     private TextView tvHeartRate;
     private TeleportClient mTeleportClient;
-    private boolean activityOpened;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,23 +63,22 @@ public class CheckPulseActivity extends AppCompatActivity
         final AnimatorSet mAnimationSet = new AnimatorSet();
         mAnimationSet.play(fadeIn).after(fadeOut);
 
-        //onClicklistener for stopping check my pulse
-        stopHR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopHR.setVisibility(View.GONE);
-                getHR.setVisibility(View.VISIBLE);
-                rippleBackground.stopRippleAnimation();
-                stopMeasure();
-            }
-        });
-
-        //onClicklistener for starting check my pulse
+        tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
+//        stopHR = (Button) findViewById(R.id.btn_check_my_pulse_stop);
+//        stopHR.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                stopHR.setVisibility(View.GONE);
+//                getHR.setVisibility(View.VISIBLE);
+//                rippleBackground.stopRippleAnimation();
+//            }
+//        });
+        getHR = (Button) findViewById(R.id.btn_check_my_pulse);
         getHR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getHR.setVisibility(View.GONE);
-                stopHR.setVisibility(View.VISIBLE);
+//                stopHR.setVisibility(View.VISIBLE);
                 rippleBackground.startRippleAnimation();
                 startMeasure();
             }
@@ -93,61 +93,7 @@ public class CheckPulseActivity extends AppCompatActivity
                 .build();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(ACTION_TEXT_CHANGED));
-    }
-
-
-
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String content = intent.getStringExtra("content");
-            tvHeartRate.setText(content);
-        }
-    };
-
-    private void startMeasure() {
-
-        if(activityOpened == true)
-        {
-            mTeleportClient.sendMessage("start", null);
-            return;
-        }
-        //open wearable's mainActivity
-        mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-
-        mTeleportClient.sendMessage("startActivity", null);
-        activityOpened = true;
-
-
-    }
-
-    private void stopMeasure() {
-
-        mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-
-        mTeleportClient.sendMessage("stop", null);
-    }
-
-    public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
-
-        @Override
-        protected void onPostExecute(String path) {
-
-
-            Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
-
-            //let's reset the task (otherwise it will be executed only once)
-            mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //if (!mResolvingError) {
-            mGoogleApiClient.connect();
-        mTeleportClient.connect();
-       //}
+        //mTeleportClient.setOnSyncDataItemTask(new ShowToastOnSyncDataItemTask());
     }
 
     @Override
@@ -170,4 +116,67 @@ public class CheckPulseActivity extends AppCompatActivity
     public void onDataChanged(DataEventBuffer dataEventBuffer) {
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //if (!mResolvingError) {
+        mGoogleApiClient.connect();
+        mTeleportClient.connect();
+        //}
+    }
+
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String content = intent.getStringExtra("content");
+            tvHeartRate.setText(content);
+        }
+    };
+
+    private void startMeasure() {
+            mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+            Log.d(TAG, "StartPulse");
+
+        mTeleportClient.sendMessage("startActivity", null);
+    }
+
+
+    public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
+
+        @Override
+        protected void onPostExecute(String path) {
+
+            if (path.equals("Finished")) {
+
+                Log.d(TAG, "Finished");
+
+                Toast.makeText(getApplicationContext(), "Message - " + path, Toast.LENGTH_SHORT).show();
+                //Insert HeartRate in DB
+                //int heartRateInteger = Integer.parseInt(tvHeartRate.getText().toString());
+
+
+
+            }
+            mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+
+        }
+    }
+
+
+
+    //Task to show the String from DataMap with key "string" when a DataItem is synced
+    public class ShowToastOnSyncDataItemTask extends TeleportClient.OnSyncDataItemTask {
+
+        protected void onPostExecute(DataMap dataMap) {
+
+            String s = dataMap.getString("heartData");
+
+            Toast.makeText(getApplicationContext(),"DataItem - "+s,Toast.LENGTH_SHORT).show();
+
+            mTeleportClient.setOnSyncDataItemTask(new ShowToastOnSyncDataItemTask());
+        }
+    }
+
 }
