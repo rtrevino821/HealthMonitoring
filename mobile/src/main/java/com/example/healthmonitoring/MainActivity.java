@@ -8,15 +8,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -91,23 +94,37 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        testInsert();
+
+       // insertDatabase(); // testing database connection
+
+
     }
 
-    public void testInsert() {
 
+
+
+
+ /*   public void insertDatabase() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
                 insert();
-
+            }
+        }).start();
     }
-    protected void insert() {
-        String sql = "INSERT INTO Login (UserName, Password) " +
-                " VALUES ('Darth', '0987650)";
+    protected void insert()  {
+        String sql = "INSERT INTO Login (UserName, Password)" +
+                " VALUES ('hello', '567')";
+
         String userName = "root";
         String password = "Ateamhealth";
 
         try {
-            Class.forName("com.mysql.jdbc.Driver"); //healthApp?zeroDateTimeBehavior=convertToNull
+
+            Class.forName("com.mysql.jdbc.Driver");  //healthApp?zeroDateTimeBehavior=convertToNull
+
             String url = "jdbc:mysql://104.196.134.4/healthApp?account=root&password=Ateamhealth";
             Connection c = DriverManager.getConnection(url, userName, password);
             PreparedStatement st = c.prepareStatement(sql);
@@ -116,14 +133,14 @@ public class MainActivity extends AppCompatActivity
             st.execute();
             st.close();
             c.close();
-        } catch (ClassNotFoundException e) {
+
+        } catch (ClassNotFoundException e)  {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
-
+*/
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

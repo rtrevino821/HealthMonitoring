@@ -60,6 +60,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private View sign_up;
+    public static final int REQUEST_SIGNUP=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +95,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        sign_up =  findViewById(R.id.account_SignUp);  /** created for create signup finish manana*/
+
+        sign_up.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+                public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(),SignupActivity.class);  // create activity for signup
+                    startActivityForResult(intent,REQUEST_SIGNUP);
+                }
+            });
     }
+
+
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
