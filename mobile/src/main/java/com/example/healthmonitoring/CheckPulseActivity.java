@@ -6,7 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +34,8 @@ public class CheckPulseActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     Button getHR;
     Button stopHR;
+    String patientIdValue = "09876";
+    private TextView bpm;
     private String TAG = "CheckPulseActivity";
     private TextView tvHeartRate;
     private TeleportClient mTeleportClient;
@@ -47,6 +51,7 @@ public class CheckPulseActivity extends AppCompatActivity
         tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
         stopHR = (Button) findViewById(R.id.btn_check_my_pulse_stop);
         getHR = (Button) findViewById(R.id.btn_check_my_pulse);
+        bpm = (TextView) findViewById(R.id.tv_bpm);
 
         //message passing
         mTeleportClient = new TeleportClient(this);
@@ -64,7 +69,7 @@ public class CheckPulseActivity extends AppCompatActivity
         mAnimationSet.play(fadeIn).after(fadeOut);
 
         tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
-//        stopHR = (Button) findViewById(R.id.btn_check_my_pulse_stop);
+//        stopHR = (Button) findViewById(R.patientIdValue.btn_check_my_pulse_stop);
 //        stopHR.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -94,6 +99,28 @@ public class CheckPulseActivity extends AppCompatActivity
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(ACTION_TEXT_CHANGED));
         //mTeleportClient.setOnSyncDataItemTask(new ShowToastOnSyncDataItemTask());
+
+        getPatientId();
+
+
+    }
+
+    public void getPatientId(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String name = preferences.getString("Name", "");
+        if(!name.equalsIgnoreCase(""))
+        {
+            name = name + "  Sethi";  /* Edit the value here*/
+            bpm.setText(name);
+        }
+
+        /*SharedPreferences prefs = getSharedPreferences("patientIdReference", MODE_PRIVATE);
+        String restoredText = prefs.getString("patientID", null);
+        if (restoredText != null) {
+            patientIdValue = prefs.getString("patientID", "0");//"No name defined" is the default value.
+            bpm.setText(patientIdValue);
+        }*/
+
     }
 
     @Override

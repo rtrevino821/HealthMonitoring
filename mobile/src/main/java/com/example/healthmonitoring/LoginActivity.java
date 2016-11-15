@@ -7,17 +7,20 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +31,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,9 +54,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
+    /*private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
-    };
+    };*/
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -62,6 +69,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private View sign_up;
     public static final int REQUEST_SIGNUP=0;
+    String patientIdReference;
+    int patientIdValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +92,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-                Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(mainIntent);
-            }
-        });
+
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -106,9 +107,66 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     startActivityForResult(intent,REQUEST_SIGNUP);
                 }
             });
+
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (attemptLogin()) {
+                    Log.d("attempLogin", String.valueOf(patientIdValue));
+                    //setPatientID();
+                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(mainIntent);
+                }
+            }
+        });
+
+
+
     }
 
+    private void getPatientID() {
+        String sql = "SELECT Id FROM healthApp.Logins WHERE Username = '" +  mEmailView.getText().toString() + "'";
+        Log.d("SQL", sql);
+        Connection conn = SQLConnection.doInBackground();
+        if(conn == null){
+            Log.d("Conn:", "Null!!");
+        }
+        try {
 
+            PreparedStatement pst = conn.prepareStatement(sql);
+
+            /*pst.setString(1, mEmailView.getText().toString());*/
+
+            ResultSet rs = pst.executeQuery();
+
+            if(rs.next()) {
+                patientIdValue = rs.getInt("Id");
+                System.out.println("PatientID!!!!!!!!" + patientIdValue);
+                /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("Name", "FUCKKKKKKK");
+                editor.apply();*/
+            }
+
+            rs.close();
+            pst.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setPatientID(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("Name", "FUCKKKKKKK");
+        editor.commit();
+
+        /*SharedPreferences.Editor editor = getSharedPreferences("patientIdReference", MODE_PRIVATE).edit();
+        editor.putString("patientID", "12345678");
+        editor.commit();*/
+    }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -159,10 +217,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
-        if (mAuthTask != null) {
+    private Boolean attemptLogin() {
+        /*if (mAuthTask != null) {
             return;
-        }
+        }*/
 
         // Reset errors.
         mEmailView.setError(null);
@@ -176,11 +234,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
-        }
+        } /*else if (!isPasswordValid(password)){
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }*/
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
@@ -197,12 +259,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
+            return false;
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+            return true;
         }
     }
 
@@ -325,22 +389,39 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+                String query = "Select * from Logins where Username = ? and Password = ?";
+                Connection conn = SQLConnection.doInBackground();
+                PreparedStatement pst = conn.prepareStatement(query);
+                pst.setString(1, mEmail);
+                pst.setString(2, mPassword);
+
+                ResultSet rs = pst.executeQuery(query);
+                if(rs.next()) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getPatientID();
+                            setPatientID();
+                        }
+                    }).start();
+
+                    return true;
+                }
+
+            } catch (SQLException e) {
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
+            /*for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
                     return pieces[1].equals(mPassword);
                 }
-            }
+            }*/
 
             // TODO: register the new account here.
-            return true;
+            return false;
         }
 
         @Override
