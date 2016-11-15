@@ -1,6 +1,7 @@
 package com.example.healthmonitoring;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,11 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import static com.example.healthmonitoring.loginActivityNeo.MY_PREFS_NAME;
 
 
 public class MainActivity extends AppCompatActivity
@@ -97,6 +94,10 @@ public class MainActivity extends AppCompatActivity
 
        // insertDatabase(); // testing database connection
 
+        //SharePreference
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        String restoredText = prefs.getString("ID", null);
+        Log.d("neoGotId", restoredText);
 
     }
 

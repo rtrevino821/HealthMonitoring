@@ -6,9 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <uses-permission android:name="android.permission.INTERNET" />
-
 
     <!-- <uses-feature android:name="android.hardware.type.watch" /> -->
     <uses-permission android:name="android.permission.BODY_SENSORS" />
@@ -35,9 +33,7 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
+
         </activity>
 
         <service
@@ -66,9 +62,10 @@
             android:name=".ContactActivity"
             android:label="@string/title_activity_contactDoctor"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".SignupActivity"
-                  android:theme="@style/AppTheme_Dark_Dialog">
-        </activity>
+        <activity
+            android:name=".SignupActivity"
+            android:theme="@style/AppTheme_Dark_Dialog"></activity>
+        <activity android:name=".loginActivityNeo"></activity>
     </application>
 
 </manifest>

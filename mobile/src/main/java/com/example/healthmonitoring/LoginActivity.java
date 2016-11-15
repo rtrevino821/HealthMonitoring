@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -159,9 +160,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private void setPatientID(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("Name", "FUCKKKKKKK");
-        editor.commit();
+
 
         /*SharedPreferences.Editor editor = getSharedPreferences("patientIdReference", MODE_PRIVATE).edit();
         editor.putString("patientID", "12345678");
@@ -264,7 +263,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password, this);
             mAuthTask.execute((Void) null);
             return true;
         }
@@ -378,11 +377,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private Context context;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String email, String password, Context context) {
             mEmail = email;
             mPassword = password;
+            this.context = context;
         }
+
+
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -397,13 +400,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 ResultSet rs = pst.executeQuery(query);
                 if(rs.next()) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            getPatientID();
-                            setPatientID();
-                        }
-                    }).start();
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            getPatientID();
+//                            setPatientID();
+//                        }
+//                    }).start();
 
                     return true;
                 }
@@ -428,7 +431,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("Name", "FUCKKKKKKK");
+            editor.commit();
             if (success) {
                 finish();
             } else {
