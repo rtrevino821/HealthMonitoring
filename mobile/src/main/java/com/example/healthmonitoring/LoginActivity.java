@@ -72,6 +72,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public static final int REQUEST_SIGNUP=0;
     String patientIdReference;
     int patientIdValue;
+    private Connection conn;
+    final static String sqlUser = "SELECT ID,Username,Password FROM healthApp.Logins WHERE Username = ?;";
+    String TAG = "/LoginActivity";
+    String ID;
+    String username;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,12 +108,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         sign_up.setOnClickListener(new View.OnClickListener() {
 
             @Override
-                public void onClick(View v) {
+            public void onClick(View v) {
 
                 Intent intent = new Intent(getApplicationContext(),SignupActivity.class);  // create activity for signup
-                    startActivityForResult(intent,REQUEST_SIGNUP);
-                }
-            });
+                startActivityForResult(intent,REQUEST_SIGNUP);
+            }
+        });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -226,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        username = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -244,11 +250,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }*/
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(username)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!isEmailValid(username)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
@@ -263,7 +269,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password, this);
+            mAuthTask = new UserLoginTask(username, password, this);
             mAuthTask.execute((Void) null);
             return true;
         }
@@ -392,28 +398,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
 
             try {
-                String query = "Select * from Logins where Username = ? and Password = ?";
-                Connection conn = SQLConnection.doInBackground();
-                PreparedStatement pst = conn.prepareStatement(query);
-                pst.setString(1, mEmail);
-                pst.setString(2, mPassword);
+                conn = SQLConnection.doInBackground();
 
-                ResultSet rs = pst.executeQuery(query);
-                if(rs.next()) {
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            getPatientID();
-//                            setPatientID();
-//                        }
-//                    }).start();
+                PreparedStatement prepare = conn.prepareStatement(sqlUser);
+                prepare.setString(1, username);
+                ResultSet rs = prepare.executeQuery();
+//                SharedPreferences prefs =
+//                        context.getSharedPreferences(MY_PREFS_NAME,
+//                                Context.MODE_PRIVATE);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences.Editor editor = prefs.edit();
 
-                    return true;
+                while(rs.next())
+                {
+                    ID = String.valueOf(rs.getInt("ID"));
+                    Log.d(TAG, String.valueOf(rs.getInt("ID")));
+                    Log.d(TAG,rs.getString("Username"));
+                    Log.d(TAG,rs.getString("Password"));
+
                 }
+                editor.putString("name", "Stoney");
+                editor.putString("ID", ID);
+                editor.commit();
+                return true;
 
-            } catch (SQLException e) {
-                return false;
             }
+            catch(SQLException e)
+            {
+                Log.d(TAG, e.getMessage());
+            }
+            return false;
+        }
 
             /*for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
@@ -423,31 +438,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }*/
 
-            // TODO: register the new account here.
-            return false;
-        }
+        // TODO: register the new account here.
 
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("Name", "FUCKKKKKKK");
-            editor.commit();
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
 
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
+    @Override
+    protected void onPostExecute(final Boolean success) {
+        mAuthTask = null;
+        showProgress(false);
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
+//        SharedPreferences.Editor editor = prefs.edit();
+//        editor.putString("Name", "FUCKKKKKKK");
+//        editor.commit();
+        if (success) {
+            finish();
+        } else {
+            mPasswordView.setError(getString(R.string.error_incorrect_password));
+            mPasswordView.requestFocus();
         }
     }
+
+    @Override
+    protected void onCancelled() {
+        mAuthTask = null;
+        showProgress(false);
+    }
+}
 }
 

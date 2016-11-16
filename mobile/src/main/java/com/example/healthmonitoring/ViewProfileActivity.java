@@ -1,7 +1,13 @@
 package com.example.healthmonitoring;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,8 +38,8 @@ public class ViewProfileActivity extends AppCompatActivity {
 
         initializeTextViews();
         retrievePatientID();
-        getDatabaseData(patientID);
-        setText(rs);
+        //getDatabaseData(patientID);
+        //setText(rs);
 
     }
 
@@ -47,6 +53,67 @@ public class ViewProfileActivity extends AppCompatActivity {
         address = (EditText) findViewById(R.id.tv_Address);
         city = (EditText) findViewById(R.id.tv_City);
         state = (EditText) findViewById(R.id.tv_State);
+    }
+    private class BackgroundTask extends AsyncTask<String,Void,Boolean> {
+
+        private Context context;
+
+        public BackgroundTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            //String user = "Stoney";
+            //String password = "FL";
+
+            //String sql = "Select * From healthApp.Logins";
+
+            joinThread();
+            try {
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences.Editor editor = preferences.edit();
+                Log.d(TAG, "before resulset");
+
+                if (rs.next())
+                {
+                    Log.d(TAG, String.valueOf(rs.getInt("ID")));
+                    Log.d(TAG, rs.getString("Username"));
+                    Log.d(TAG, rs.getString("Password"));
+                    editor.putString("name", rs.getString("Username"));
+                    editor.putString("ID", String.valueOf(rs.getInt("ID")));
+                    editor.commit();
+                    //Login Successful
+                    loginStatus(true);
+                    return true;
+                }
+                else
+                {//no results
+                    loginStatus(false);
+                    Log.d(TAG,"asynctask  inside false");
+                    return false;
+                }
+
+            } catch (SQLException e) {
+                Log.d(TAG, e.getMessage());
+            }
+
+            //Login Failed
+            loginStatus(false);
+            Log.d(TAG,"asynctask ouside false");
+            return false;
+
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean result)
+        {
+
+            Log.d("neoPost", "Preference received in background: " + result);
+        }
+
     }
 
     private void retrievePatientID() {
