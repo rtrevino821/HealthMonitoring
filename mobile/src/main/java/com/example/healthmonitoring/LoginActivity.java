@@ -4,20 +4,24 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +32,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,9 +55,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
+    /*private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
-    };
+    };*/
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -62,6 +70,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private View sign_up;
     public static final int REQUEST_SIGNUP=0;
+    String patientIdReference;
+    int patientIdValue;
+    private Connection conn;
+    final static String sqlUser = "SELECT ID,Username,Password FROM healthApp.Logins WHERE Username = ?;";
+    String TAG = "/LoginActivity";
+    String ID;
+    String username;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +99,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-                Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(mainIntent);
-            }
-        });
+
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -100,15 +108,70 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         sign_up.setOnClickListener(new View.OnClickListener() {
 
             @Override
-                public void onClick(View v) {
+            public void onClick(View v) {
 
                 Intent intent = new Intent(getApplicationContext(),SignupActivity.class);  // create activity for signup
-                    startActivityForResult(intent,REQUEST_SIGNUP);
+                startActivityForResult(intent,REQUEST_SIGNUP);
+            }
+        });
+
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (attemptLogin()) {
+                    Log.d("attempLogin", String.valueOf(patientIdValue));
+                    //setPatientID();
+                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(mainIntent);
                 }
-            });
+            }
+        });
+
+
+
     }
 
+    private void getPatientID() {
+        String sql = "SELECT Id FROM healthApp.Logins WHERE Username = '" +  mEmailView.getText().toString() + "'";
+        Log.d("SQL", sql);
+        Connection conn = SQLConnection.doInBackground();
+        if(conn == null){
+            Log.d("Conn:", "Null!!");
+        }
+        try {
 
+            PreparedStatement pst = conn.prepareStatement(sql);
+
+            /*pst.setString(1, mEmailView.getText().toString());*/
+
+            ResultSet rs = pst.executeQuery();
+
+            if(rs.next()) {
+                patientIdValue = rs.getInt("Id");
+                System.out.println("PatientID!!!!!!!!" + patientIdValue);
+                /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("Name", "FUCKKKKKKK");
+                editor.apply();*/
+            }
+
+            rs.close();
+            pst.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setPatientID(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+
+
+        /*SharedPreferences.Editor editor = getSharedPreferences("patientIdReference", MODE_PRIVATE).edit();
+        editor.putString("patientID", "12345678");
+        editor.commit();*/
+    }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -159,35 +222,39 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
-        if (mAuthTask != null) {
+    private Boolean attemptLogin() {
+        /*if (mAuthTask != null) {
             return;
-        }
+        }*/
 
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        username = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
-        }
+        } /*else if (!isPasswordValid(password)){
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }*/
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(username)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!isEmailValid(username)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
@@ -197,12 +264,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
+            return false;
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(username, password, this);
             mAuthTask.execute((Void) null);
+            return true;
         }
     }
 
@@ -314,53 +383,85 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private Context context;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String email, String password, Context context) {
             mEmail = email;
             mPassword = password;
+            this.context = context;
         }
+
+
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+                conn = SQLConnection.doInBackground();
 
-            for (String credential : DUMMY_CREDENTIALS) {
+                PreparedStatement prepare = conn.prepareStatement(sqlUser);
+                prepare.setString(1, username);
+                ResultSet rs = prepare.executeQuery();
+//                SharedPreferences prefs =
+//                        context.getSharedPreferences(MY_PREFS_NAME,
+//                                Context.MODE_PRIVATE);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences.Editor editor = prefs.edit();
+
+                while(rs.next())
+                {
+                    ID = String.valueOf(rs.getInt("ID"));
+                    Log.d(TAG, String.valueOf(rs.getInt("ID")));
+                    Log.d(TAG,rs.getString("Username"));
+                    Log.d(TAG,rs.getString("Password"));
+
+                }
+                editor.putString("name", "Stoney");
+                editor.putString("ID", ID);
+                editor.commit();
+                return true;
+
+            }
+            catch(SQLException e)
+            {
+                Log.d(TAG, e.getMessage());
+            }
+            return false;
+        }
+
+            /*for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
                     return pieces[1].equals(mPassword);
                 }
-            }
+            }*/
 
-            // TODO: register the new account here.
-            return true;
-        }
+        // TODO: register the new account here.
 
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
 
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
+    @Override
+    protected void onPostExecute(final Boolean success) {
+        mAuthTask = null;
+        showProgress(false);
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
+//        SharedPreferences.Editor editor = prefs.edit();
+//        editor.putString("Name", "FUCKKKKKKK");
+//        editor.commit();
+        if (success) {
+            finish();
+        } else {
+            mPasswordView.setError(getString(R.string.error_incorrect_password));
+            mPasswordView.requestFocus();
         }
     }
+
+    @Override
+    protected void onCancelled() {
+        mAuthTask = null;
+        showProgress(false);
+    }
+}
 }
 

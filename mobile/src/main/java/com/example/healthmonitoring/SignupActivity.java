@@ -1,10 +1,8 @@
 package com.example.healthmonitoring;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +10,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-/** similar to find view by ID */
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,7 +17,10 @@ import java.sql.SQLException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
+
+/**
+ * similar to find view by ID
+ */
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
@@ -67,7 +67,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 
-    //@OnClick(R.id.btn_signup)
+    //@OnClick(R.patientIdValue.btn_signup)
     public void insertDatabase() {
 
         final String Fname = _fname.getText().toString();
@@ -125,7 +125,7 @@ public class SignupActivity extends AppCompatActivity {
     protected void insertLogin(String... params) {
 
           String sql = "INSERT INTO healthApp.Logins (Id, Username, Password)" +
-                  "  Select id, '"+ params[0] +"','"+ params[1] +"' From healthApp.Patient where F_Name='"+ params[2] +"'";
+                  "  Select patientIdValue, '"+ params[0] +"','"+ params[1] +"' From healthApp.Patient where F_Name='"+ params[2] +"'";
 
 
         String dbuserName = "root";
@@ -150,7 +150,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 
-    //@OnClick(R.id.btn_signup)
+    //@OnClick(R.patientIdValue.btn_signup)
     public void signup() {
         Log.d(TAG, "Signup");
 
