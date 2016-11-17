@@ -1,13 +1,9 @@
 package com.example.healthmonitoring;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -69,9 +65,9 @@ public class LoginActivityNeo extends AppCompatActivity   {
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getResulset();
+                //getResulset();
 
-                    task = new BackgroundTask(context);
+                task = new BackgroundTask(context);
                 //showProgress(true);
 
                 task.execute();
@@ -122,14 +118,7 @@ public class LoginActivityNeo extends AppCompatActivity   {
     {
         loginStatus = status;
     }
-    private void joinThread()
-    {
-        try{
-            thread.join();
-        }catch(Exception e){
 
-        }
-    }
     private class BackgroundTask extends AsyncTask<String,Void,Boolean> {
 
         private Context context;
@@ -145,8 +134,19 @@ public class LoginActivityNeo extends AppCompatActivity   {
 
             //String sql = "Select * From healthApp.Logins";
 
-            joinThread();
+            //joinThread();
             try {
+                conn = SQLConnection.doInBackground();
+                PreparedStatement prepare = conn.prepareStatement(sqlUser);
+
+                getUsername();
+                getPassword();
+
+                prepare.setString(1, username);
+                prepare.setString(2, password);
+                Log.d(TAG, username);
+                Log.d(TAG, password);
+                rs = prepare.executeQuery();
 
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
                 SharedPreferences.Editor editor = preferences.edit();
@@ -175,7 +175,6 @@ public class LoginActivityNeo extends AppCompatActivity   {
             }
 
             //Login Failed
-            loginStatus(false);
             Log.d(TAG,"asynctask ouside false");
             return false;
 
@@ -185,7 +184,6 @@ public class LoginActivityNeo extends AppCompatActivity   {
         @Override
         protected void onPostExecute(Boolean result)
         {
-            showProgress(false);
             if(result)
             {
                 Intent mainIntent = new Intent(LoginActivityNeo.this, MainActivity.class);
@@ -201,38 +199,5 @@ public class LoginActivityNeo extends AppCompatActivity   {
 
     }
 
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
+    
 }
