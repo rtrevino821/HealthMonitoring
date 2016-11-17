@@ -6,10 +6,8 @@ package com.example.healthmonitoring;
  */
 
 
-import android.content.Context;
-
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class SQLConnection {
 
@@ -24,6 +22,7 @@ public class SQLConnection {
             String url = "jdbc:mysql://104.196.134.4/healthApp?user=root&password=Ateamhealth";
 
 
+
             String userName = "root";
             String password = "Ateamhealth";
             conn = DriverManager.getConnection(url, userName, password);
@@ -31,6 +30,7 @@ public class SQLConnection {
 
             return conn;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
