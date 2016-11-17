@@ -61,7 +61,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    //private UserLoginTask mAuthTask = null;
+    private BackgroundTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -73,16 +74,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     String patientIdReference;
     int patientIdValue;
     private Connection conn;
-    final static String sqlUser = "SELECT ID,Username,Password FROM healthApp.Logins WHERE Username = ?;";
+    final static String sqlUser = "SELECT ID,Username,Password FROM healthApp.Logins WHERE Username = ? and `Password` = ?;";
     String TAG = "/LoginActivity";
     String ID;
-    String username;
+    private String username = "";
+    private String password = "";
+    private Context context;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        context = this;
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -119,12 +125,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (attemptLogin()) {
+                attemptLogin();
+                /*if (attemptLogin()) {
                     Log.d("attempLogin", String.valueOf(patientIdValue));
                     //setPatientID();
                     Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(mainIntent);
-                }
+                }*/
             }
         });
 
@@ -222,7 +229,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private Boolean attemptLogin() {
+    private void attemptLogin() {
         /*if (mAuthTask != null) {
             return;
         }*/
@@ -264,14 +271,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-            return false;
+            //return false;
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(username, password, this);
-            mAuthTask.execute((Void) null);
-            return true;
+            mAuthTask = new BackgroundTask(context);
+            mAuthTask.execute();
+            //return true;
         }
     }
 
@@ -375,11 +382,82 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
+    private void getUsername()
+    {
+        username =mEmailView.getText().toString();
+    }
+    private void getPassword()
+    {
+        password = mPasswordView.getText().toString();
+    }
+
+    private class BackgroundTask extends AsyncTask<String,Void,Boolean> {
+
+        private Context context;
+
+        public BackgroundTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            //String user = "Stoney";
+            //String password = "FL";
+
+            //String sql = "Select * From healthApp.Logins";
+
+            //joinThread();
+            try {
+                conn = SQLConnection.doInBackground();
+                PreparedStatement prepare = conn.prepareStatement(sqlUser);
+
+                getUsername();
+                getPassword();
+
+                prepare.setString(1, username);
+                prepare.setString(2, password);
+                Log.d(TAG, username);
+                Log.d(TAG, password);
+                ResultSet rs = prepare.executeQuery();
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences.Editor editor = preferences.edit();
+                Log.d(TAG, "before resulset");
+
+                if (rs.next())
+                {
+                    Log.d(TAG, String.valueOf(rs.getInt("ID")));
+                    Log.d(TAG, rs.getString("Username"));
+                    Log.d(TAG, rs.getString("Password"));
+                    //editor.putString("name", rs.getString("Username")); Unnecessary write to pref
+                    editor.putString("ID", String.valueOf(rs.getInt("ID")));
+                    editor.commit();
+
+                    //Login Successful
+                    rs.close();
+                    return true;
+                }
+                else
+                {//no results
+                    Log.d(TAG,"asynctask  inside false");
+                    return false;
+                }
+
+            } catch (SQLException e) {
+                Log.d(TAG, e.getMessage());
+            }
+
+            //Login Failed
+            Log.d(TAG,"asynctask ouside false");
+            return false;
+
+        }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+/*    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;
@@ -428,7 +506,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Log.d(TAG, e.getMessage());
             }
             return false;
-        }
+        }*/
 
             /*for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
@@ -442,14 +520,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     @Override
-    protected void onPostExecute(final Boolean success) {
-        mAuthTask = null;
+    protected void onPostExecute(Boolean result) {
+        //mAuthTask = null;
         showProgress(false);
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.context);
-//        SharedPreferences.Editor editor = prefs.edit();
-//        editor.putString("Name", "FUCKKKKKKK");
-//        editor.commit();
-        if (success) {
+        if (result) {
+            Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(mainIntent);
             finish();
         } else {
             mPasswordView.setError(getString(R.string.error_incorrect_password));

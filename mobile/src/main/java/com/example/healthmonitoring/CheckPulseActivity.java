@@ -107,10 +107,9 @@ public class CheckPulseActivity extends AppCompatActivity
 
     public void getPatientId(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String name = preferences.getString("Name", "");
+        String name = preferences.getString("ID", "");
         if(!name.equalsIgnoreCase(""))
         {
-            name = name + "  Sethi";  /* Edit the value here*/
             bpm.setText(name);
         }
 
