@@ -1,3 +1,4 @@
+/*
 package com.example.healthmonitoring;
 
 import android.content.Context;
@@ -51,7 +52,9 @@ public class LoginActivityNeo extends AppCompatActivity   {
         usernameView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        View sign_up =  findViewById(R.id.account_SignUp);  /** created for create signup finish manana*/
+        View sign_up =  findViewById(R.id.account_SignUp);  */
+/** created for create signup finish manana*//*
+
         sign_up.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -157,9 +160,10 @@ public class LoginActivityNeo extends AppCompatActivity   {
                     Log.d(TAG, String.valueOf(rs.getInt("ID")));
                     Log.d(TAG, rs.getString("Username"));
                     Log.d(TAG, rs.getString("Password"));
-                    editor.putString("name", rs.getString("Username"));
+                    //editor.putString("name", rs.getString("Username")); Unnecessary write to pref
                     editor.putString("ID", String.valueOf(rs.getInt("ID")));
                     editor.commit();
+
                     //Login Successful
                     rs.close();
                     return true;
@@ -201,3 +205,4 @@ public class LoginActivityNeo extends AppCompatActivity   {
 
     
 }
+*/
