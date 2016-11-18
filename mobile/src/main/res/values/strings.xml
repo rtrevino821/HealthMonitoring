@@ -34,4 +34,9 @@
     <string name="title_activity_contactDoctor">Contact Doctor</string>
     <string name="stop">Stop</string>
     <string name="DOB">Date of Birth</string>
+    <string name="CAPABILITY_MOBILE">MOBILE</string>
+    <string name="CAPABILITY_ANDROID_WEAR">WEARABLE</string>
+    <string-array name="android_wear_capabilities">
+        <item>@string/CAPABILITY_MOBILE</item>
+    </string-array>
 </resources>

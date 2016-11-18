@@ -2,6 +2,7 @@ package com.example.healthmonitoring;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerAdapter.ViewHolder viewHolder, int position) {
+        Log.d("OnBind", heartData.get(position).timestamp);
+        Log.d("OnBind", heartData.get(position).heartRate);
+        Log.d("OnBind", heartData.get(position).date);
         viewHolder.itemTime.setText(heartData.get(position).timestamp);
         viewHolder.itemReading.setText(heartData.get(position).heartRate);
         viewHolder.itemDate.setText(heartData.get(position).date);

@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     String patientIdReference;
     int patientIdValue;
     private Connection conn;
-    final static String sqlUser = "SELECT ID,Username,Password FROM healthApp.Logins WHERE Username = ? and `Password` = ?;";
+    final  String sqlUser = "SELECT ID,Username,Password FROM healthApp.Logins WHERE Username = ? and `Password` = ?;";
     String TAG = "/LoginActivity";
     String ID;
     private String username = "";
