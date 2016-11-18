@@ -17,13 +17,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEventBuffer;
-import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.Wearable;
 import com.skyfishjy.library.RippleBackground;
 
@@ -39,6 +37,8 @@ public class CheckPulseActivity extends AppCompatActivity
     private String TAG = "CheckPulseActivity";
     private TextView tvHeartRate;
     private TeleportClient mTeleportClient;
+    private RippleBackground rippleBackground;
+    int count = 0;
 
 
     @Override
@@ -52,12 +52,12 @@ public class CheckPulseActivity extends AppCompatActivity
         stopHR = (Button) findViewById(R.id.btn_check_my_pulse_stop);
         getHR = (Button) findViewById(R.id.btn_check_my_pulse);
         bpm = (TextView) findViewById(R.id.tv_bpm);
-
-        //message passing
+        //init teleport  API
         mTeleportClient = new TeleportClient(this);
 
+
         //Ripple effect Background
-        final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
+        rippleBackground=(RippleBackground)findViewById(R.id.content);
 
         // Custom animation on image
         ImageView myView = (ImageView) findViewById(R.id.img_pulse);
@@ -105,7 +105,7 @@ public class CheckPulseActivity extends AppCompatActivity
 
     }
 
-    public void getPatientId(){
+    private void getPatientId(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String name = preferences.getString("ID", "");
         if(!name.equalsIgnoreCase(""))
@@ -113,14 +113,16 @@ public class CheckPulseActivity extends AppCompatActivity
             bpm.setText(name);
         }
 
-        /*SharedPreferences prefs = getSharedPreferences("patientIdReference", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("patientIdReference", MODE_PRIVATE);
         String restoredText = prefs.getString("patientID", null);
         if (restoredText != null) {
             patientIdValue = prefs.getString("patientID", "0");//"No name defined" is the default value.
             bpm.setText(patientIdValue);
-        }*/
+        }
 
     }
+
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -153,19 +155,36 @@ public class CheckPulseActivity extends AppCompatActivity
     }
 
 
+    /**
+     *  Receives heartrate my MyService
+     *  saves the heartrate in a sharedpreference
+     */
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if(intent.getStringExtra("visible") != null)
+            {
+                    Log.d(TAG,"Button apppear");
+                   getHR.setVisibility(View.VISIBLE);
+                   rippleBackground.stopRippleAnimation();
+            }
+
             String content = intent.getStringExtra("content");
             tvHeartRate.setText(content);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("HeartRate",content);
+            editor.apply();
         }
     };
 
+    //Sends a message to wearable
     private void startMeasure() {
-            mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-            Log.d(TAG, "StartPulse");
+        mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+        Log.d(TAG, "StartPulse");
 
         mTeleportClient.sendMessage("startActivity", null);
+            Log.d(TAG, "StartPulse");
     }
 
 
@@ -174,17 +193,7 @@ public class CheckPulseActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String path) {
 
-            if (path.equals("Finished")) {
 
-                Log.d(TAG, "Finished");
-
-                Toast.makeText(getApplicationContext(), "Message - " + path, Toast.LENGTH_SHORT).show();
-                //Insert HeartRate in DB
-                //int heartRateInteger = Integer.parseInt(tvHeartRate.getText().toString());
-
-
-
-            }
             mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
 
         }
@@ -192,17 +201,7 @@ public class CheckPulseActivity extends AppCompatActivity
 
 
 
-    //Task to show the String from DataMap with key "string" when a DataItem is synced
-    public class ShowToastOnSyncDataItemTask extends TeleportClient.OnSyncDataItemTask {
 
-        protected void onPostExecute(DataMap dataMap) {
 
-            String s = dataMap.getString("heartData");
-
-            Toast.makeText(getApplicationContext(),"DataItem - "+s,Toast.LENGTH_SHORT).show();
-
-            mTeleportClient.setOnSyncDataItemTask(new ShowToastOnSyncDataItemTask());
-        }
-    }
 
 }

@@ -46,6 +46,7 @@ public class MyService extends WearableListenerService {
             }
         }
 
+
     }
 
     private void retrieveMessage(String message) {

@@ -20,8 +20,12 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -46,11 +50,18 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     TeleportClient.OnGetMessageTask mMessageTask;
     private CountDownTimer timer;
     private int mHeartRate;
+    Node mNode; // the connected device to send the message to
+    private static final String HELLO_WORLD_WEAR_PATH = "/hello-world-wear";
+    private boolean mResolvingError=false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //message passing
+        mTeleportClient = new TeleportClient(this);
 
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
@@ -92,19 +103,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-        //instantiate the TeleportClient with the application Context
-        mTeleportClient = new TeleportClient(this);
-
-        //Create and initialize task
-        //mOnSyncDataItemTask = new ShowToastOnSyncDataItemTask();
-        mMessageTask = new ShowToastFromOnGetMessageTask();
-
-
-        //let's set the two task to be executed when an item is synced or a message is received
-        //mTeleportClient.setOnSyncDataItemTask(mOnSyncDataItemTask);
-        mTeleportClient.setOnGetMessageTask(mMessageTask);
-
-
         initTimer();
         startMeasure();
         //exampleFunction();
@@ -115,10 +113,10 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if (!mResolvingError) {
+            mGoogleApiClient.connect();
+        }
         mTeleportClient.connect();
-        //startMeasure();
-
     }
 //    @Override
 //    protected void onStop() {
@@ -140,6 +138,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
     @Override //ConnectionCallbacks
     public void onConnected(Bundle connectionHint) {
+        resolveNode();
         Log.d(TAG, "Google API Client was connected");
     }
 
@@ -159,8 +158,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
             public void onFinish() {
                 Log.d(TAG," Timer done");
                 //let's reset the task (otherwise it will be executed only once)
-                mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-                mTeleportClient.sendMessage("Finished",null);
+                sendMessage();
                 Thread thread = new Thread(){
                     @Override
                     public void run() {
@@ -239,7 +237,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         {
             mTextView.setText(Integer.toString(mHeartRate));
             String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
-
+            logHeartRate(mHeartRate,date);
 
         }
 
@@ -295,6 +293,45 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         }
 
         }
+
+
+    private void sendMessage() {
+
+        if (mNode != null && mGoogleApiClient!=null && mGoogleApiClient.isConnected()) {
+            Wearable.MessageApi.sendMessage(
+                    mGoogleApiClient, mNode.getId(), HELLO_WORLD_WEAR_PATH, null).setResultCallback(
+
+                    new ResultCallback<MessageApi.SendMessageResult>() {
+                        @Override
+                        public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+
+                            if (!sendMessageResult.getStatus().isSuccess()) {
+                                Log.e("TAG", "Failed to send message with status code: "
+                                        + sendMessageResult.getStatus().getStatusCode());
+                            }
+                        }
+                    }
+            );
+        }else{
+            //Improve your code
+        }
+
+    }//end of method
+
+    /*
+    * Resolve the node = the connected device to send the message to
+    */
+    private void resolveNode() {
+
+        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+            @Override
+            public void onResult(NodeApi.GetConnectedNodesResult nodes) {
+                for (Node node : nodes.getNodes()) {
+                    mNode = node;
+                }
+            }
+        });
+    }
 
 
     }
