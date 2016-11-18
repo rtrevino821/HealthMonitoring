@@ -239,11 +239,9 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         {
             mTextView.setText(Integer.toString(mHeartRate));
             String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
-
+            logHeartRate(mHeartRate, date);
 
         }
-
-
     }
 
     @Override

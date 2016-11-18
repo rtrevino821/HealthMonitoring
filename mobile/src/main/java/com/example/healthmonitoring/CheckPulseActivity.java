@@ -41,6 +41,8 @@ public class CheckPulseActivity extends AppCompatActivity
     private TeleportClient mTeleportClient;
 
 
+    final RippleBackground rippleBackground = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,6 +155,7 @@ public class CheckPulseActivity extends AppCompatActivity
     }
 
 
+
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -182,14 +185,19 @@ public class CheckPulseActivity extends AppCompatActivity
                 //Insert HeartRate in DB
                 //int heartRateInteger = Integer.parseInt(tvHeartRate.getText().toString());
 
+                //stopMeasure();
 
 
             }
             mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-
+            //stopMeasure();
         }
     }
 
+    private void stopMeasure() {
+        getHR.setVisibility(View.VISIBLE);
+        rippleBackground.stopRippleAnimation();
+    }
 
 
     //Task to show the String from DataMap with key "string" when a DataItem is synced
