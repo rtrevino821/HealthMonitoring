@@ -3,4 +3,9 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_round">Hello Round World!</string>
     <string name="hello_square">Hello Square World!</string>
+    <string name="CAPABILITY_MOBILE">MOBILE</string>
+    <string name="CAPABILITY_ANDROID_WEAR">WEARABLE</string>
+    <string-array name="android_wear_capabilities">
+        <item>@string/CAPABILITY_MOBILE</item>
+    </string-array>
 </resources>
