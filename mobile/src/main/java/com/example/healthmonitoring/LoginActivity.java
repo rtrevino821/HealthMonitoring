@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     String patientIdReference;
     int patientIdValue;
     private Connection conn;
-    final  String sqlUser = "SELECT ID,Username,Password FROM healthApp.Logins WHERE Username = ? and `Password` = ?;";
+    final  String sqlUser = "SELECT ID,Username,Password,Admin FROM healthApp.Logins WHERE Username = ? and `Password` = ?;";
     String TAG = "/LoginActivity";
     String ID;
     private String username = "";
@@ -429,8 +429,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     Log.d(TAG, String.valueOf(rs.getInt("ID")));
                     Log.d(TAG, rs.getString("Username"));
                     Log.d(TAG, rs.getString("Password"));
+                    Log.d(TAG, "Admin: " + rs.getString("Admin"));
                     //editor.putString("name", rs.getString("Username")); Unnecessary write to pref
                     editor.putString("ID", String.valueOf(rs.getInt("ID")));
+                    editor.putString("Admin", String.valueOf(rs.getString("Admin")));
                     editor.commit();
 
                     //Login Successful
@@ -524,9 +526,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //mAuthTask = null;
         showProgress(false);
         if (result) {
-            Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(mainIntent);
-            finish();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            String admin = preferences.getString("Admin", "N");
+            if(admin.equalsIgnoreCase("Y")){
+                Log.d("OnPostAdmin", "Yes");
+                Intent mainDoctorIntent = new Intent(LoginActivity.this, MainActivityDoctor.class);
+                startActivity(mainDoctorIntent);
+                finish();
+            }else {
+                Log.d("OnPostAdmin", "Nah Fam");
+                Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(mainIntent);
+                finish();
+            }
         } else {
             mPasswordView.setError(getString(R.string.error_incorrect_password));
             mPasswordView.requestFocus();

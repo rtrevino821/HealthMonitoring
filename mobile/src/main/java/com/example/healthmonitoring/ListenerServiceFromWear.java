@@ -30,6 +30,7 @@ public class ListenerServiceFromWear   extends WearableListenerService {
     private int userHeartRate;
     private int binary;
     private java.sql.Timestamp timeStamp;
+
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
               /*

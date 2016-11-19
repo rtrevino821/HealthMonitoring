@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="12dp"
+    android:elevation="4dp"
+    android:id="@+id/my_cardView">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="5dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal">
+
+            <TextView
+                android:text="Patient Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_Patient_Name"
+                android:textColor="@color/colorPrimary"
+                android:textSize="22dp"
+                android:textAlignment="center" />
+
+            <TextView
+                android:text="Last Visit: 8/29/2016"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_Last_Visit"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="BPM Threshold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_Current_Threshold_Label"
+                android:layout_weight="1"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:minHeight="58dp"
+                android:textAlignment="center"
+                android:gravity="bottom|center_horizontal" />
+
+            <TextView
+                android:text="120"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/tv_Current_Threshold"
+                android:layout_weight="1"
+                android:textColor="@color/colorPrimary"
+                android:textSize="43dp"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

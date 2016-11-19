@@ -32,9 +32,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <service
             android:name=".MyService"
@@ -73,8 +71,17 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".SignupActivity"
-            android:theme="@style/AppTheme_Dark_Dialog"></activity>
-        <activity android:name=".LoginActivityNeo"></activity>
+            android:theme="@style/AppTheme_Dark_Dialog" />
+        <activity android:name=".LoginActivityNeo" />
+
+        <activity android:name=".MainActivityDoctor"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".PatientListActivity"
+            android:parentActivityName=".MainActivityDoctor"></activity>
+
+        <activity android:name=".ViewAlertsActivityDoctor"
+            android:parentActivityName=".MainActivityDoctor"></activity>
     </application>
 
 </manifest>
