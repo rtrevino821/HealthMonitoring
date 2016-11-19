@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 
 /**
- * Created by Mario on 10/07/2014.
+ * Created by A-team on 10/07/2016.
  */
 public class WearService extends TeleportService{
 
