@@ -1,3 +1,4 @@
+/*
 package com.example.healthmonitoring;
 
 import android.content.Context;
@@ -20,9 +21,11 @@ import java.sql.SQLException;
 import java.util.Calendar;
 
 
+*/
 /**
  * Gets message sent from phone and inserts to to database
- */
+ *//*
+
 
 public class ListenerServiceFromWear extends WearableListenerService {
 
@@ -37,9 +40,11 @@ public class ListenerServiceFromWear extends WearableListenerService {
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-              /*
+              */
+/*
          * Receive the message from wear
-         */
+         *//*
+
         if (messageEvent.getPath().equals(HELLO_WORLD_WEAR_PATH)) {
             BackgroundTask task = new BackgroundTask(this);
             task.execute();
@@ -128,7 +133,7 @@ public class ListenerServiceFromWear extends WearableListenerService {
         Log.d(TAG, userID);
         String heartData = (prefs.getString("HeartRate", null));
         userHeartRate = Integer.parseInt(heartData);
-        Log.d(TAG, heartData);
+        Log.d("TAG from shared prefer", heartData);
     }
 
     //sets flag
@@ -182,3 +187,4 @@ public class ListenerServiceFromWear extends WearableListenerService {
 }
 
 
+*/
