@@ -33,7 +33,7 @@ import com.google.android.gms.wearable.Wearable;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-//This is a comment
+
 
 public class MainActivity extends WearableActivity implements SensorEventListener, DataApi.DataListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -53,7 +53,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     Node mNode; // the connected device to send the message to
     private static final String HELLO_WORLD_WEAR_PATH = "/hello-world-wear";
     private boolean mResolvingError=false;
-
+    private boolean timeLeft = false;
 
 
     @Override
@@ -285,9 +285,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 //                //let's reset the task (otherwise it will be executed only once)
 //                //mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
 //            }
-
-
-
 
         }
 
