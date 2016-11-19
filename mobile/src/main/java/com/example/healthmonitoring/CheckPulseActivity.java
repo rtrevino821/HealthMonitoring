@@ -176,9 +176,10 @@ public class CheckPulseActivity extends AppCompatActivity
             String content = intent.getStringExtra("content");
             tvHeartRate.setText(content);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            Log.d("shared TAG",content);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("HeartRate",content);
-            editor.apply();
+            editor.commit();
         }
     };
 
