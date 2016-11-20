@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +28,15 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.Wearable;
 import com.skyfishjy.library.RippleBackground;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+
 import static com.example.healthmonitoring.MyService.ACTION_TEXT_CHANGED;
+import static com.example.healthmonitoring.R.id.tv_Heart_Rate;
+import static java.lang.Integer.parseInt;
 
 public class CheckPulseActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, DataApi.DataListener {
@@ -40,6 +51,13 @@ public class CheckPulseActivity extends AppCompatActivity
     //private RippleBackground rippleBackground;
     int count = 0;
 
+    private String userID;
+    private String userHeartRate="00";
+    private int binary;
+    private java.sql.Timestamp timeStamp;
+    private BackgroundTask task;
+    private Context context;
+
 
     RippleBackground rippleBackground = null;
 
@@ -48,9 +66,10 @@ public class CheckPulseActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setTitle(R.string.check_my_pulse);
         setContentView(R.layout.activity_check_pulse);
+        context=this;
 
         //initialize text views
-        tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
+        tvHeartRate = (TextView) findViewById(tv_Heart_Rate);
         stopHR = (Button) findViewById(R.id.btn_check_my_pulse_stop);
         getHR = (Button) findViewById(R.id.btn_check_my_pulse);
         bpm = (TextView) findViewById(R.id.tv_bpm);
@@ -70,7 +89,7 @@ public class CheckPulseActivity extends AppCompatActivity
         final AnimatorSet mAnimationSet = new AnimatorSet();
         mAnimationSet.play(fadeIn).after(fadeOut);
 
-        tvHeartRate = (TextView) findViewById(R.id.tv_Heart_Rate);
+        tvHeartRate = (TextView) findViewById(tv_Heart_Rate);
 //        stopHR = (Button) findViewById(R.patientIdValue.btn_check_my_pulse_stop);
 //        stopHR.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -104,24 +123,35 @@ public class CheckPulseActivity extends AppCompatActivity
 
         getPatientId();
 
+        new CountDownTimer(14000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                Log.d(TAG,"seconds remaining: " + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                // mTextField.setText("Done");
+                Log.d("tag HR", String.valueOf(tvHeartRate.getText()));
+                userHeartRate= (String)tvHeartRate.getText();
+                task=  new BackgroundTask(context);
+                task.execute();
+            }
+
+        }.start();
+
+
+
 
     }
 
-    private void getPatientId(){
+    public String getPatientId() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String name = preferences.getString("ID", "");
-        if(!name.equalsIgnoreCase(""))
-        {
-            bpm.setText(name);
+        if (!name.equalsIgnoreCase("")) {
+            return name;
+        } else {
+            return null;
         }
-
-        SharedPreferences prefs = getSharedPreferences("patientIdReference", MODE_PRIVATE);
-        String restoredText = prefs.getString("patientID", null);
-        if (restoredText != null) {
-            patientIdValue = prefs.getString("patientID", "0");//"No name defined" is the default value.
-            bpm.setText(patientIdValue);
-        }
-
     }
 
 
@@ -155,8 +185,6 @@ public class CheckPulseActivity extends AppCompatActivity
         mTeleportClient.connect();
         //}
     }
-
-
 
     /**
      *  Receives heartrate my MyService
@@ -209,6 +237,132 @@ public class CheckPulseActivity extends AppCompatActivity
     }
 
 
+    //Async task makes connection
+    class BackgroundTask extends AsyncTask<String, Void, Boolean> {
+
+        private Context context;
+
+        public BackgroundTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            //get values for vars to insert
+            getTimeStamp();
+           // getSharedPreference(context);
+            userID=getPatientId();
+
+            checkThreshold();
+            if (binary==1) {
+                sendSMS("2396826170","Patient " + getPatientId() +" heart rate is " + userHeartRate + "Bpm " );
+            }
+
+            try {
+                Connection conn = SQLConnection.doInBackground();
+                String SQL = "INSERT INTO healthApp.HeartRateData" +
+                        "(`Id`,`HeartRate`,`TimeStamp`,`Flag`)" +
+                        "VALUES (?, ?, ?, ?);";
+                Log.d("tag userId", userID);
+                PreparedStatement prepare = conn.prepareStatement(SQL);
+                prepare.setString(1, userID);
+                prepare.setString(2, userHeartRate);
+                prepare.setString(3, timeStamp.toString());
+                prepare.setInt(4, binary);
+
+                prepare.executeUpdate();
+                return true;
+
+
+            } catch (SQLException e) {
+                Log.d(TAG, e.getMessage());
+            }
+
+            Log.d(TAG, "asynctask ouside false");
+            return true;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                Log.d(TAG, "Good Job");
+                //retrieveMessage("button");
+            } else
+                Log.d(TAG, "Good Effort");
+        }
+
+    }
+
+    private void getTimeStamp() {
+        java.util.Date utilDate = new java.util.Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(utilDate);
+        cal.set(Calendar.MILLISECOND, 0);
+        timeStamp = new java.sql.Timestamp(utilDate.getTime());
+        Log.d(TAG, timeStamp.toString());
+    }
+
+
+
+
+    //gets ID and HeartRate
+    /*private void getSharedPreference(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        userID = prefs.getString("ID", null);
+        Log.d(TAG, userID);
+        String heartData = (prefs.getString("HeartRate", null));
+        userHeartRate = Integer.parseInt(heartData);
+        Log.d("TAG from shared prefer", heartData);
+    }*/
+
+    //sets flag
+    private int checkThreshold() {
+
+        int HRLimit = 0;
+        String id = getPatientId();
+        Log.d("this patients ID is", id);
+        binary = 0;
+        try {
+            Connection conn = SQLConnection.doInBackground();
+            String SQL = "SELECT HR_Limits FROM healthApp.Patient WHERE Id = ?";
+
+            PreparedStatement prepare = conn.prepareStatement(SQL);
+            prepare.setString(1, id);
+            ResultSet rs = prepare.executeQuery();
+
+            while (rs.next()) {
+                HRLimit = rs.getInt("HR_Limits");
+                Log.d("heartRate", String.valueOf(HRLimit));
+            }
+
+            if (HRLimit < parseInt(userHeartRate)) {
+
+                binary = 1;
+
+            } else {
+                binary = 0;
+            }
+
+
+        } catch (SQLException e) {
+            Log.d(TAG, e.getMessage());
+        }
+        return binary;
+    }
+
+    /*private void retrieveMessage(String message) {
+        Intent intent = new Intent();
+        intent.setAction(AFTER_INSERT);
+        intent.putExtra("visible", message);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }*/
+
+    private void sendSMS(String phoneNumber, String message) {
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(phoneNumber, null, message, null, null);
+    }
 
 
 

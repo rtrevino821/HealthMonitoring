@@ -107,6 +107,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         startMeasure();
         //exampleFunction();
 
+        Log.d("tag on create", "how many runs");
+
 
     }
 
