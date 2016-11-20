@@ -2,19 +2,79 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_main"
+    android:id="@+id/content_main_doctor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f1f1f1"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.healthmonitoring.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:context="com.example.healthmonitoring.MainActivityDoctor"
+    tools:showIn="@layout/app_bar_main_doctor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/btn_my_patients"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/view_profile_bg" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right|center_vertical"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="@string/my_patients"
+                android:textColor="#ffffff"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="35sp"
+                android:shadowColor="#88000000"
+                android:shadowDx="0"
+                android:shadowDy="10"
+                android:shadowRadius="10" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+
+            <ImageView
+                android:id="@+id/btn_view_alerts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/heart_history_bg"
+                android:adjustViewBounds="false" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="@string/view_alerts"
+                android:textColor="#ffffff"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="35sp"
+                android:shadowColor="#88000000"
+                android:shadowDx="0"
+                android:shadowDy="10"
+                android:shadowRadius="10"/>
+        </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -38,107 +98,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="right|center_vertical"
-                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_vertical_margin"
                 android:text="@string/check_my_pulse"
                 android:textColor="#ffffff"
                 android:fontFamily="sans-serif-condensed"
-                android:textSize="25sp"
+                android:textSize="35sp"
                 android:shadowColor="#88000000"
                 android:shadowDx="0"
                 android:shadowDy="10"
                 android:shadowRadius="10"/>
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
 
-
-            <ImageView
-                android:id="@+id/btn_view_alerts"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:foreground="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/heart_history_bg" />
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:text="@string/hr_history"
-                android:textColor="#ffffff"
-                android:fontFamily="sans-serif-condensed"
-                android:textSize="25sp"
-                android:shadowColor="#88000000"
-                android:shadowDx="0"
-                android:shadowDy="10"
-                android:shadowRadius="10"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:id="@+id/btn_my_patients"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:foreground="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/view_profile_bg" />
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="right|center_vertical"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:text="@string/view_profile"
-                android:textColor="#ffffff"
-                android:fontFamily="sans-serif-condensed"
-                android:textSize="25sp"
-                android:shadowColor="#88000000"
-                android:shadowDx="0"
-                android:shadowDy="10"
-                android:shadowRadius="10"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <ImageView
-                android:id="@+id/btn_contact_doctor"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:foreground="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/contact_doctor_bg" />
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:text="@string/contact_doctor"
-                android:shadowColor="#88000000"
-                android:shadowDx="0"
-                android:shadowDy="10"
-                android:shadowRadius="10"
-                android:textColor="#ffffff"
-                android:fontFamily="sans-serif-condensed"
-                android:textSize="25sp" />
-        </RelativeLayout>
 
     </LinearLayout>
 

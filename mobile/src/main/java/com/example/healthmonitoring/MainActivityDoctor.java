@@ -1,57 +1,51 @@
 package com.example.healthmonitoring;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-
-public class MainActivity extends AppCompatActivity
+public class MainActivityDoctor extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ImageView btnHRHistory;
-    private ImageView btnViewProfile;
+    private ImageView btnMyPatients;
+    private ImageView btnViewAlerts;
     private ImageView btnCheckMyPulse;
-    private ImageView btnContactDoctor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_doctor);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
 
         toolbar.setTitle("Home");
 
-        btnHRHistory = (ImageView) findViewById(R.id.btn_view_alerts);
-        btnViewProfile = (ImageView) findViewById(R.id.btn_my_patients);
+        btnMyPatients = (ImageView) findViewById(R.id.btn_my_patients);
+        btnViewAlerts = (ImageView) findViewById(R.id.btn_view_alerts);
         btnCheckMyPulse = (ImageView) findViewById(R.id.btn_check_my_pulse);
-        btnContactDoctor = (ImageView) findViewById(R.id.btn_contact_doctor);
 
-        btnHRHistory.setOnClickListener(new View.OnClickListener() {
+        btnViewAlerts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent heartRateHistoryIntent = new Intent(MainActivity.this, HeartHistoryActivity.class);
-                startActivity(heartRateHistoryIntent);
+                Intent viewAlertsIntent = new Intent(MainActivityDoctor.this, ViewAlertsActivityDoctor.class);
+                startActivity(viewAlertsIntent);
             }
         });
 
-        btnViewProfile.setOnClickListener(new View.OnClickListener() {
+        btnMyPatients.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent viewProfileIntent = new Intent(MainActivity.this, ViewProfileActivity.class);
-                startActivity(viewProfileIntent);
+                Intent myPatientsIntent = new Intent(MainActivityDoctor.this, PatientListActivity.class);
+                startActivity(myPatientsIntent);
 
             }
         });
@@ -59,20 +53,12 @@ public class MainActivity extends AppCompatActivity
         btnCheckMyPulse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent checkPulseIntent = new Intent(MainActivity.this, CheckPulseActivity.class);
+                Intent checkPulseIntent = new Intent(MainActivityDoctor.this, CheckPulseActivity.class);
                 startActivity(checkPulseIntent);
             }
         });
 
-        btnContactDoctor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent contactIntent = new Intent(MainActivity.this, ContactActivity.class);
-                startActivity(contactIntent);
-            }
-        });
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.patientIdValue.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,58 +75,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-       // insertDatabase(); // testing database connection
-
-        //SharePreference
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String restoredText = prefs.getString("ID", null);
-        Log.d("neoGotId", restoredText);
-
     }
 
-
-
-
-
- /*   public void insertDatabase() {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                insert();
-            }
-        }).start();
-    }
-    protected void insert()  {
-        String sql = "INSERT INTO Login (UserName, Password)" +
-                " VALUES ('hello', '567')";
-
-        String userName = "root";
-        String password = "Ateamhealth";
-
-        try {
-
-            Class.forName("com.mysql.jdbc.Driver");  //healthApp?zeroDateTimeBehavior=convertToNull
-
-            String url = "jdbc:mysql://104.196.134.4/healthApp?account=root&password=Ateamhealth";
-            Connection c = DriverManager.getConnection(url, userName, password);
-            PreparedStatement st = c.prepareStatement(sql);
-
-
-            st.execute();
-            st.close();
-            c.close();
-
-        } catch (ClassNotFoundException e)  {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-*/
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -200,3 +136,4 @@ public class MainActivity extends AppCompatActivity
 
 
 }
+
