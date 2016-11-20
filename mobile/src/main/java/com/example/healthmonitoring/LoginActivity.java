@@ -74,7 +74,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     String patientIdReference;
     int patientIdValue;
     private Connection conn;
-    final  String sqlUser = "SELECT ID,Username,Password,Admin FROM healthApp.Logins WHERE Username = ? and `Password` = ?;";
+    //final  String sqlUser = "SELECT ID,Username,Password,Admin FROM healthApp.Logins WHERE Username = ? and `Password` = ?;";
+    final  String sqlUser = "SELECT Logins.Id,Username, Password, Admin, Emer_Contact " +
+                        "from healthApp.Logins join healthApp.Patient on Logins.Id = Patient.Id " +
+                        "where Username = ? and Password = ?;";
     String TAG = "/LoginActivity";
     String ID;
     private String username = "";
@@ -416,6 +419,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 prepare.setString(1, username);
                 prepare.setString(2, password);
+                Log.d("SQL", sqlUser);
                 Log.d(TAG, username);
                 Log.d(TAG, password);
                 ResultSet rs = prepare.executeQuery();
@@ -430,9 +434,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     Log.d(TAG, rs.getString("Username"));
                     Log.d(TAG, rs.getString("Password"));
                     Log.d(TAG, "Admin: " + rs.getString("Admin"));
+                    Log.d(TAG, "EmerContact: " + rs.getString("Emer_Contact"));
                     //editor.putString("name", rs.getString("Username")); Unnecessary write to pref
                     editor.putString("ID", String.valueOf(rs.getInt("ID")));
                     editor.putString("Admin", String.valueOf(rs.getString("Admin")));
+                    editor.putString("EmergencyContact", String.valueOf(rs.getString("Emer_Contact")));
                     editor.commit();
 
                     //Login Successful

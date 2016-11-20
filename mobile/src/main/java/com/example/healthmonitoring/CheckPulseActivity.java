@@ -141,6 +141,7 @@ public class CheckPulseActivity extends AppCompatActivity
                 // mTextField.setText("Done");
                 Log.d("tag HR", String.valueOf(tvHeartRate.getText()));
                 //userHeartRate = (String) tvHeartRate.getText();
+                rippleBackground.stopRippleAnimation();
                 task = new BackgroundTask(context);
                 task.execute();
                 userHeartRate = (String) tvHeartRate.getText();
@@ -154,6 +155,16 @@ public class CheckPulseActivity extends AppCompatActivity
         String name = preferences.getString("ID", "");
         if (!name.equalsIgnoreCase("")) {
             return name;
+        } else {
+            return null;
+        }
+    }
+
+    public String getPatientEmergencyContact() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String emergencyContact = preferences.getString("EmergencyContact", "");
+        if (!emergencyContact.equalsIgnoreCase("")) {
+            return emergencyContact;
         } else {
             return null;
         }
