@@ -106,7 +106,9 @@ public class CheckPulseActivity extends AppCompatActivity
                 getHR.setVisibility(View.GONE);
 //                stopHR.setVisibility(View.VISIBLE);
                 rippleBackground.startRippleAnimation();
-                startMeasure();
+           //     startMeasure();
+                initTimer();
+
             }
         });
 
@@ -122,25 +124,28 @@ public class CheckPulseActivity extends AppCompatActivity
         //mTeleportClient.setOnSyncDataItemTask(new ShowToastOnSyncDataItemTask());
 
         getPatientId();
+    }
 
-        new CountDownTimer(14000, 1000) {
+    private void initTimer() {
+        startMeasure();
+
+        new CountDownTimer(17000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                Log.d(TAG,"seconds remaining: " + millisUntilFinished / 1000);
+                Log.d(TAG, "seconds remaining: " + millisUntilFinished / 1000);
+                Log.d("final HR",(String)tvHeartRate.getText());
+
             }
 
             public void onFinish() {
                 // mTextField.setText("Done");
                 Log.d("tag HR", String.valueOf(tvHeartRate.getText()));
-                userHeartRate= (String)tvHeartRate.getText();
-                task=  new BackgroundTask(context);
+                //userHeartRate = (String) tvHeartRate.getText();
+                task = new BackgroundTask(context);
                 task.execute();
+                userHeartRate = (String) tvHeartRate.getText();
             }
-
         }.start();
-
-
-
 
     }
 
@@ -153,7 +158,6 @@ public class CheckPulseActivity extends AppCompatActivity
             return null;
         }
     }
-
 
 
     @Override
@@ -256,7 +260,7 @@ public class CheckPulseActivity extends AppCompatActivity
 
             checkThreshold();
             if (binary==1) {
-                sendSMS("2396826170","Patient " + getPatientId() +" heart rate is " + userHeartRate + "Bpm " );
+                sendSMS("2396826170","Patient " + getPatientId() +" heart rate is " + userHeartRate + " Bpm " );
             }
 
             try {
@@ -334,7 +338,7 @@ public class CheckPulseActivity extends AppCompatActivity
 
             while (rs.next()) {
                 HRLimit = rs.getInt("HR_Limits");
-                Log.d("heartRate", String.valueOf(HRLimit));
+                Log.d("heartRateLimit", String.valueOf(HRLimit));
             }
 
             if (HRLimit < parseInt(userHeartRate)) {
