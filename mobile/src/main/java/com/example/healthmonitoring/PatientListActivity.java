@@ -81,7 +81,7 @@ public class PatientListActivity extends AppCompatActivity {
                 ResultSet rs = prepare.executeQuery();
 
                 while (rs.next()) {
-                    patientDoctors.add(new PatientDoctor(rs.getString(3)+", "+rs.getString(2), rs.getString(4), rs.getString(7)));
+                    patientDoctors.add(new PatientDoctor(rs.getString(3)+", "+rs.getString(2), rs.getString(1), rs.getString(7)));
                 }
                 rs.close();
                 return true;

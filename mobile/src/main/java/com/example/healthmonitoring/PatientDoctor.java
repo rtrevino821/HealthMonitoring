@@ -6,12 +6,12 @@ package com.example.healthmonitoring;
 
 class PatientDoctor {
     String name;
-    String lastVisit;
+    String patientID;
     String threshold;
 
-    PatientDoctor(String name, String lastVisit, String threshold) {
+    PatientDoctor(String name, String patientID, String threshold) {
         this.name = name;
-        this.lastVisit = lastVisit;
+        this.patientID = patientID;
         this.threshold = threshold;
     }
 }
