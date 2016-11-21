@@ -272,6 +272,8 @@ public class CheckPulseActivity extends AppCompatActivity
             checkThreshold();
             if (binary==1) {
                 sendSMS("2396826170","Patient " + getPatientId() +" heart rate is " + userHeartRate + " Bpm " );
+                if(getPatientEmergencyContact() != null)
+                    sendSMS(getPatientEmergencyContact(),"Patient " + getPatientId() +" heart rate is " + userHeartRate + " Bpm " );
             }
 
             try {
@@ -375,6 +377,7 @@ public class CheckPulseActivity extends AppCompatActivity
     }*/
 
     private void sendSMS(String phoneNumber, String message) {
+        Log.d("Phone Number", phoneNumber);
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumber, null, message, null, null);
     }
