@@ -53,7 +53,7 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
     @Override
     public void onBindViewHolder(RecyclerAdapterDoctor.ViewHolder viewHolder, int position) {
         viewHolder.itemPatientName.setText(patientDoctors.get(position).name);
-        viewHolder.itemLastVisit.setText("Last Visit: " + patientDoctors.get(position).lastVisit);
+        viewHolder.itemLastVisit.setText("Date of Birth: " + patientDoctors.get(position).lastVisit);
         viewHolder.itemThreshold.setText(patientDoctors.get(position).threshold);
     }
 
