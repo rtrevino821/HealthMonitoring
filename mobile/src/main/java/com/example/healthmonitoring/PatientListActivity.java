@@ -73,7 +73,15 @@ public class PatientListActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... params) {
-            String sqlPatientQuery = "SELECT * FROM healthApp.Patient";
+
+      /*      "SELECT Logins.Id,Username, Password, Admin, Emer_Contact " +
+                    "from healthApp.Logins join healthApp.Patient on Logins.Id = Patient.Id " +
+                    "where Username = ? and Password = ?;";
+
+      */
+            String sqlPatientQuery = "SELECT * FROM healthApp.Patient join healthApp.Logins\n" +
+                    "on Logins.ID = Patient.id\n" +
+                    "Where Admin <> 'Y'";
             try {
                 Connection conn = SQLConnection.doInBackground();
                 PreparedStatement prepare = conn.prepareStatement(sqlPatientQuery);
