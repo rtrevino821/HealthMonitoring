@@ -8,19 +8,21 @@
     app:cardCornerRadius="12dp"
     android:elevation="4dp"
     android:clickable="true"
-    android:id="@+id/my_cardView">
+    android:id="@+id/my_cardView_alerts">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:background="@drawable/cardview_background1">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingLeft="5dp"
-            android:layout_weight="1"
+            android:layout_weight=".75"
             android:gravity="center_vertical|center_horizontal">
 
             <TextView
@@ -28,15 +30,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_Patient_Name"
-                android:textColor="@color/colorPrimary"
+                android:textColor="#fff"
                 android:textSize="22dp"
                 android:textAlignment="center" />
 
             <TextView
-                android:text="Last Visit: 8/29/2016"
+                android:text="Patient ID:"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_Last_Visit"
+                android:id="@+id/tv_Patient_Id"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:textAlignment="center" />
+
+            <TextView
+                android:text="Date: 8/29/2016"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_Date"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"
                 android:textAlignment="center" />
@@ -49,15 +60,16 @@
             android:layout_weight="1">
 
             <TextView
-                android:text="BPM Threshold"
+                android:text="Threshold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_Current_Threshold_Label"
                 android:layout_weight="1"
-                android:textColor="@color/colorAccent"
+                android:textColor="#fff"
                 android:textSize="16sp"
                 android:minHeight="58dp"
                 android:textAlignment="center"
+                android:layout_marginTop="20dp"
                 android:gravity="bottom|center_horizontal" />
 
             <TextView
@@ -66,7 +78,38 @@
                 android:layout_height="match_parent"
                 android:id="@+id/tv_Current_Threshold"
                 android:layout_weight="1"
-                android:textColor="@color/colorPrimary"
+                android:textColor="#fff"
+                android:textSize="43dp"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="Heart Rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_Heart_Rate_Label"
+                android:layout_weight="1"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:minHeight="58dp"
+                android:textAlignment="center"
+                android:layout_marginTop="20dp"
+                android:gravity="bottom|center_horizontal" />
+
+            <TextView
+                android:text="120"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/tv_Heart_Rate"
+                android:layout_weight="1"
+                android:textColor="@color/colorAccent"
                 android:textSize="43dp"
                 android:textAlignment="center" />
 

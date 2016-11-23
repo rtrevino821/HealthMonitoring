@@ -20,7 +20,7 @@ public class ViewAlertsActivityDoctor extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.Adapter adapter;
-    private List<PatientDoctor> patientDoctors;
+    private List<PatientAlert> patientAlert;
     private BackgroundTask task;
     private Context context;
 
@@ -42,7 +42,7 @@ public class ViewAlertsActivityDoctor extends AppCompatActivity {
     }
 
     private void intializeData() {
-        patientDoctors = new ArrayList<>();
+        patientAlert = new ArrayList<>();
         task = new BackgroundTask(context);
         task.execute();
 
@@ -59,7 +59,7 @@ public class ViewAlertsActivityDoctor extends AppCompatActivity {
     }
 
     private void intializeAdapter() {
-        adapter = new RecyclerAdapterDoctor(patientDoctors);
+        adapter = new RecyclerAdapterPatientAlertsDoctor(patientAlert);
         recyclerView.setAdapter(adapter);
     }
 
@@ -74,11 +74,6 @@ public class ViewAlertsActivityDoctor extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... params) {
 
-      /*      "SELECT Logins.Id,Username, Password, Admin, Emer_Contact " +
-                    "from healthApp.Logins join healthApp.Patient on Logins.Id = Patient.Id " +
-                    "where Username = ? and Password = ?;";
-
-      */
             String sqlPatientQuery = "SELECT *\n" +
                     "FROM HeartRateData join healthApp.Patient on HeartRateData.id = Patient.id\n" +
                     "WHERE TimeStamp >= curdate() -7\n" +
@@ -90,7 +85,7 @@ public class ViewAlertsActivityDoctor extends AppCompatActivity {
                 ResultSet rs = prepare.executeQuery();
 
                 while (rs.next()) {
-                    patientDoctors.add(new PatientDoctor(rs.getString(3)+", "+rs.getString(2), rs.getString(1), rs.getString(7)));
+                    patientAlert.add(new PatientAlert(rs.getString(7)+", "+rs.getString(6), rs.getString(1), rs.getString(11), rs.getString(2),rs.getString(3)));
                 }
                 rs.close();
                 return true;
