@@ -7,12 +7,15 @@
     android:layout_margin="5dp"
     app:cardCornerRadius="12dp"
     android:elevation="4dp"
+    android:clickable="true"
     android:id="@+id/my_cardView_alerts">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:background="@drawable/cardview_background1">
 
         <LinearLayout
             android:orientation="vertical"
@@ -27,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_Patient_Name"
-                android:textColor="@color/colorPrimary"
+                android:textColor="#fff"
                 android:textSize="22dp"
                 android:textAlignment="center" />
 
@@ -62,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_Current_Threshold_Label"
                 android:layout_weight="1"
-                android:textColor="@color/colorPrimary"
+                android:textColor="#fff"
                 android:textSize="16sp"
                 android:minHeight="58dp"
                 android:textAlignment="center"
@@ -75,7 +78,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/tv_Current_Threshold"
                 android:layout_weight="1"
-                android:textColor="@color/colorPrimary"
+                android:textColor="#fff"
                 android:textSize="43dp"
                 android:textAlignment="center" />
 
@@ -93,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_Heart_Rate_Label"
                 android:layout_weight="1"
-                android:textColor="@android:color/holo_red_dark"
+                android:textColor="@color/colorAccent"
                 android:textSize="16sp"
                 android:minHeight="58dp"
                 android:textAlignment="center"
@@ -106,7 +109,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/tv_Heart_Rate"
                 android:layout_weight="1"
-                android:textColor="@android:color/holo_red_dark"
+                android:textColor="@color/colorAccent"
                 android:textSize="43dp"
                 android:textAlignment="center" />
 
