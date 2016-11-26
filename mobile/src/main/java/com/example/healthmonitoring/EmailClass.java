@@ -1,13 +1,10 @@
 package com.example.healthmonitoring;
 
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 public class EmailClass extends Activity {
@@ -27,7 +24,7 @@ public class EmailClass extends Activity {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
         emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
+        emailIntent.setType("message/rfc822");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Your subject");

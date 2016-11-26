@@ -74,10 +74,10 @@ public class ViewAlertsActivityDoctor extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... params) {
 
-            String sqlPatientQuery = "SELECT *\n" +
-                    "FROM HeartRateData join healthApp.Patient on HeartRateData.id = Patient.id\n" +
-                    "WHERE TimeStamp >= curdate() -7\n" +
-                    "AND Flag=1";
+            String sqlPatientQuery = "SELECT * FROM healthApp.HeartRateData " +
+                    "inner join healthApp.Patient on HeartRateData.id = Patient.id " +
+                    "inner join healthApp.Logins on HeartRateData.id = Logins.Id " +
+                    "WHERE TimeStamp >= curdate() -7 AND Flag=1";
             try {
                 Connection conn = SQLConnection.doInBackground();
                 PreparedStatement prepare = conn.prepareStatement(sqlPatientQuery);
@@ -85,7 +85,8 @@ public class ViewAlertsActivityDoctor extends AppCompatActivity {
                 ResultSet rs = prepare.executeQuery();
 
                 while (rs.next()) {
-                    patientAlert.add(new PatientAlert(rs.getString(7)+", "+rs.getString(6), rs.getString(1), rs.getString(11), rs.getString(2),rs.getString(3)));
+                    //patientAlert.add(new PatientAlert(rs.getString(7)+", "+rs.getString(6), rs.getString(1), rs.getString(11), rs.getString(2),rs.getString(3)));
+                    patientAlert.add(new PatientAlert(rs.getString("L_Name")+", "+rs.getString("F_Name"), rs.getString("Username"), rs.getString("HR_Limits"), rs.getString("HeartRate"),rs.getString("TimeStamp")));
                 }
                 rs.close();
                 return true;

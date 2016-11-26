@@ -2,16 +2,12 @@ package com.example.healthmonitoring;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.telecom.Call;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.app.Activity;
 
 import java.util.List;
 
@@ -32,7 +28,7 @@ public class RecyclerAdapterPatientAlertsDoctor extends RecyclerView.Adapter<Rec
         public TextView itemDate;
         public TextView itemThreshold;
         public TextView itemHeartRate;
-        public TextView itemPatientId;
+        public TextView itemPatientEmail;
         public View container;
 
         public ViewHolder(View itemView) {
@@ -41,7 +37,7 @@ public class RecyclerAdapterPatientAlertsDoctor extends RecyclerView.Adapter<Rec
             itemPatientName = (TextView) itemView.findViewById(R.id.tv_Patient_Name);
             itemDate = (TextView) itemView.findViewById(R.id.tv_Date);
             itemThreshold = (TextView) itemView.findViewById(R.id.tv_Current_Threshold);
-            itemPatientId = (TextView) itemView.findViewById(R.id.tv_Patient_Id);
+            itemPatientEmail = (TextView) itemView.findViewById(R.id.tv_Patient_Id);
             itemHeartRate = (TextView) itemView.findViewById(R.id.tv_Heart_Rate);
 
 
@@ -73,7 +69,7 @@ public class RecyclerAdapterPatientAlertsDoctor extends RecyclerView.Adapter<Rec
     @Override
     public void onBindViewHolder(RecyclerAdapterPatientAlertsDoctor.ViewHolder viewHolder, final int position) {
         viewHolder.itemPatientName.setText(patientAlert.get(position).name);
-        viewHolder.itemPatientId.setText("Patient ID: " + patientAlert.get(position).patientID);
+        viewHolder.itemPatientEmail.setText(patientAlert.get(position).username);
         viewHolder.itemThreshold.setText(patientAlert.get(position).threshold);
         viewHolder.itemDate.setText(patientAlert.get(position).date);
         viewHolder.itemHeartRate.setText(patientAlert.get(position).heartRate);
