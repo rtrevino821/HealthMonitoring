@@ -33,7 +33,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".MyService"
@@ -44,7 +44,6 @@
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
         </service>
-
 
         <activity
             android:name=".CheckPulseActivity"
@@ -66,15 +65,17 @@
             android:name=".SignupActivity"
             android:theme="@style/AppTheme_Dark_Dialog" />
         <activity android:name=".LoginActivityNeo" />
-
-        <activity android:name=".MainActivityDoctor"
+        <activity
+            android:name=".MainActivityDoctor"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".PatientListActivity"
-            android:parentActivityName=".MainActivityDoctor"></activity>
-
-        <activity android:name=".ViewAlertsActivityDoctor"
-            android:parentActivityName=".MainActivityDoctor"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PatientListActivity"
+            android:parentActivityName=".MainActivityDoctor" />
+        <activity
+            android:name=".ViewAlertsActivityDoctor"
+            android:parentActivityName=".MainActivityDoctor" />
+        <activity android:name=".EmailClass"></activity>
     </application>
 
 </manifest>
