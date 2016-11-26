@@ -81,7 +81,7 @@ public class RecyclerAdapterPatientAlertsDoctor extends RecyclerView.Adapter<Rec
             public void onClick(View view) {
 
                         Intent i = new Intent (view.getContext(), EmailClass.class);
-                        i.putExtra("TitleKey",patientAlert.get(position).username);
+                        i.putExtra("patientEmail",patientAlert.get(position).username);
                        // i.putExtra("DescrKey",ProbDescr.getText().toString());
                         view.getContext().startActivity(i);
             }
