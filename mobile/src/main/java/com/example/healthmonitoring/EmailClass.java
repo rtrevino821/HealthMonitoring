@@ -13,8 +13,14 @@ public class EmailClass extends Activity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
                 sendEmail();
             }
+        }).start();
+    }
 
 
     protected void sendEmail() {

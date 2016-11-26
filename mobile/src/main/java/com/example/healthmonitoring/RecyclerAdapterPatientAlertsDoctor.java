@@ -79,10 +79,9 @@ public class RecyclerAdapterPatientAlertsDoctor extends RecyclerView.Adapter<Rec
         viewHolder.itemPatientName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             //   cardView.setOnClickListener(new View.OnClickListener() {
-                   // @Override public void onClick(View view) {
+
                         Intent i = new Intent (view.getContext(), EmailClass.class);
-                       // i.putExtra("TitleKey",ProbTitle.getText().toString());
+                        i.putExtra("TitleKey",patientAlert.get(position).username);
                        // i.putExtra("DescrKey",ProbDescr.getText().toString());
                         view.getContext().startActivity(i);
             }
@@ -101,31 +100,7 @@ public class RecyclerAdapterPatientAlertsDoctor extends RecyclerView.Adapter<Rec
         });
     }
 
-    /*protected void sendEmail() {
-        Log.i("Send email", "");
 
-        String[] TO = {"stevenjoy99@yahoo.com"};
-        String[] CC = {"sjjoyvolk3640@eagle.fgcu.edu"};
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
-
-
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-        emailIntent.putExtra(Intent.EXTRA_CC, CC);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Your subject");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message goes here");
-
-        try {
-            RecyclerAdapterPatientAlertsDoctor.context.startActivity(emailIntent);
-            //startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-            context.finish();
-            Log.d("Finished sending email", "");
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(context,
-                    "There is no email client.", Toast.LENGTH_SHORT).show();
-        }
-    }*/
 
 
     @Override
