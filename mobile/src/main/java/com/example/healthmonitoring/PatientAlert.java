@@ -6,14 +6,14 @@ package com.example.healthmonitoring;
 
 class PatientAlert {
     String name;
-    String patientID;
+    String username;
     String threshold;
     String heartRate;
     String date;
 
-    PatientAlert(String name, String patientID, String threshold, String heartRate, String date) {
+    PatientAlert(String name, String username, String threshold, String heartRate, String date) {
         this.name = name;
-        this.patientID = patientID;
+        this.username = username;
         this.threshold = threshold;
         this.heartRate = heartRate;
         this.date = date;
