@@ -6,8 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,16 +19,22 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     Context context;
+   /* private ArrayList<String> mData;
+
+    private AdapterView.OnItemClickListener mOnItemClickListener;*/
+
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-
+       // View container;
         public int currentItem;
         public TextView itemReading;
         public TextView itemDate;
         public TextView itemTime;
-
+        ;
         public ViewHolder(View itemView) {
             super(itemView);
+
+          //  container = itemView;
             itemReading = (TextView) itemView.findViewById(R.id.tv_History_Pulse);
             itemDate = (TextView) itemView.findViewById(R.id.tv_History_Date);
             itemTime = (TextView) itemView.findViewById(R.id.tv_History_Time);
@@ -51,7 +60,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecyclerAdapter.ViewHolder viewHolder,final int position) {
         Log.d("OnBind", heartData.get(position).timestamp);
         Log.d("OnBind", heartData.get(position).heartRate);
         Log.d("OnBind", heartData.get(position).date);
