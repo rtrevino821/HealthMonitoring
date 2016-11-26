@@ -17,14 +17,17 @@ public class EmailClass extends Activity {
 
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
-            final String detailValue = extras.getString("patientEmail");
-            if(detailValue != null) {
-                Toast.makeText(context, "User Email" + detailValue, Toast.LENGTH_SHORT).show();
+            final String patientEmail = extras.getString("patientEmail");
+            if(patientEmail != null) {
+                Toast.makeText(context, "User Email" + patientEmail, Toast.LENGTH_SHORT).show();
+                final String patientName = extras.getString("patientName");
+                final String date = extras.getString("date");
+                final String heartRate = extras.getString("patientHeartRate");
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
 
-                        sendEmail(detailValue);
+                        sendEmail(patientEmail, patientName, date, heartRate);
                     }
                 }).start();
             }
@@ -34,7 +37,7 @@ public class EmailClass extends Activity {
     }
 
 
-    protected void sendEmail(String email) {
+    protected void sendEmail(String email, String name, String date, String heartRate) {
         Log.i("Send email", "");
         String[] TO = {email};
         String[] CC = {"sjjoyvolk3640@eagle.fgcu.edu"};
@@ -44,8 +47,12 @@ public class EmailClass extends Activity {
         emailIntent.setType("message/rfc822");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Your subject");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message goes here");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Request For Heart Consultation");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hello " + name + "\n"
+                + "\tDue to a recent pulse reading of " + heartRate + " bpm on " + date
+        + ", your Cardiologist would like to request for you to come in for a consultation "
+        + "regarding this matter. You can request an appointment on our mobile app under the "
+        + "contact us option.\n\nRegards.");
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
