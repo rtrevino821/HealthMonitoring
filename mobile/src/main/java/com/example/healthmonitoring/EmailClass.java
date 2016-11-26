@@ -1,6 +1,7 @@
 package com.example.healthmonitoring;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,20 +13,30 @@ public class EmailClass extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
+        Context context = this;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+            final String detailValue = extras.getString("patientEmail");
+            if(detailValue != null) {
+                Toast.makeText(context, "User Email" + detailValue, Toast.LENGTH_SHORT).show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                sendEmail();
+                        sendEmail(detailValue);
+                    }
+                }).start();
             }
-        }).start();
+        }
+
+
     }
 
 
-    protected void sendEmail() {
+    protected void sendEmail(String email) {
         Log.i("Send email", "");
-        String[] TO = {"Stevenjoy99@yahoo.com"};
+        String[] TO = {email};
         String[] CC = {"sjjoyvolk3640@eagle.fgcu.edu"};
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
