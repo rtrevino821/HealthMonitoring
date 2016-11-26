@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -209,6 +210,9 @@ public class SignupActivity extends AppCompatActivity {
         final String UserCity = _city.getText().toString();
         final String UserState = _state.getText().toString();
         String password = _passwordText.getText().toString();
+        final String Phone = _phone.getText().toString();
+        final String EmerPhone = _emergencyPhone.getText().toString();
+
 
         /** login validations necessary characters needed*/
         if (name.isEmpty() || name.length() < 3) {             // only first name
@@ -231,6 +235,20 @@ public class SignupActivity extends AppCompatActivity {
             valid = false;
         } else {
             _emailText.setError(null);
+        }
+
+        if (Phone.length() < 10) {
+            _phone.setError("Enter a valid phone number including area code");
+            valid = false;
+        }else {
+            _phone.setError(null);
+        }
+
+        if (EmerPhone.length() < 10) {
+            _emergencyPhone.setError("Enter a valid phone number including area code");
+            valid = false;
+        }else {
+            _emergencyPhone.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
