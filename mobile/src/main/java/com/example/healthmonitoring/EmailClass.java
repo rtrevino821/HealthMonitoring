@@ -32,8 +32,6 @@ public class EmailClass extends Activity {
                 }).start();
             }
         }
-
-
     }
 
 

@@ -2,6 +2,7 @@ package com.example.healthmonitoring;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -37,7 +38,8 @@ public class SignupActivity extends AppCompatActivity {
     @InjectView(R.id.input_Address) EditText _address;
     @InjectView(R.id.input_city) EditText _city;
     @InjectView(R.id.input_state) EditText _state;
-
+    @InjectView(R.id.input_Phone) EditText _phone;
+    @InjectView(R.id.input_Emergency) EditText _emergencyPhone;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,8 +52,9 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 signup();
-                insertDatabase();
-
+                if (validate()==true) {
+                    insertDatabase();
+                }
 
             }
         });
@@ -79,15 +82,15 @@ public class SignupActivity extends AppCompatActivity {
         final String UserCity = _city.getText().toString();
         final String UserState = _state.getText().toString();
         final String Userpassword = _passwordText.getText().toString();
-
-
+        final String PhoneNum = _phone.getText().toString();
+        final String EmergencyPhone = _emergencyPhone.getText().toString();
 
 
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                insert(Fname,L_name,UserAge,UserGender,UserAddress,UserCity,UserState,UserState);
+                insert(Fname,L_name,UserAge,UserGender,UserAddress,UserCity,UserState, PhoneNum,EmergencyPhone);
                 insertLogin(UserEmail,Userpassword, Fname);
 
             }
@@ -96,9 +99,9 @@ public class SignupActivity extends AppCompatActivity {
 
     protected void insert(String... params) {
 
-        String sql = "INSERT INTO Patient (F_Name, L_Name, Age, Gender, Address, City, State)" +
+        String sql = "INSERT INTO Patient (F_Name, L_Name, Age, Gender, Address, City, State, Phone, Emer_Contact)" +
                 " VALUES ('"+ params[0] +"' , '"+ params[1] +"', '"+ params[2] +"', '"+ params[3] +"', '"+ params[4] +
-                "', '"+ params[5] +"', '"+ params[6] +"');";
+                "', '"+ params[5] +"', '"+ params[6] +"', '"+params[7]+"','"+params[8]+"');";
 
 
         String dbuserName = "root";
@@ -166,8 +169,6 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.setIndeterminate(true);       /** loading bar */
         progressDialog.setMessage("Creating Account...");  /** display when account created */
         progressDialog.show();
-
-
 
 
         new android.os.Handler().postDelayed(
@@ -246,7 +247,8 @@ public class SignupActivity extends AppCompatActivity {
             _age.setError(null);
         }
 
-        if (UserGender.isEmpty() || !UserGender.equals("M") || !UserGender.equals("F")) {             // only first name
+        //if (UserGender.isEmpty() || !UserGender.equals("M") || !UserGender.equals("F")) {             // only first name
+        if (UserGender.isEmpty()){
             _gender.setError("Enter a valid gender");
             valid = false;
         } else {
