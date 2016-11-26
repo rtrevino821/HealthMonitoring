@@ -82,7 +82,9 @@ public class RecyclerAdapterPatientAlertsDoctor extends RecyclerView.Adapter<Rec
 
                         Intent i = new Intent (view.getContext(), EmailClass.class);
                         i.putExtra("patientEmail",patientAlert.get(position).username);
-                       // i.putExtra("DescrKey",ProbDescr.getText().toString());
+                        i.putExtra("patientName",patientAlert.get(position).name);
+                        i.putExtra("patientHeartRate",patientAlert.get(position).heartRate);
+                        i.putExtra("date", patientAlert.get(position).date);
                         view.getContext().startActivity(i);
             }
                  //   Toast.makeText(view.getContext(), "Recycle Click" + position, Toast.LENGTH_SHORT).show();
