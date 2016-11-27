@@ -85,6 +85,7 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
                             i.putExtra("patientThreshold", m_Text[0]);
                             i.putExtra("patientId", patientDoctors.get(position).patientID);
                             view.getContext().startActivity(i);
+
                         }
                     });
                     builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -113,6 +114,5 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
     public int getItemCount() {
         return patientDoctors.size();
     }
-
 
 }
