@@ -1,10 +1,15 @@
 package com.example.healthmonitoring;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.List;
@@ -51,10 +56,24 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
     }
 
     @Override
-    public void onBindViewHolder(RecyclerAdapterDoctor.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final RecyclerAdapterDoctor.ViewHolder viewHolder, final int position) {
         viewHolder.itemPatientName.setText(patientDoctors.get(position).name);
         viewHolder.itemLastVisit.setText("Patient ID: " + patientDoctors.get(position).patientID);
         viewHolder.itemThreshold.setText(patientDoctors.get(position).threshold);
+
+        viewHolder.itemThreshold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i = new Intent(view.getContext(), ChangeThreshold.class);
+               // i.putExtra("patientThreshold", patientDoctors.get(position).threshold);
+
+                view.getContext().startActivity(i);
+            }
+            //   Toast.makeText(view.getContext(), "Recycle Click" + position, Toast.LENGTH_SHORT).show();
+
+        });
+
     }
 
     @Override

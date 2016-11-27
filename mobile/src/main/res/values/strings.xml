@@ -42,4 +42,5 @@
     <string-array name="android_wear_capabilities">
         <item>@string/CAPABILITY_MOBILE</item>
     </string-array>
+    <string name="title_activity_change_threshold">ChangeThreshold</string>
 </resources>
