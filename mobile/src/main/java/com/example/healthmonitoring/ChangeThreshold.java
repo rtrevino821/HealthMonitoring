@@ -1,56 +1,55 @@
 package com.example.healthmonitoring;
 
-import android.content.DialogInterface;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
+import android.widget.Toast;
 
-import static com.example.healthmonitoring.RecyclerAdapterPatientAlertsDoctor.context;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 /**
  * Created by steven j on 11/26/2016.
  */
-public class ChangeThreshold extends AppCompatActivity {
+public class ChangeThreshold extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        alert();
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+
+                final String patientId = extras.getString("patientId");
+                final String threshold = extras.getString("patientThreshold");
+            Toast.makeText(this, "Update Threshold to " + threshold + " for patient " + patientId, Toast.LENGTH_SHORT).show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        upDateThreshold(patientId, threshold);
+                    }
+                }).start();
+        }
+
+        finish();
 
     }
 
+    public void upDateThreshold(String patientId, String threshold) {
 
-    public void alert() {
-        final String[] m_Text = {""};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Please enter new Threshold");
+        String sql = "update healthApp.Patient set HR_Limits = " + threshold + " where Id = " + patientId;
+        try {
+            Connection conn = SQLConnection.doInBackground();
+            PreparedStatement prepare = conn.prepareStatement(sql);
 
+            prepare.execute();
+            prepare.close();
 
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                m_Text[0] = input.getText().toString();
-                Log.d("TAG", m_Text[0]);
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
+        } catch (SQLException e) {
+            Log.d("SQL Error", e.getMessage());
+        }
 
     }
+
 }
