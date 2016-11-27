@@ -271,7 +271,7 @@ public class CheckPulseActivity extends AppCompatActivity
 
             checkThreshold();
             if (binary==1) {
-                sendSMS("2396826170","Patient " + getPatientId() +" heart rate is " + userHeartRate + " Bpm " );
+                //sendSMS("2396826170","Patient " + getPatientId() +" heart rate is " + userHeartRate + " Bpm " );
                 if(getPatientEmergencyContact() != null)
                     sendSMS(getPatientEmergencyContact(),"Patient " + getPatientId() +" heart rate is " + userHeartRate + " Bpm " );
             }

@@ -2,10 +2,8 @@ package com.example.healthmonitoring;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -267,14 +265,16 @@ public class SignupActivity extends AppCompatActivity {
 
         //if (UserGender.isEmpty() || !UserGender.equals("M") || !UserGender.equals("F")) {             // only first name
         if (UserGender.isEmpty()){
-            _gender.setError("Enter a valid gender");
-            valid = false;
-        } else {
-            _gender.setError(null);
+            if(UserGender.equals("M") || UserGender.equals("F")){
+                _gender.setError(null);
+            }else {
+                _gender.setError("Enter a valid gender: M or F");
+                valid = false;
+            }
         }
 
         if (UserAddress.isEmpty()) {
-            _address.setError("PLease enter Address");
+            _address.setError("Please enter Address");
             valid = false;
         } else {
             _address.setError(null);
