@@ -75,7 +75,11 @@
         <activity
             android:name=".ViewAlertsActivityDoctor"
             android:parentActivityName=".MainActivityDoctor" />
-        <activity android:name=".EmailClass"></activity>
+        <activity android:name=".EmailClass" />
+        <activity
+            android:name=".ChangeThreshold"
+            android:label="@string/title_activity_change_threshold"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
