@@ -20,7 +20,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/SplashScreenTheme">
+            android:theme="@style/SplashScreenTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,11 +30,13 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".MyService"
@@ -48,32 +51,40 @@
         <activity
             android:name=".CheckPulseActivity"
             android:label="@string/title_activity_checkPulse"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".HeartHistoryActivity"
             android:label="@string/title_activity_heartHistory"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ViewProfileActivity"
             android:label="@string/title_activity_profile"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ContactActivity"
             android:label="@string/title_activity_contactDoctor"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".SignupActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme_Dark_Dialog" />
         <activity android:name=".LoginActivityNeo" />
         <activity
             android:name=".MainActivityDoctor"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PatientListActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivityDoctor" />
         <activity
             android:name=".ViewAlertsActivityDoctor"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivityDoctor" />
         <activity android:name=".EmailClass" />
         <activity
