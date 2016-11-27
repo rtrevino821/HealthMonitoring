@@ -39,6 +39,7 @@ public class SignupActivity extends AppCompatActivity {
     @InjectView(R.id.input_state) EditText _state;
     @InjectView(R.id.input_Phone) EditText _phone;
     @InjectView(R.id.input_Emergency) EditText _emergencyPhone;
+    public String patientId ="";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,7 +103,6 @@ public class SignupActivity extends AppCompatActivity {
                 " VALUES ('"+ params[0] +"' , '"+ params[1] +"', '"+ params[2] +"', '"+ params[3] +"', '"+ params[4] +
                 "', '"+ params[5] +"', '"+ params[6] +"', '"+params[7]+"','"+params[8]+"');";
 
-
         String dbuserName = "root";
         String dbpassword = "Ateamhealth";
 
@@ -126,8 +126,15 @@ public class SignupActivity extends AppCompatActivity {
 
     protected void insertLogin(String... params) {
 
-          String sql = "INSERT INTO healthApp.Logins (Id, Username, Password)" +
-                  "  Select patientIdValue, '"+ params[0] +"','"+ params[1] +"' From healthApp.Patient where F_Name='"+ params[2] +"'";
+         // String sql = "INSERT INTO healthApp.Logins (Id, Username, Password)" +
+         //         "  Select patientIdValue, '"+ params[0] +"','"+ params[1] +"' From healthApp.Patient where F_Name='"+ params[2] +"'";
+
+        //        String sql = "update healthApp.Patient set HR_Limits = " + threshold + " where Id = " + patientId;
+
+
+        String sql = "INSERT INTO healthApp.Logins (Id, Username, Password)" +
+                "  Select Id, '"+ params[0] +"','"+ params[1] +"' From healthApp.Patient where F_Name='"+ params[2] +"'";
+
 
 
         String dbuserName = "root";
