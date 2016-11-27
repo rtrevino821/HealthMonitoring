@@ -25,6 +25,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     TextView lastName;
     TextView dateOfBirth;
     TextView gender;
+    TextView phone;
     TextView emergencyContact;
     TextView hrLimit;
     TextView address;
@@ -64,6 +65,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         lastName = (TextView) findViewById(R.id.tvLastName);
         dateOfBirth = (TextView) findViewById(R.id.tvDateOfBirth);
         gender = (TextView) findViewById(R.id.tvGender);
+        phone = (TextView) findViewById(R.id.tvPhone);
         emergencyContact = (TextView) findViewById(R.id.tvEmergencyContact);
         hrLimit = (TextView) findViewById(R.id.tvHeartRateThreshold);
         address = (TextView) findViewById(R.id.tvAddress);
@@ -102,13 +104,14 @@ public class ViewProfileActivity extends AppCompatActivity {
                 ResultSet rs = prepare.executeQuery();
 
                 while (rs.next()) {
-                    textData.add(rs.getString(2)); //First Name
-                    textData.add(rs.getString(3)); //Last Name
-                    textData.add(rs.getString(4)); //Age
-                    textData.add(rs.getString(5)); //Gender
-                    textData.add(rs.getString(6)); //Emer Contact
-                    textData.add(rs.getString(7)); //HR_Limits
-                    textData.add(rs.getString(8) + " " + rs.getString(9) + ", " + rs.getString(10)); //Address
+                    textData.add(rs.getString("F_Name")); //First Name
+                    textData.add(rs.getString("L_Name")); //Last Name
+                    textData.add(rs.getString("Age")); //Age
+                    textData.add(rs.getString("Gender")); //Gender
+                    textData.add(rs.getString("Phone")); //Phone
+                    textData.add(rs.getString("Emer_Contact")); //Emer Contact
+                    textData.add(rs.getString("HR_Limits")); //HR_Limits
+                    textData.add(rs.getString("Address") + " " + rs.getString("City") + ", " + rs.getString("State")); //Address
                 }
                 rs.close();
                 return true;
@@ -141,9 +144,10 @@ public class ViewProfileActivity extends AppCompatActivity {
         lastName.setText(textData.get(1));
         dateOfBirth.setText(textData.get(2));
         gender.setText(textData.get(3));
-        emergencyContact.setText(textData.get(4));
-        hrLimit.setText(textData.get(5));
-        address.setText(textData.get(6));
+        phone.setText(textData.get(4));
+        emergencyContact.setText(textData.get(5));
+        hrLimit.setText(textData.get(6));
+        address.setText(textData.get(7));
     }
 
 }
