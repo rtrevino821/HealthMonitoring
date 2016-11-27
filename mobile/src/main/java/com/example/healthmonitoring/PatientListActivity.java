@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,12 +32,37 @@ public class PatientListActivity extends AppCompatActivity {
 
         context = this;
 
+        Toast.makeText(context, "OnCreate", Toast.LENGTH_SHORT).show();
+
+
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
+        intializeData();
+        intializeAdapter();
+    }
+
+    //notifyDataSetChanged();
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Toast.makeText(this, "OnRestart", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Toast.makeText(this, "OnPause", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(this, "OnResume", Toast.LENGTH_SHORT).show();
         intializeData();
         intializeAdapter();
     }
