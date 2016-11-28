@@ -30,8 +30,8 @@
         <item name="colorControlHighlight">@color/colorAccent</item>
         <item name="colorButtonNormal">@color/colorPrimary</item>
     </style>
-    <!-- style below used for create login account-->
-    <style name="AppTheme_Dark_Dialog" parent="Theme.AppCompat.Dialog">
+    <!-- style below used for create login account change AppCompat.Dialog for pop up-->
+    <style name="AppTheme_Dark_Dialog" parent="Theme.AppCompat.NoActionBar">
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">#CCCCCC</item>
     </style>
