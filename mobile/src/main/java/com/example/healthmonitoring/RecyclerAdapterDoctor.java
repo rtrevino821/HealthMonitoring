@@ -69,8 +69,7 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
                     final String[] m_Text = {""};
                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                     builder.setTitle("Please enter new Threshold");
-
-
+                    //(R.layout.activity_change_threshold);
                     final EditText input = new EditText(view.getContext());
                     input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
                     builder.setView(input);

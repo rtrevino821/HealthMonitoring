@@ -129,10 +129,10 @@ public class CheckPulseActivity extends AppCompatActivity
     private void initTimer() {
         startMeasure();
 
-        new CountDownTimer(17000, 1000) {
+        new CountDownTimer(14000, 50) {
 
             public void onTick(long millisUntilFinished) {
-                Log.d(TAG, "seconds remaining: " + millisUntilFinished / 1000);
+                Log.d(TAG, "final seconds remaining: " + (millisUntilFinished / 50));
                 Log.d("final HR",(String)tvHeartRate.getText());
 
             }
@@ -381,7 +381,4 @@ public class CheckPulseActivity extends AppCompatActivity
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumber, null, message, null, null);
     }
-
-
-
 }

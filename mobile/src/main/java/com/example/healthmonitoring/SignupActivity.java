@@ -39,14 +39,12 @@ public class SignupActivity extends AppCompatActivity {
     @InjectView(R.id.input_state) EditText _state;
     @InjectView(R.id.input_Phone) EditText _phone;
     @InjectView(R.id.input_Emergency) EditText _emergencyPhone;
-    public String patientId ="";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.inject(this);  //  inject views
-
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,16 +124,8 @@ public class SignupActivity extends AppCompatActivity {
 
     protected void insertLogin(String... params) {
 
-         // String sql = "INSERT INTO healthApp.Logins (Id, Username, Password)" +
-         //         "  Select patientIdValue, '"+ params[0] +"','"+ params[1] +"' From healthApp.Patient where F_Name='"+ params[2] +"'";
-
-        //        String sql = "update healthApp.Patient set HR_Limits = " + threshold + " where Id = " + patientId;
-
-
         String sql = "INSERT INTO healthApp.Logins (Id, Username, Password)" +
                 "  Select Id, '"+ params[0] +"','"+ params[1] +"' From healthApp.Patient where F_Name='"+ params[2] +"'";
-
-
 
         String dbuserName = "root";
         String dbpassword = "Ateamhealth";
@@ -270,7 +260,6 @@ public class SignupActivity extends AppCompatActivity {
             _age.setError(null);
         }
 
-        //if (UserGender.isEmpty() || !UserGender.equals("M") || !UserGender.equals("F")) {             // only first name
         if (UserGender.isEmpty()){
             if(UserGender.equals("M") || UserGender.equals("F")){
                 _gender.setError(null);
