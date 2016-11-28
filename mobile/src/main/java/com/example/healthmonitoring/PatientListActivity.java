@@ -41,8 +41,10 @@ public class PatientListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-        /*intializeData();
-        intializeAdapter();*/
+
+        //intializeData();
+        //intializeAdapter();
+
     }
 
     //notifyDataSetChanged();

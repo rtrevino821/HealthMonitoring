@@ -46,7 +46,6 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.inject(this);  //  inject views
 
-
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +101,6 @@ public class SignupActivity extends AppCompatActivity {
                 " VALUES ('"+ params[0] +"' , '"+ params[1] +"', '"+ params[2] +"', '"+ params[3] +"', '"+ params[4] +
                 "', '"+ params[5] +"', '"+ params[6] +"', '"+params[7]+"','"+params[8]+"');";
 
-
         String dbuserName = "root";
         String dbpassword = "Ateamhealth";
 
@@ -126,9 +124,8 @@ public class SignupActivity extends AppCompatActivity {
 
     protected void insertLogin(String... params) {
 
-          String sql = "INSERT INTO healthApp.Logins (Id, Username, Password)" +
-                  "  Select patientIdValue, '"+ params[0] +"','"+ params[1] +"' From healthApp.Patient where F_Name='"+ params[2] +"'";
-
+        String sql = "INSERT INTO healthApp.Logins (Id, Username, Password)" +
+                "  Select Id, '"+ params[0] +"','"+ params[1] +"' From healthApp.Patient where F_Name='"+ params[2] +"'";
 
         String dbuserName = "root";
         String dbpassword = "Ateamhealth";
@@ -263,7 +260,6 @@ public class SignupActivity extends AppCompatActivity {
             _age.setError(null);
         }
 
-        //if (UserGender.isEmpty() || !UserGender.equals("M") || !UserGender.equals("F")) {             // only first name
         if (UserGender.isEmpty()){
             if(UserGender.equals("M") || UserGender.equals("F")){
                 _gender.setError(null);

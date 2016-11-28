@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,21 @@ public class MainActivityDoctor extends AppCompatActivity
         //setSupportActionBar(toolbar);
 
         toolbar.setTitle("Home");
+
+        toolbar.inflateMenu(R.menu.main);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                if (id == R.id.action_settings) {
+                    Log.d("Tag", "logout is clicked");
+                    Intent LogoutIntent = new Intent(MainActivityDoctor.this, LoginActivity.class);
+                    startActivity(LogoutIntent);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         btnMyPatients = (ImageView) findViewById(R.id.btn_my_patients);
         btnViewAlerts = (ImageView) findViewById(R.id.btn_view_alerts);

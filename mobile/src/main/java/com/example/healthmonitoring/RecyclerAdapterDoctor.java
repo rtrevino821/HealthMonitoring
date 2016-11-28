@@ -22,7 +22,7 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
 
     Context context;
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView itemPatientName;
         public TextView itemLastVisit;
@@ -39,14 +39,13 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
 
     List<PatientDoctor> patientDoctors;
 
-    RecyclerAdapterDoctor(List<PatientDoctor> patientDoctors){
+    RecyclerAdapterDoctor(List<PatientDoctor> patientDoctors) {
         this.patientDoctors = patientDoctors;
     }
 
 
     public RecyclerAdapterDoctor(Context context) {
     }
-
 
 
     @Override
@@ -66,13 +65,13 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
             @Override
             public void onClick(final View view) {
 
-                    final String[] m_Text = {""};
-                    final Dialog dialog = new Dialog(view.getContext());
-                    dialog.setContentView(R.layout.threshold_dialog);
+                final String[] m_Text = {""};
 
+                final Dialog dialog = new Dialog(view.getContext());
+                dialog.setContentView(R.layout.threshold_dialog);
 
-                    final EditText input = new EditText(view.getContext());
-                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+                final EditText input = new EditText(view.getContext());
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
 
                 // set the custom dialog components - text, image and button
                 TextView text = (TextView) dialog.findViewById(R.id.text);

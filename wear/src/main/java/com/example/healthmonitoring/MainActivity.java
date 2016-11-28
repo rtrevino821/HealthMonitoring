@@ -151,7 +151,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
     private void initTimer()
     {
-        timer = new CountDownTimer(10000, 1000) {
+        timer = new CountDownTimer(13500, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 Log.d(TAG,"seconds remaining: " + millisUntilFinished / 1000);
@@ -165,7 +165,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                     @Override
                     public void run() {
                         try {
-                            Thread.sleep(3500); // As I am using LENGTH_LONG in Toast
+                         //   Thread.sleep(500); // As I am using LENGTH_LONG in Toast
                             MainActivity.this.finish();
                         } catch (Exception e) {
                             e.printStackTrace();
