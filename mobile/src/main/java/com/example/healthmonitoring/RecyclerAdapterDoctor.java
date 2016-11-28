@@ -1,16 +1,16 @@
 package com.example.healthmonitoring;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
 
     Context context;
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView itemPatientName;
         public TextView itemLastVisit;
@@ -39,14 +39,13 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
 
     List<PatientDoctor> patientDoctors;
 
-    RecyclerAdapterDoctor(List<PatientDoctor> patientDoctors){
+    RecyclerAdapterDoctor(List<PatientDoctor> patientDoctors) {
         this.patientDoctors = patientDoctors;
     }
 
 
     public RecyclerAdapterDoctor(Context context) {
     }
-
 
 
     @Override
@@ -66,45 +65,47 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
             @Override
             public void onClick(final View view) {
 
-                    final String[] m_Text = {""};
-                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                    builder.setTitle("Please enter new Threshold");
-                    //(R.layout.activity_change_threshold);
-                    final EditText input = new EditText(view.getContext());
-                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
-                    builder.setView(input);
+                final String[] m_Text = {""};
 
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            m_Text[0] = input.getText().toString();
-                            Log.d("TAG", m_Text[0]);
+                final Dialog dialog = new Dialog(view.getContext());
+                dialog.setContentView(R.layout.threshold_dialog);
 
-                            Intent i = new Intent(view.getContext(), ChangeThreshold.class);
-                            i.putExtra("patientThreshold", m_Text[0]);
-                            i.putExtra("patientId", patientDoctors.get(position).patientID);
-                            view.getContext().startActivity(i);
+                final EditText input = new EditText(view.getContext());
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
 
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
+                // set the custom dialog components - text, image and button
+                TextView text = (TextView) dialog.findViewById(R.id.text);
+                text.setText("Adjust Threshold");
 
-                    builder.show();
+                final NumberPicker np = (NumberPicker) dialog.findViewById(R.id.numberPicker);
+                np.setMaxValue(200);
+                np.setMinValue(50);
 
+                Button ok = (Button) dialog.findViewById(R.id.dialogButtonOK);
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        m_Text[0] = String.valueOf(np.getValue());
 
+                        Intent i = new Intent(view.getContext(), ChangeThreshold.class);
+                        i.putExtra("patientThreshold", m_Text[0]);
+                        i.putExtra("patientId", patientDoctors.get(position).patientID);
+                        view.getContext().startActivity(i);
+                        dialog.dismiss();
 
-                //Intent i = new Intent(view.getContext(), ChangeThreshold.class);
-               // i.putExtra("patientThreshold", patientDoctors.get(position).threshold);
+                    }
+                });
 
-                //view.getContext().startActivity(i);
+                Button cancel = (Button) dialog.findViewById(R.id.dialogButtonCancel);
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
             }
-            //   Toast.makeText(view.getContext(), "Recycle Click" + position, Toast.LENGTH_SHORT).show();
-
         });
 
     }

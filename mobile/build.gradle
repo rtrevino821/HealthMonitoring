@@ -33,6 +33,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.skyfishjy.ripplebackground:library:1.0.1'
     compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'biz.kasual:materialnumberpicker:1.2.1'
 
     compile files('libs/mysql-connector-java-5.0.8-bin.jar')
 
