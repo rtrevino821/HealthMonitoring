@@ -130,47 +130,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
-
-
-
- /*   public void insertDatabase() {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                insert();
-            }
-        }).start();
-    }
-    protected void insert()  {
-        String sql = "INSERT INTO Login (UserName, Password)" +
-                " VALUES ('hello', '567')";
-
-        String userName = "root";
-        String password = "Ateamhealth";
-
-        try {
-
-            Class.forName("com.mysql.jdbc.Driver");  //healthApp?zeroDateTimeBehavior=convertToNull
-
-            String url = "jdbc:mysql://104.196.134.4/healthApp?account=root&password=Ateamhealth";
-            Connection c = DriverManager.getConnection(url, userName, password);
-            PreparedStatement st = c.prepareStatement(sql);
-
-
-            st.execute();
-            st.close();
-            c.close();
-
-        } catch (ClassNotFoundException e)  {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-*/
+    
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

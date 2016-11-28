@@ -68,21 +68,6 @@ public class HeartHistoryActivity extends AppCompatActivity {
         task = new BackgroundTask(context);
         task.execute();
 
-/*        heartData.add(new HeartData("8:30pm", "8/29/2016", "120"));
-        heartData.add(new HeartData("7:30pm", "8/29/2016", "70"));
-        heartData.add(new HeartData("6:30pm", "8/29/2016", "60"));
-        heartData.add(new HeartData("5:30pm", "8/29/2016", "65"));
-        heartData.add(new HeartData("4:30pm", "8/29/2016", "69"));
-        heartData.add(new HeartData("3:30pm", "8/29/2016", "60"));
-        heartData.add(new HeartData("2:30pm", "8/29/2016", "70"));
-        heartData.add(new HeartData("1:30pm", "8/29/2016", "72"));
-        heartData.add(new HeartData("12:30pm", "8/29/2016", "60"));
-        heartData.add(new HeartData("11:30pm", "8/29/2016", "70"));
-        heartData.add(new HeartData("10:30pm", "8/29/2016", "80"));
-        heartData.add(new HeartData("9:30pm", "8/29/2016", "60"));
-        heartData.add(new HeartData("8:30pm", "8/29/2016", "80"));
-        heartData.add(new HeartData("7:30pm", "8/29/2016", "70"));
-        heartData.add(new HeartData("6:30pm", "8/29/2016", "50"));*/
     }
 
     private class BackgroundTask extends AsyncTask<String,Void,Boolean> {
@@ -95,7 +80,7 @@ public class HeartHistoryActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... params) {
-            String sqlHeartData = "SELECT * FROM healthApp.HeartRateData WHERE Id = ?";
+            String sqlHeartData = "SELECT * FROM healthApp.HeartRateData WHERE Id = ? ORDER BY TimeStamp desc";
             try {
                 Connection conn = SQLConnection.doInBackground();
                 PreparedStatement prepare = conn.prepareStatement(sqlHeartData);
