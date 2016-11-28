@@ -96,6 +96,15 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
 
                     }
                 });
+
+                Button cancel = (Button) dialog.findViewById(R.id.dialogButtonCancel);
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
                 dialog.show();
             }
         });
