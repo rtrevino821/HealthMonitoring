@@ -37,6 +37,7 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
     ViewHolder recView;
     private BackgroundTask task;
     String patientName;
+    String ID;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -232,6 +233,7 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
             intent.putExtra("itemPosition", pos);
             intent.putExtra("threshold", threshold);
             intent.putExtra("patientName", patientName);
+            intent.putExtra("ID", patientId);
 
             Log.d("UnoDos","broadcast sent");
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);

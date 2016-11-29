@@ -60,17 +60,23 @@ public class PatientListActivity extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            intializeData();
+            //intializeData();
             //intializeAdapter();
 
-            if(intent.getStringExtra("pos") != null)
+            if(intent.getStringExtra("itemPosition") != null)
             {
                 Log.d("UnoDos","broadcast receive");
 
-                final String pos = intent.getStringExtra("pos");
+                final String pos = intent.getStringExtra("itemPosition");
                 final String threshold = intent.getStringExtra("threshold");
                 final String patient = intent.getStringExtra("patientName");
+                final String ID = intent.getStringExtra("ID");
 
+
+                //patientDoctors.set(Integer.parseInt(pos), (new PatientDoctor(patient+", "+ID, threshold,threshold)));
+                patientDoctors.remove(Integer.parseInt(pos));
+                patientDoctors.add(Integer.parseInt(pos), (new PatientDoctor(patient, ID,threshold)));
+                intializeAdapter();
 
                 Log.d("UnoDos","position: " + pos );
 
