@@ -2,7 +2,9 @@ package com.example.healthmonitoring;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
@@ -19,17 +21,22 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.example.healthmonitoring.R.id.tv_Current_Threshold;
 import static com.google.android.gms.plus.PlusOneDummyView.TAG;
 
 /**
  * Created by rtrev on 10/23/2016.
  */
 public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterDoctor.ViewHolder> {
+    public  final String UPDARTETHRESHOLD = "UPDARTETHRESHOLD";
 
     Context context;
     String threshold;
     String patientId;
+    int itemPosition;
+    ViewHolder recView;
     private BackgroundTask task;
+    String patientName;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -41,7 +48,7 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
             super(itemView);
             itemPatientName = (TextView) itemView.findViewById(R.id.tv_Patient_Name);
             itemLastVisit = (TextView) itemView.findViewById(R.id.tv_Last_Visit);
-            itemThreshold = (TextView) itemView.findViewById(R.id.tv_Current_Threshold);
+            itemThreshold = (TextView) itemView.findViewById(tv_Current_Threshold);
 
         }
     }
@@ -70,6 +77,7 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
         viewHolder.itemLastVisit.setText("Patient ID: " + patientDoctors.get(position).patientID);
         viewHolder.itemThreshold.setText(patientDoctors.get(position).threshold);
 
+
         viewHolder.itemThreshold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -97,13 +105,33 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
                         m_Text[0] = String.valueOf(np.getValue());
                         threshold = m_Text[0];;
                         patientId = patientDoctors.get(position).patientID;
+                        itemPosition = position;
+                        patientName = (patientDoctors.get(position).name);
+
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                upDateThreshold(patientId, threshold);
+//                            }
+//                        }).start();
+                        viewHolder.itemThreshold.setText("20");
+
                         task = new BackgroundTask(context);
                         task.execute();
+
+
+
 
 //                        Intent i = new Intent(view.getContext(), ChangeThreshold.class);
 //                        i.putExtra("patientThreshold", m_Text[0]);
 //                        i.putExtra("patientId", patientDoctors.get(position).patientID);
 //                        view.getContext().startActivity(i);
+                        notifyItemChanged(itemPosition);
+                        notifyDataSetChanged();
+                        String value = "" + np.getValue();
+                        Log.d("dialog value is ", "" + np.getValue());
+
+                        viewHolder.itemThreshold.setText(value);
                         dialog.dismiss();
 
                     }
@@ -119,9 +147,31 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
 
                 dialog.show();
             }
+
         });
 
     }
+    public void upDateThreshold(String patientId, String threshold) {
+
+        String sql = "update healthApp.Patient set HR_Limits = " + threshold + " where Id = " + patientId;
+        try {
+            Connection conn = SQLConnection.doInBackground();
+            PreparedStatement prepare = conn.prepareStatement(sql);
+
+            prepare.execute();
+            prepare.close();
+            notifyItemChanged(itemPosition);
+            notifyDataSetChanged();
+
+
+        } catch (SQLException e) {
+            Log.d("SQL Error", e.getMessage());
+        }
+
+    }
+
+
+
 
     @Override
     public int getItemCount() {
@@ -144,8 +194,7 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
                 Connection conn = SQLConnection.doInBackground();
 
                 String sql = "update healthApp.Patient set HR_Limits = " + threshold + " where Id = " + patientId;
-
-                PreparedStatement prepare = conn.prepareStatement(sql);
+;                PreparedStatement prepare = conn.prepareStatement(sql);
 
                 prepare.executeUpdate();
                 prepare.close();
@@ -166,13 +215,29 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
         protected void onPostExecute(Boolean result) {
             if (result) {
                 Log.d(TAG, "Good Job");
+                //notifyItemChanged(itemPosition);
+                retrieveMessage(String.valueOf(itemPosition),threshold, patientName);
+
                 //Toast.makeText(context, "Update Threshold to " + threshold + " for patient " + patientId, Toast.LENGTH_SHORT).show();
-                notifyDataSetChanged();
+
+
                 //retrieveMessage("button");
             } else
                 Log.d(TAG, "Good Effort");
         }
 
+        private void retrieveMessage(String pos, String threshold, String patientName) {
+            Intent intent = new Intent();
+            intent.setAction(UPDARTETHRESHOLD);
+            intent.putExtra("itemPosition", pos);
+            intent.putExtra("threshold", threshold);
+            intent.putExtra("patientName", patientName);
+
+            Log.d("UnoDos","broadcast sent");
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        }
     }
+
+
 
 }

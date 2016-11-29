@@ -1,8 +1,12 @@
 package com.example.healthmonitoring;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +28,8 @@ public class PatientListActivity extends AppCompatActivity {
     private List<PatientDoctor> patientDoctors;
     private BackgroundTask task;
     private Context context;
+    public  final String UPDARTETHRESHOLD = "UPDARTETHRESHOLD";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +47,43 @@ public class PatientListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-
-        //intializeData();
-        //intializeAdapter();
+          intializeData();
+        intializeAdapter();
+//        recyclerView.invalidate();
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(UPDARTETHRESHOLD));
 
     }
 
-    //notifyDataSetChanged();
+
+
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            intializeData();
+            //intializeAdapter();
+
+            if(intent.getStringExtra("pos") != null)
+            {
+                Log.d("UnoDos","broadcast receive");
+
+                final String pos = intent.getStringExtra("pos");
+                final String threshold = intent.getStringExtra("threshold");
+                final String patient = intent.getStringExtra("patientName");
+
+
+                Log.d("UnoDos","position: " + pos );
+
+
+
+
+
+
+            }
+
+
+        }
+    };
 
     @Override
     protected void onRestart() {
@@ -128,4 +164,6 @@ public class PatientListActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }
