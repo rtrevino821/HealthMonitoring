@@ -72,21 +72,13 @@ public class PatientListActivity extends AppCompatActivity {
                 final String patient = intent.getStringExtra("patientName");
                 final String ID = intent.getStringExtra("ID");
 
-
-                //patientDoctors.set(Integer.parseInt(pos), (new PatientDoctor(patient+", "+ID, threshold,threshold)));
                 patientDoctors.remove(Integer.parseInt(pos));
                 patientDoctors.add(Integer.parseInt(pos), (new PatientDoctor(patient, ID,threshold)));
                 intializeAdapter();
 
                 Log.d("UnoDos","position: " + pos );
 
-
-
-
-
-
             }
-
 
         }
     };
