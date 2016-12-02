@@ -34,7 +34,9 @@ public class ChangeThreshold extends Activity {
 
         finish();
 
+
     }
+
 
     public void upDateThreshold(String patientId, String threshold) {
 
