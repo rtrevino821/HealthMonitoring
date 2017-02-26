@@ -1,6 +1,7 @@
 package com.example.healthmonitoring;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -8,11 +9,17 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.wearable.activity.WearableActivity;
+import android.support.wearable.view.DotsPageIndicator;
+import android.support.wearable.view.GridViewPager;
 import android.support.wearable.view.WatchViewStub;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -42,6 +49,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private ImageButton btnStart;
     private ImageButton btnPause;
     private Button btnHRHistory;
+    private Button buttonAccel;
     private GoogleApiClient mGoogleApiClient;
     private SensorManager mSensorManager;
     private Sensor mSensor;
@@ -63,13 +71,30 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         //message passing
         mTeleportClient = new TeleportClient(this);
 
+
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
-                mTextView = (TextView) stub.findViewById(R.id.heartRateText);
-                btnStart = (ImageButton) stub.findViewById(R.id.btnStart);
-                btnPause = (ImageButton) stub.findViewById(R.id.btnPause);
+//                mTextView = (TextView) stub.findViewById(R.id.heartRateText);
+//                btnStart = (ImageButton) stub.findViewById(R.id.btnStart);
+//                btnPause = (ImageButton) stub.findViewById(R.id.btnPause);
+                buttonAccel= (Button) stub.findViewById(R.id.button1);
+
+
+                /** ADDED TRYING TO LOAD ACCELEROMETER CLASS*/
+//                buttonAccel.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                       // setContentView(R.layout.main_accelerometer);
+//
+//                        final GridViewPager pager = (GridViewPager) findViewById(R.id.pager);
+//                        pager.setAdapter(new SensorFragmentPagerAdapter(getFragmentManager()));
+//
+//                        DotsPageIndicator indicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
+//                        indicator.setPager(pager);
+//                    }
+//                });
 
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -92,6 +117,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 });
             }
         });
+
+
 
         setAmbientEnabled();
 
@@ -180,7 +207,10 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         };
 
     }
-    public void exampleFunction() {
+
+
+
+        public void exampleFunction() {
         ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
         exec.schedule(new Runnable() {
             public void run() {
