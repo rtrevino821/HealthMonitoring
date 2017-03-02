@@ -10,13 +10,14 @@ import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridViewPager;
 import android.support.wearable.view.WatchViewStub;
 
-public class MainActivityAccelerometer extends Activity {
+public class AccelerometerActivity extends Activity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //setContentView(R.layout.main_accelerometer);
+       // setContentView(R.layout.main_accelerometer);
 
         WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
@@ -29,4 +30,6 @@ public class MainActivityAccelerometer extends Activity {
             }
         });
     }
+
+
 }

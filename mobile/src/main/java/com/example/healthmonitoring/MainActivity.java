@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import static com.example.healthmonitoring.R.id.action_settings;
 
@@ -86,13 +84,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        btnCheckMyPulse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent checkPulseIntent = new Intent(MainActivity.this, CheckPulseActivity.class);
-                startActivity(checkPulseIntent);
-            }
-        });
+//        btnCheckMyPulse.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent checkPulseIntent = new Intent(MainActivity.this, CheckPulseActivity.class);
+//                startActivity(checkPulseIntent);
+//            }
+//        });
 
         btnContactDoctor.setOnClickListener(new View.OnClickListener() {
             @Override

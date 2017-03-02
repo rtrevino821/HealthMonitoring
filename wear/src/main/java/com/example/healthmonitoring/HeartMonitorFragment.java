@@ -5,16 +5,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
-import android.support.wearable.activity.WearableActivity;
-import android.support.wearable.view.DotsPageIndicator;
-import android.support.wearable.view.GridViewPager;
-import android.support.wearable.view.WatchViewStub;
+import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -25,7 +25,6 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEventBuffer;
-import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -36,15 +35,30 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link HeartMonitorFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link HeartMonitorFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class HeartMonitorFragment extends Fragment  implements SensorEventListener, DataApi.DataListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-public class MainActivity extends WearableActivity implements SensorEventListener, DataApi.DataListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
     private static final String TAG = "Wearable/ MainActivity";
     private TextView mTextView;
     private ImageButton btnStart;
     private ImageButton btnPause;
     private Button btnHRHistory;
-    //private Button buttonAccel;
+    private Button buttonAccel;
     private GoogleApiClient mGoogleApiClient;
     private SensorManager mSensorManager;
     private Sensor mSensor;
@@ -58,90 +72,106 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private boolean mResolvingError=false;
     private boolean timeLeft = false;
 
+    private OnFragmentInteractionListener mListener;
+
+    public HeartMonitorFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment HeartMonitorFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static HeartMonitorFragment newInstance(String param1, String param2) {
+        HeartMonitorFragment fragment = new HeartMonitorFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //message passing
-        mTeleportClient = new TeleportClient(this);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
 
-
-        final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
-
-        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
-            @Override
-            public void onLayoutInflated(WatchViewStub stub) {
-//                mTextView = (TextView) stub.findViewById(R.id.heartRateText);
-//                btnStart = (ImageButton) stub.findViewById(R.id.btnStart);
-//                btnPause = (ImageButton) stub.findViewById(R.id.btnPause);
-                  Button buttonAccel= (Button) findViewById(R.id.button1);
-
-//                /** ADDED TRYING TO LOAD ACCELEROMETER CLASS*/
-                buttonAccel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                       setContentView(R.layout.round_activity2);
-
-                        final GridViewPager pager = (GridViewPager) findViewById(R.id.pager);
-                        pager.setAdapter(new SensorFragmentPagerAdapter(getFragmentManager()));
-
-                        DotsPageIndicator indicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
-                        indicator.setPager(pager);
-//                        Intent mainIntent = new Intent(MainActivity.this, AccelerometerActivity.class);
-//                        startActivity(mainIntent);
-                    }
-                });
-
-
-            }
-        });
-//
-//                btnStart.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        btnStart.setVisibility(ImageButton.GONE);
-//                        btnPause.setVisibility(ImageButton.VISIBLE);
-//                        mTextView.setText("Please wait...");
-//                        startMeasure();
-//                    }
-//                });
-//
-//                btnPause.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        btnPause.setVisibility(ImageButton.GONE);
-//                        btnStart.setVisibility(ImageButton.VISIBLE);
-//                        mTextView.setText("--");
-//                        stopMeasure();
-//                    }
-//                });
-//            }
-//        });
-
-
-
-        setAmbientEnabled();
-
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager  = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-        initTimer();
-        startMeasure();
-        //exampleFunction();
-
-        Log.d("tag on create", "how many runs");
-
-
     }
 
     @Override
-    protected void onStart() {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+       View mView = inflater.inflate(R.layout.sensor, container, false);
+
+
+
+
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_heart_monitor, container, false);
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+
+
+
+    @Override
+    public void onStart() {
         super.onStart();
         if (!mResolvingError) {
             mGoogleApiClient.connect();
@@ -156,7 +186,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 //    }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
     }
@@ -188,13 +218,12 @@ public class MainActivity extends WearableActivity implements SensorEventListene
             public void onFinish() {
                 Log.d(TAG," Timer done");
                 //let's reset the task (otherwise it will be executed only once)
-                sendMessage();
                 Thread thread = new Thread(){
                     @Override
                     public void run() {
                         try {
-                         //   Thread.sleep(500); // As I am using LENGTH_LONG in Toast
-                            MainActivity.this.finish();
+                            //   Thread.sleep(500); // As I am using LENGTH_LONG in Toast
+                            //MainActivity.this.finish();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -211,7 +240,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
 
 
-        public void exampleFunction() {
+    public void exampleFunction() {
         ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
         exec.schedule(new Runnable() {
             public void run() {
@@ -286,70 +315,9 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
     }
 
-
-    //Task that shows the path of a received message
-    public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
-
-        @Override
-        protected void onPostExecute(String  path) {
-
-//            if (path.equals("stop")){
-//                mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-//
-//                stopMeasure();
-//                Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
-//                Log.d(TAG, path);
-//                btnPause.setVisibility(ImageButton.GONE);
-//                btnStart.setVisibility(ImageButton.VISIBLE);
-//                mTextView.setText("--");
-//                //let's reset the task (otherwise it will be executed only once)
-//                //mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-//
-//            }
-//            else if (path.equals("start")){
-//                mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-//                Log.d(TAG, path);
-//                startMeasure();
-//
-//                Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
-//                btnStart.setVisibility(ImageButton.GONE);
-//                btnPause.setVisibility(ImageButton.VISIBLE);
-//                mTextView.setText("Please wait...");
-//                //let's reset the task (otherwise it will be executed only once)
-//                //mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-//            }
-
-        }
-
-        }
-
-
-    private void sendMessage() {
-
-        if (mNode != null && mGoogleApiClient!=null && mGoogleApiClient.isConnected()) {
-            Wearable.MessageApi.sendMessage(
-                    mGoogleApiClient, mNode.getId(), HELLO_WORLD_WEAR_PATH, null).setResultCallback(
-
-                    new ResultCallback<MessageApi.SendMessageResult>() {
-                        @Override
-                        public void onResult(MessageApi.SendMessageResult sendMessageResult) {
-
-                            if (!sendMessageResult.getStatus().isSuccess()) {
-                                Log.e("TAG", "Failed to send message with status code: "
-                                        + sendMessageResult.getStatus().getStatusCode());
-                            }
-                        }
-                    }
-            );
-        }else{
-            //Improve your code
-        }
-
-    }//end of method
-
     /*
-    * Resolve the node = the connected device to send the message to
-    */
+* Resolve the node = the connected device to send the message to
+*/
     private void resolveNode() {
 
         Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
@@ -363,4 +331,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     }
 
 
-    }
+
+
+
+
+}

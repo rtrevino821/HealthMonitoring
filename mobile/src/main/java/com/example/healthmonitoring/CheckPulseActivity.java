@@ -242,7 +242,8 @@ public class CheckPulseActivity extends AppCompatActivity
         protected void onPostExecute(String path) {
 
             mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
-            //stopMeasure();
+            //stopMeasu
+
         }
     }
 

@@ -16,7 +16,7 @@
         <uses-library android:name="com.google.android.wearable" android:required="false" />
 
         <activity android:name=".MainActivity"
-            android:label="@string/title_activity_main">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,10 +26,13 @@
                 android:name=".SensorFragment"/>
             <activity
                 android:name=".SensorFragmentAdapter"/>
-            <activity
-                android:name=".MainActivityAccelerometer"/>
+
 
         </activity>
+        <activity
+            android:name=".AccelerometerActivity">
+    </activity>
+
 
         <service
             android:name=".WearService" >
