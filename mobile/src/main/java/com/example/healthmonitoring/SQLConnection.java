@@ -19,7 +19,7 @@ public class SQLConnection {
         try {
             Class.forName("com.mysql.jdbc.Driver");
 
-            String url = "jdbc:mysql://35.185.80.205\n/healthApp?user=root&password=Ateamhealth";
+            String url = "jdbc:mysql://35.185.80.205/healthApp?user=root&password=Ateamhealth";
 
 
 

@@ -84,13 +84,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-//        btnCheckMyPulse.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent checkPulseIntent = new Intent(MainActivity.this, CheckPulseActivity.class);
-//                startActivity(checkPulseIntent);
-//            }
-//        });
+        btnCheckMyPulse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent checkPulseIntent = new Intent(MainActivity.this, CheckPulseActivity.class);
+                startActivity(checkPulseIntent);
+            }
+        });
 
         btnContactDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
