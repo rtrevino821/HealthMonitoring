@@ -3,11 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/black">
+    android:background="@drawable/watchface"
+    >
 
     <TextView android:id="@+id/text_title"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorAccentPink"
         android:layout_centerHorizontal="true"
         android:text="@string/init_title" />
 
@@ -16,5 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/text_title"
+        android:textColor="@color/colorAccentPink"
         android:text="@string/init_values" />
 </RelativeLayout>

@@ -128,10 +128,11 @@ public class SensorFragment extends Fragment implements SensorEventListener {
             // Change background color if gForce exceeds threshold;
             // otherwise, reset the color
             if(gForce > SHAKE_THRESHOLD) {
-                mView.setBackgroundColor(Color.rgb(0, 100, 0));
+                // use this to change background color of watch to green
+                //  mView.setBackgroundColor(Color.rgb(0, 100, 0));
             }
             else {
-                mView.setBackgroundColor(Color.BLACK);
+             //   mView.setBackgroundColor(Color.BLACK);
             }
         }
     }
@@ -152,7 +153,7 @@ public class SensorFragment extends Fragment implements SensorEventListener {
                 mView.setBackgroundColor(Color.rgb(0, 100, 0));
             }
             else {
-                mView.setBackgroundColor(Color.BLACK);
+               // mView.setBackgroundColor(Color.BLACK);
             }
         }
     }
