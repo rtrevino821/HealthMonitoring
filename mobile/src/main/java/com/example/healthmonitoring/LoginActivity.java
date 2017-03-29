@@ -32,6 +32,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,6 +57,8 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
+
+    private String admin = null;
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -128,6 +141,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 attemptLogin();
                 /*if (attemptLogin()) {
                     Log.d("attempLogin", String.valueOf(patientIdValue));
@@ -410,6 +424,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //String sql = "Select * From healthApp.Logins";
 
             //joinThread();
+
+            getUsername();
+
+            try {
+                Patient patient = login(username);
+                if(patient != null) {
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("ID", patient.getId());
+                    editor.putString("Admin", admin);
+                    editor.putString("EmergencyContact", patient.getEmer_contact());
+                    editor.commit();
+
+                    return true;
+                }else{
+                    return false;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            /*
             try {
                 conn = SQLConnection.doInBackground();
                 PreparedStatement prepare = conn.prepareStatement(sqlUser);
@@ -454,7 +492,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } catch (SQLException e) {
                 Log.d(TAG, e.getMessage());
             }
-
+            */
             //Login Failed
             Log.d(TAG,"asynctask ouside false");
             return false;
@@ -556,6 +594,62 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mAuthTask = null;
         showProgress(false);
     }
+
+        public Patient login(String username) throws IOException, JSONException {
+            URL url = null;
+            URL url2 = null;
+            Patient patient;
+
+
+            url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientId?username="
+                    + username);
+
+            HttpURLConnection urlConnection = null;
+            HttpURLConnection urlConnection2 = null;
+
+            urlConnection = (HttpURLConnection) url.openConnection();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            String resultString = result.toString();
+            //Log.d("TAG",resultString);
+            JSONObject items = new JSONObject(resultString);
+            int count = Integer.parseInt(items.getString("Count"));
+            if(count != 1){
+                return null;
+            }
+
+            JSONArray patients = items.getJSONArray("Items");
+            JSONObject currentPatient = patients.getJSONObject(0);
+            admin = currentPatient.getString("admin");
+
+            url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientInfo?id=" + currentPatient.getString("id"));
+            StringBuilder result2 = null;
+
+            urlConnection2 = (HttpURLConnection) url2.openConnection();
+            BufferedReader reader2 = new BufferedReader(new InputStreamReader(url2.openStream()));
+            result2 = new StringBuilder();
+            String line2;
+            while ((line2 = reader2.readLine()) != null) {
+                result2.append(line2);
+            }
+            String resultString2 = result2.toString();
+            //Log.d("TAG",resultString2);
+            JSONObject patientItem = new JSONObject(resultString2);
+            JSONObject patientInfo = patientItem.getJSONObject("Item");
+
+            // Log.d("Tag", member.toString());
+            ObjectMapper mapper = new ObjectMapper();
+
+            patient = mapper.readValue(patientInfo.toString(), Patient.class);
+            // Log.d("Tag", user.getPassword());
+
+
+            return patient;
+        }
 }
 }
 
