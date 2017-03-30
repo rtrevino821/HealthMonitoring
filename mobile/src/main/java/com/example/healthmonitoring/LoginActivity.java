@@ -26,6 +26,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -142,6 +143,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
 
+                InputMethodManager imm = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
                 attemptLogin();
                 /*if (attemptLogin()) {
                     Log.d("attempLogin", String.valueOf(patientIdValue));
@@ -426,7 +430,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //joinThread();
 
             getUsername();
-
+            getPassword();
             try {
                 Patient patient = login(username);
                 if(patient != null) {
@@ -618,12 +622,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //Log.d("TAG",resultString);
             JSONObject items = new JSONObject(resultString);
             int count = Integer.parseInt(items.getString("Count"));
-            if(count != 1){
+            if(count != 1 ){
                 return null;
             }
-
             JSONArray patients = items.getJSONArray("Items");
             JSONObject currentPatient = patients.getJSONObject(0);
+            if(!currentPatient.getString("password").equals(password)){
+                return null;
+            }
             admin = currentPatient.getString("admin");
 
             url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientInfo?id=" + currentPatient.getString("id"));
