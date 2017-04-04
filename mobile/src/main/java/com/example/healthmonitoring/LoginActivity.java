@@ -142,10 +142,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 InputMethodManager imm = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
+
                 attemptLogin();
                 /*if (attemptLogin()) {
                     Log.d("attempLogin", String.valueOf(patientIdValue));
@@ -422,12 +422,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(String... params) {
-            //String user = "Stoney";
-            //String password = "FL";
-
-            //String sql = "Select * From healthApp.Logins";
-
-            //joinThread();
 
             getUsername();
             getPassword();
@@ -600,8 +594,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
         public Patient login(String username) throws IOException, JSONException {
-            URL url = null;
-            URL url2 = null;
+            URL url;
+            URL url2;
             Patient patient;
 
 

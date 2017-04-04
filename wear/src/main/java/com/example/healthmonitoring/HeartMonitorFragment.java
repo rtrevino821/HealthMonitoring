@@ -55,6 +55,7 @@ public class HeartMonitorFragment extends Fragment  implements SensorEventListen
     private String mParam2;
     private static final String TAG = "Wearable/ MainActivity";
     private TextView mTextView;
+    private TextView stepCountTV;
     private ImageButton btnStart;
     private ImageButton btnPause;
     private Button btnHRHistory;
@@ -62,6 +63,8 @@ public class HeartMonitorFragment extends Fragment  implements SensorEventListen
     private GoogleApiClient mGoogleApiClient;
     private SensorManager mSensorManager;
     private Sensor mSensor;
+    private Sensor mStepCounterSensor;
+    private Sensor mStepDetectorSensor;
     private TeleportClient mTeleportClient;
     TeleportClient.OnSyncDataItemTask mOnSyncDataItemTask;
     TeleportClient.OnGetMessageTask mMessageTask;
@@ -106,6 +109,8 @@ public class HeartMonitorFragment extends Fragment  implements SensorEventListen
 
         mSensorManager  = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+        mStepCounterSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        mStepDetectorSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
                 .addApi(Wearable.API)
@@ -291,18 +296,33 @@ public class HeartMonitorFragment extends Fragment  implements SensorEventListen
 
     @Override
     public void onSensorChanged (SensorEvent event){
+        Sensor sensor = event.sensor;
         float mHeartRateFloat = event.values[0];
+        float[] values = event.values;
+        int value = -1;
+
+        if (values.length > 0) {
+            value = (int) values[0];
+        }
 
         mHeartRate = Math.round(mHeartRateFloat);
 
         if(mTextView != null)
         {
-            mTextView.setText(Integer.toString(mHeartRate));
-            String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
+            if(sensor.getType() == Sensor.TYPE_HEART_RATE) {
+                mTextView.setText(Integer.toString(mHeartRate));
+                String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
 
-            logHeartRate(mHeartRate,date);
+                logHeartRate(mHeartRate, date);
+            } else if(sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+                logSteps(value);
+            }
 
         }
+    }
+
+    private void logSteps(int steps) {
+        //textView.setText("Steps : " + steps);
     }
 
     @Override

@@ -51,6 +51,7 @@ public class CheckPulseActivity extends AppCompatActivity
     //private RippleBackground rippleBackground;
     int count = 0;
 
+
     private String userID;
     private String userHeartRate="00";
     private int binary;
@@ -321,9 +322,6 @@ public class CheckPulseActivity extends AppCompatActivity
         timeStamp = new java.sql.Timestamp(utilDate.getTime());
         Log.d(TAG, timeStamp.toString());
     }
-
-
-
 
     //gets ID and HeartRate
     /*private void getSharedPreference(Context context) {

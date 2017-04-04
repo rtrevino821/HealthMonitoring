@@ -7,6 +7,14 @@
     <string name="CAPABILITY_ANDROID_WEAR">WEARABLE</string>
     <string name="init_title">Sensor type</string>
     <string name="init_values">Getting data...</string>
+    <string name="step_counter">
+         android.hardware.sensor.stepcounter
+   </string>
+
+
+    <string name="step_detector">
+         android.hardware.sensor.stepdetector
+   </string>
     <string-array name="android_wear_capabilities">
         <item>@string/CAPABILITY_MOBILE</item>
     </string-array>

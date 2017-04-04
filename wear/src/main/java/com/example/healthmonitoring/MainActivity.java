@@ -41,6 +41,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
     private static final String TAG = "Wearable/ MainActivity";
     private TextView mTextView;
+    private TextView stepCount;
     private ImageButton btnStart;
     private ImageButton btnPause;
     private Button btnHRHistory;
@@ -48,6 +49,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private GoogleApiClient mGoogleApiClient;
     private SensorManager mSensorManager;
     private Sensor mSensor;
+    private Sensor mStepCounterSensor;
+    private Sensor mStepDetectorSensor;
     private TeleportClient mTeleportClient;
     TeleportClient.OnSyncDataItemTask mOnSyncDataItemTask;
     TeleportClient.OnGetMessageTask mMessageTask;
@@ -57,6 +60,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private static final String HELLO_WORLD_WEAR_PATH = "/hello-world-wear";
     private boolean mResolvingError=false;
     private boolean timeLeft = false;
+    private int steps;
 
 
     @Override
@@ -66,13 +70,16 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         //message passing
         mTeleportClient = new TeleportClient(this);
 
+        steps = 0;
+
 
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
 
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
-//                mTextView = (TextView) stub.findViewById(R.id.heartRateText);
+                mTextView = (TextView) stub.findViewById(R.id.heartRateText);
+                stepCount = (TextView) stub.findViewById(R.id.stepCountResultsTV);
 //                btnStart = (ImageButton) stub.findViewById(R.id.btnStart);
 //                btnPause = (ImageButton) stub.findViewById(R.id.btnPause);
                   Button buttonAccel= (Button) findViewById(R.id.button1);
@@ -125,6 +132,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+        mStepCounterSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        mStepDetectorSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
@@ -179,7 +188,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
     private void initTimer()
     {
-        timer = new CountDownTimer(13500, 1000) {
+        timer = new CountDownTimer(20500, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 Log.d(TAG,"seconds remaining: " + millisUntilFinished / 1000);
@@ -229,7 +238,9 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
     private void startMeasure() {
         boolean sensorRegistered = mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        boolean stepSensorRegistered = mSensorManager.registerListener(this, mStepCounterSensor, SensorManager.SENSOR_DELAY_FASTEST);
         Log.d("Sensor Status:", " Sensor registered: " + (sensorRegistered ? "yes" : "no"));
+        Log.d("Step Sensor Status:", " Sensor registered: " + (stepSensorRegistered ? "yes" : "no"));
         timer.start();
     }
 
@@ -262,22 +273,58 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
     @Override
     public void onSensorChanged (SensorEvent event){
+        Sensor sensor = event.sensor;
         float mHeartRateFloat = event.values[0];
+        float[] values = event.values;
+        //int steps = 0;
+        int value = -1;
+
+        if (values.length > 0) {
+            value = (int) values[0];
+        }
 
         mHeartRate = Math.round(mHeartRateFloat);
 
         if(mTextView != null)
         {
-            mTextView.setText(Integer.toString(mHeartRate));
-            String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
+            if(sensor.getType() == Sensor.TYPE_HEART_RATE) {
+                mTextView.setText(Integer.toString(mHeartRate));
+                String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
+                logHeartRate(mHeartRate, date);
+            } else if(sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+                //steps++;
 
-            logHeartRate(mHeartRate,date);
+                stepCount.setText(value);
+                String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
+                logSteps(value, date);
+            }
 
         }
     }
 
+    private void logSteps(int steps, String timestamp) {
+        Log.d("logSteps", "Recieved: " + steps + " steps @ " + timestamp);
+
+        PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/step-count"); //path to object
+
+        putDataMapRequest.getDataMap().putInt("step-count", steps);
+        putDataMapRequest.getDataMap().putString("step-timestamp", timestamp);
+
+        PutDataRequest request = putDataMapRequest.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult =
+                Wearable.DataApi.putDataItem(mGoogleApiClient, request);
+    }
+
+
     @Override
-    public void onAccuracyChanged (Sensor sensor,int accuracy){
+    public void onAccuracyChanged(Sensor sensor, int i) {
+        super.onResume();
+        mSensorManager.registerListener(this, mStepCounterSensor,
+
+                SensorManager.SENSOR_DELAY_FASTEST);
+
+//        mSensorManager.registerListener(this, mStepDetectorSensor,
+//                SensorManager.SENSOR_DELAY_FASTEST);
 
     }
 

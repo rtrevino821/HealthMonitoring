@@ -13,8 +13,8 @@
         android:layout_height="match_parent"
         android:src="@drawable/watchface"
         android:scaleType="fitXY"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/btnPause" />
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
@@ -23,27 +23,61 @@
         android:text="click me"
         />
 
+    <LinearLayout
+        android:id="@id/stepLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button1"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/stepCountTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button1"
+            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@+id/stepCountTV"
+            android:fontFamily="sans-serif"
+            android:text="Steps: "
+            android:textColor="@color/colorAccentPink"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/stepCountResultsTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button1"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif"
+            android:text="0000"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/heartRateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/stepLayout"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:fontFamily="sans-serif-thin"
-        android:text="--"
+        android:paddingTop="5dp"
+        android:text="125"
         android:textColor="@color/colorAccent"
-        android:textSize="75dp" />
+        android:textSize="40dp" />
+
 
     <TextView
         android:id="@+id/bpmText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="bpm"
-        android:textColor="@color/colorAccentPink"
         android:layout_below="@id/heartRateText"
-        android:layout_marginLeft="3dp"
         android:layout_centerHorizontal="true"
-        android:textSize="25dp"/>
+        android:layout_marginLeft="3dp"
+        android:text="Pulse"
+        android:textColor="@color/colorAccentPink"
+        android:textSize="20dp" />
 
     <ImageButton
         android:id="@+id/btnPause"
@@ -67,6 +101,30 @@
         android:layout_marginTop="5dp"
         android:visibility="gone"
         android:background="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/activityLevelTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bpmText"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif"
+        android:paddingTop="10dp"
+        android:text="Activity Level: "
+        android:textColor="#ffffff"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/activityLevelResultTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activityLevelTV"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif"
+        android:text="Average"
+        android:textColor="@color/orange"
+        android:textSize="15dp" />
+
 
 
 

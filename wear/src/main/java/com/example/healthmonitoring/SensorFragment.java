@@ -131,7 +131,7 @@ public class SensorFragment extends Fragment implements SensorEventListener {
                 mView.setBackgroundColor(Color.rgb(0, 100, 0));
             }
             else {
-                mView.setBackgroundColor(Color.BLACK);
+            //    mView.setBackgroundColor(Color.BLACK);
             }
         }
     }
