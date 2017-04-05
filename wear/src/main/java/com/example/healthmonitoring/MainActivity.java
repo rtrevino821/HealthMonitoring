@@ -61,6 +61,10 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private boolean mResolvingError=false;
     private boolean timeLeft = false;
     private int steps;
+    private boolean firstStep = false;
+    int testCount = 0;
+
+
 
 
     @Override
@@ -275,12 +279,18 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     public void onSensorChanged (SensorEvent event){
         Sensor sensor = event.sensor;
         float mHeartRateFloat = event.values[0];
+        Log.d("Event.Value Length:", String.valueOf(event.values.length));
         float[] values = event.values;
-        //int steps = 0;
         int value = -1;
 
+        if (!firstStep && values.length > 0) {
+            testCount = (int) event.values[0];
+            Log.d("Event Init Step Count", String.valueOf(testCount));
+            firstStep = true;
+        }
+
         if (values.length > 0) {
-            value = (int) values[0];
+            value = (int) (values[0]);
         }
 
         mHeartRate = Math.round(mHeartRateFloat);
@@ -293,7 +303,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 logHeartRate(mHeartRate, date);
             } else if(sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
                 //steps++;
-
                 stepCount.setText(value);
                 String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
                 logSteps(value, date);
