@@ -142,10 +142,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                InputMethodManager imm = (InputMethodManager)
-                getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
 
+                InputMethodManager imm = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
                 attemptLogin();
                 /*if (attemptLogin()) {
                     Log.d("attempLogin", String.valueOf(patientIdValue));
@@ -422,6 +422,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(String... params) {
+            //String user = "Stoney";
+            //String password = "FL";
+
+            //String sql = "Select * From healthApp.Logins";
+
+            //joinThread();
 
             getUsername();
             getPassword();
@@ -594,42 +600,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
         public Patient login(String username) throws IOException, JSONException {
-            URL url;
-            URL url2;
-            Patient patient;
 
-
-            url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientId?username="
-                    + username);
-
-            HttpURLConnection urlConnection = null;
-            HttpURLConnection urlConnection2 = null;
-
-            urlConnection = (HttpURLConnection) url.openConnection();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder result = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                result.append(line);
-            }
-            String resultString = result.toString();
-            //Log.d("TAG",resultString);
-            JSONObject items = new JSONObject(resultString);
-            int count = Integer.parseInt(items.getString("Count"));
-            if(count != 1 ){
-                return null;
-            }
-            JSONArray patients = items.getJSONArray("Items");
-            JSONObject currentPatient = patients.getJSONObject(0);
-            if(!currentPatient.getString("password").equals(password)){
-                return null;
-            }
-            admin = currentPatient.getString("admin");
-
-            url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientInfo?id=" + currentPatient.getString("id"));
+            URL url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientInfo?username=" + username);
             StringBuilder result2 = null;
 
-            urlConnection2 = (HttpURLConnection) url2.openConnection();
+            HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
             BufferedReader reader2 = new BufferedReader(new InputStreamReader(url2.openStream()));
             result2 = new StringBuilder();
             String line2;
@@ -639,14 +614,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             String resultString2 = result2.toString();
             //Log.d("TAG",resultString2);
             JSONObject patientItem = new JSONObject(resultString2);
-            JSONObject patientInfo = patientItem.getJSONObject("Item");
+            JSONArray patientInfoArray = patientItem.getJSONArray("Items");
+            JSONObject patientInfo = (JSONObject) patientInfoArray.get(0);
 
             // Log.d("Tag", member.toString());
             ObjectMapper mapper = new ObjectMapper();
 
-            patient = mapper.readValue(patientInfo.toString(), Patient.class);
+            Patient patient = mapper.readValue(patientInfo.toString(), Patient.class);
             // Log.d("Tag", user.getPassword());
-
+            admin = patientInfo.getString("admin");
 
             return patient;
         }
