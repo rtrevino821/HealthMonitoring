@@ -32,6 +32,7 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.text.BreakIterator;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +43,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private static final String TAG = "Wearable/ MainActivity";
     private TextView mTextView;
     private TextView stepCount;
+    private TextView activityLevel;
     private ImageButton btnStart;
     private ImageButton btnPause;
     private Button btnHRHistory;
@@ -60,7 +62,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private static final String HELLO_WORLD_WEAR_PATH = "/hello-world-wear";
     private boolean mResolvingError=false;
     private boolean timeLeft = false;
-    private int steps;
     private boolean firstStep = false;
     int testCount = 0;
 
@@ -74,9 +75,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         //message passing
         mTeleportClient = new TeleportClient(this);
 
-        steps = 0;
-
-
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
 
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
@@ -84,6 +82,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
             public void onLayoutInflated(WatchViewStub stub) {
                 mTextView = (TextView) stub.findViewById(R.id.heartRateText);
                 stepCount = (TextView) stub.findViewById(R.id.stepCountResultsTV);
+                activityLevel = (TextView) stub.findViewById(R.id.activityLevelResultTV);
 //                btnStart = (ImageButton) stub.findViewById(R.id.btnStart);
 //                btnPause = (ImageButton) stub.findViewById(R.id.btnPause);
                   Button buttonAccel= (Button) findViewById(R.id.button1);
@@ -283,11 +282,11 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         float[] values = event.values;
         int value = -1;
 
-        if (!firstStep && values.length > 0) {
-            testCount = (int) event.values[0];
-            Log.d("Event Init Step Count", String.valueOf(testCount));
-            firstStep = true;
-        }
+//        if (!firstStep && values.length > 0) {
+//            testCount = (int) event.values[0];
+//            Log.d("Event Init Step Count", String.valueOf(testCount));
+//            firstStep = true;
+//        }
 
         if (values.length > 0) {
             value = (int) (values[0]);
@@ -303,7 +302,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 logHeartRate(mHeartRate, date);
             } else if(sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
                 //steps++;
-                stepCount.setText(value);
+                stepCount.setText(Integer.toString(value));
                 String date = (DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
                 logSteps(value, date);
             }
@@ -312,6 +311,14 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     }
 
     private void logSteps(int steps, String timestamp) {
+
+        if(steps < 2000)
+            activityLevel.setText("Low");
+        if(steps >= 2000 && steps <= 5000)
+            activityLevel.setText("Good");
+        if(steps > 5000)
+            activityLevel.setText("Excellent");
+
         Log.d("logSteps", "Recieved: " + steps + " steps @ " + timestamp);
 
         PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/step-count"); //path to object

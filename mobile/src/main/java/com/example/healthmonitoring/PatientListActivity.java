@@ -111,8 +111,8 @@ public class PatientListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Toast.makeText(this, "OnResume", Toast.LENGTH_SHORT).show();
-        intializeData();
-        intializeAdapter();
+       //intializeData();
+        //intializeAdapter();
     }
 
     private void intializeData() {
