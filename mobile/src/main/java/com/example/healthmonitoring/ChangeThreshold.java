@@ -5,6 +5,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -27,7 +40,15 @@ public class ChangeThreshold extends Activity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        upDateThreshold(patientId, threshold);
+                        try {
+                            upDateThreshold(patientId, threshold);
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (ProtocolException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }).start();
         }
@@ -38,9 +59,17 @@ public class ChangeThreshold extends Activity {
     }
 
 
-    public void upDateThreshold(String patientId, String threshold) {
+    public void upDateThreshold(String patientId, String threshold) throws IOException {
 
-        String sql = "update healthApp.Patient set HR_Limits = " + threshold + " where Id = " + patientId;
+        URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientInfo?id=" + patientId + "&hr=" + threshold);
+
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.setDoOutput(true);
+        httpURLConnection.setRequestMethod("PUT");
+        OutputStreamWriter out = new OutputStreamWriter(httpURLConnection.getOutputStream());
+        out.close();
+
+        /*tring sql = "update healthApp.Patient set HR_Limits = " + threshold + " where Id = " + patientId;
         try {
             Connection conn = SQLConnection.doInBackground();
             PreparedStatement prepare = conn.prepareStatement(sql);
@@ -51,7 +80,7 @@ public class ChangeThreshold extends Activity {
         } catch (SQLException e) {
             Log.d("SQL Error", e.getMessage());
         }
-
+*/
     }
 
 }

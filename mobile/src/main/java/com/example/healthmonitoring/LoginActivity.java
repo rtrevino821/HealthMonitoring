@@ -626,6 +626,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             return patient;
         }
-}
+    }
 }
 

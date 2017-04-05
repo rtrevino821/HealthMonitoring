@@ -13,6 +13,18 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -125,8 +137,41 @@ public class PatientListActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... params) {
+            URL url = null;
+            try {
+                url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getAllPatients");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                HttpURLConnection urlConnection2 = (HttpURLConnection) url.openConnection();
+                BufferedReader reader2 = new BufferedReader(new InputStreamReader(url.openStream()));
+                StringBuilder result = new StringBuilder();
+                String line2;
+                while ((line2 = reader2.readLine()) != null) {
+                    result.append(line2);
+                }
+                String resultString = result.toString();
+                //Log.d("TAG",resultString2);
+                JSONObject patientItems = new JSONObject(resultString);
+                JSONArray patientInfoArray = patientItems.getJSONArray("Items");
+                String countString = patientItems.getString("Count");
+                int count = Integer.parseInt(countString);
+                for(int i = 0;i < count;i++){
+                    JSONObject patient = (JSONObject) patientInfoArray.get(i);
+                    patientDoctors.add(new PatientDoctor(patient.getString("l_name")+", " + patient.getString("f_name"),patient.getString("id"),patient.getString("hr_limits")));
+                }
 
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return true;
+            /*
             String sqlPatientQuery = "SELECT * FROM healthApp.Patient join healthApp.Logins\n" +
                     "on Logins.ID = Patient.id\n" +
                     "Where Admin <> 'Y'";
@@ -148,7 +193,7 @@ public class PatientListActivity extends AppCompatActivity {
             //Login Failed
             Log.d("Error", "asynctask ouside false");
             return false;
-
+        */
         }
 
         @Override
