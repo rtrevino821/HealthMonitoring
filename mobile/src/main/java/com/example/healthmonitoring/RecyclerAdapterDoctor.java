@@ -15,7 +15,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -104,17 +113,32 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
                     @Override
                     public void onClick(View v) {
                         m_Text[0] = String.valueOf(np.getValue());
-                        threshold = m_Text[0];;
+                        threshold = m_Text[0];
+                        Log.d("TAG",threshold);
                         patientId = patientDoctors.get(position).patientID;
+                        Log.d("TAG",patientId);
                         itemPosition = position;
                         patientName = (patientDoctors.get(position).name);
 
-//                        new Thread(new Runnable() {
+
+//                        Runnable runnable = new Runnable() {
 //                            @Override
 //                            public void run() {
-//                                upDateThreshold(patientId, threshold);
+//                                try {
+//                                    upDateThreshold(patientId,threshold);
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
 //                            }
-//                        }).start();
+//                        };
+//                        Thread thread = new Thread(runnable);
+//                        thread.start();
+//
+//                        try {
+//                            thread.join();
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
                         viewHolder.itemThreshold.setText("20");
 
                         task = new BackgroundTask(context);
@@ -152,8 +176,19 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
         });
 
     }
-    public void upDateThreshold(String patientId, String threshold) {
+    public void upDateThreshold(String patientId, String threshold)throws IOException {
+        Log.d("TAG","Making PUT Request");
+        URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientInfo?id=" + patientId + "&hr=" + threshold);
 
+        HttpURLConnection conn = ( HttpURLConnection ) url.openConnection();
+
+        conn.setRequestMethod( "PUT" );
+        conn.setDoOutput( false);
+        conn.connect();
+
+
+
+        /*
         String sql = "update healthApp.Patient set HR_Limits = " + threshold + " where Id = " + patientId;
         try {
             Connection conn = SQLConnection.doInBackground();
@@ -168,7 +203,7 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
         } catch (SQLException e) {
             Log.d("SQL Error", e.getMessage());
         }
-
+*/
     }
 
 
@@ -189,7 +224,33 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
         @Override
         protected Boolean doInBackground(String... params) {
 
+            Log.d("TAG","Making PUT Request");
+            URL url = null;
+            try {
+                url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientInfo?id=" + patientId);
 
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            HttpURLConnection conn = null;
+            try {
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("PUT");
+                conn.setDoOutput(true);
+                OutputStreamWriter out = new OutputStreamWriter(
+                        conn.getOutputStream());
+                out.write(threshold.toString());
+                Log.d("TAG","YEA");
+                out.close();
+                conn.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return true;
+/*
             try {
 
                 Connection conn = SQLConnection.doInBackground();
@@ -209,15 +270,17 @@ public class RecyclerAdapterDoctor extends RecyclerView.Adapter<RecyclerAdapterD
 
             Log.d(TAG, "asynctask ouside false");
             return true;
-
+*/
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
                 Log.d(TAG, "Good Job");
-                //notifyItemChanged(itemPosition);
+                patientDoctors.get(itemPosition).threshold = threshold;
+                notifyItemChanged(itemPosition);
                 retrieveMessage(String.valueOf(itemPosition),threshold, patientName);
+
 
                 //Toast.makeText(context, "Update Threshold to " + threshold + " for patient " + patientId, Toast.LENGTH_SHORT).show();
 
