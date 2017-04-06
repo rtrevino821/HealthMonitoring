@@ -33,6 +33,7 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.text.BreakIterator;
+import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -149,6 +150,10 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
         Log.d("tag on create", "how many runs");
 
+        final List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
+        for(Sensor type : deviceSensors){
+            Log.d("ALLsensors",type.getStringType());
+        }
 
     }
 
