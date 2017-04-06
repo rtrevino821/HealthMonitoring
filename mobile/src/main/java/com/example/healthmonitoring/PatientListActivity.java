@@ -50,7 +50,7 @@ public class PatientListActivity extends AppCompatActivity {
 
         context = this;
 
-        Toast.makeText(context, "OnCreate", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "OnCreate", Toast.LENGTH_SHORT).show();
 
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -60,7 +60,7 @@ public class PatientListActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
           intializeData();
-        intializeAdapter();
+        //intializeAdapter();
 //        recyclerView.invalidate();
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(UPDARTETHRESHOLD));
 
@@ -86,7 +86,7 @@ public class PatientListActivity extends AppCompatActivity {
 
                 patientDoctors.remove(Integer.parseInt(pos));
                 patientDoctors.add(Integer.parseInt(pos), (new PatientDoctor(patient, ID,threshold)));
-                intializeAdapter();
+                //intializeAdapter();
 
                 Log.d("UnoDos","position: " + pos );
 
@@ -98,21 +98,21 @@ public class PatientListActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        Toast.makeText(this, "OnRestart", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "OnRestart", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Toast.makeText(this, "OnPause", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "OnPause", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(this, "OnResume", Toast.LENGTH_SHORT).show();
-       //intializeData();
-        //intializeAdapter();
+       // Toast.makeText(this, "OnResume", Toast.LENGTH_SHORT).show();
+        //intializeData();
+       // intializeAdapter();
     }
 
     private void intializeData() {
