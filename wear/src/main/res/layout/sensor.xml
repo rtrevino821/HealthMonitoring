@@ -3,18 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/black">
+    android:background="@drawable/watchface">
 
     <TextView android:id="@+id/text_title"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="@string/init_title" />
+        android:text="@string/init_title"
+        android:textColor="@color/colorAccentPink" />
 
     <TextView android:id="@+id/text_values"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/text_title"
-        android:text="@string/init_values" />
+        android:text="@string/init_values"
+        android:textColor="@color/colorAccentPink" />
+
+    <TextView android:id="@+id/bright_values"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/text_values"
+        android:layout_marginTop="20dp"
+        android:textSize="25dp"
+        android:textColor="@color/colorAccentPink" />
 </RelativeLayout>
