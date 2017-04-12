@@ -13,10 +13,13 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.List;
 
 public class SensorFragment extends Fragment implements SensorEventListener {
 
@@ -28,6 +31,8 @@ public class SensorFragment extends Fragment implements SensorEventListener {
     private View mView;
     private TextView mTextTitle;
     private TextView mTextValues;
+    private TextView lightSensor;
+
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private int mSensorType;
@@ -47,7 +52,8 @@ public class SensorFragment extends Fragment implements SensorEventListener {
         return f;
     }
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
@@ -57,6 +63,12 @@ public class SensorFragment extends Fragment implements SensorEventListener {
 
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(mSensorType);
+        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        final List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
+        for(Sensor type : deviceSensors) {
+            Log.d("sensors", type.getStringType());
+        }
+
     }
 
     @Override
@@ -68,8 +80,10 @@ public class SensorFragment extends Fragment implements SensorEventListener {
         mTextTitle = (TextView) mView.findViewById(R.id.text_title);
         mTextTitle.setText(mSensor.getStringType());
         mTextValues = (TextView) mView.findViewById(R.id.text_values);
+        lightSensor = (TextView) mView.findViewById(R.id.bright_values);
 
         return mView;
+
     }
 
     @Override
@@ -91,17 +105,24 @@ public class SensorFragment extends Fragment implements SensorEventListener {
         {
             return;
         }
+        else {
+            mTextValues.setText(
+                    "x = " + Float.toString(event.values[0]) + "\n" +
+                            "y = " + Float.toString(event.values[1]) + "\n" +
+                            "z = " + Float.toString(event.values[2]) + "\n"
+            );
 
-        mTextValues.setText(
-                "x = " + Float.toString(event.values[0]) + "\n" +
-                        "y = " + Float.toString(event.values[1]) + "\n" +
-                        "z = " + Float.toString(event.values[2]) + "\n"
-        );
-
-        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            detectShake(event);
+            if (event.sensor.getType()==Sensor.TYPE_LIGHT) {
+                mTextValues.setText(
+                        "lx = " + Float.toString(event.values[0]) + "\n");
+                detectLight(event);
+            }
         }
-        else if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+
+       // if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+           // detectShake(event);
+      //  }
+         if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
             detectRotation(event);
         }
     }
@@ -111,30 +132,42 @@ public class SensorFragment extends Fragment implements SensorEventListener {
 
     }
 
+    private void detectLight(SensorEvent event) {
 
-    private void detectShake(SensorEvent event) {
-        long now = System.currentTimeMillis();
+        float lightValue = event.values[0];
 
-        if((now - mShakeTime) > SHAKE_WAIT_TIME_MS) {
-            mShakeTime = now;
-
-            double gX = event.values[0] / SensorManager.GRAVITY_EARTH;
-            double gY = event.values[1] / SensorManager.GRAVITY_EARTH;
-            double gZ = event.values[2] / SensorManager.GRAVITY_EARTH;
-
-            // gForce will be close to 1 when there is no movement
-            double gForce = Math.sqrt(gX*gX + gY*gY + gZ*gZ);
-
-            // Change background color if gForce exceeds threshold;
-            // otherwise, reset the color
-            if(gForce > SHAKE_THRESHOLD) {
-                mView.setBackgroundColor(Color.rgb(0, 100, 0));
-            }
-            else {
-            //    mView.setBackgroundColor(Color.BLACK);
+        if (lightValue > 800) {
+            lightSensor.setText("Too Bright!");
+        }else {
+                lightSensor.setText("");
             }
         }
-    }
+
+
+
+//    private void detectShake(SensorEvent event) {
+//        long now = System.currentTimeMillis();
+//
+//        if((now - mShakeTime) > SHAKE_WAIT_TIME_MS) {
+//            mShakeTime = now;
+//
+//            double gX = event.values[0] / SensorManager.GRAVITY_EARTH;
+//            double gY = event.values[1] / SensorManager.GRAVITY_EARTH;
+//            double gZ = event.values[2] / SensorManager.GRAVITY_EARTH;
+//
+//            // gForce will be close to 1 when there is no movement
+//            double gForce = Math.sqrt(gX*gX + gY*gY + gZ*gZ);
+//
+//            // Change background color if gForce exceeds threshold;
+//            // otherwise, reset the color
+//            if(gForce > SHAKE_THRESHOLD) {
+//                mView.setBackgroundColor(Color.rgb(0, 100, 0));
+//            }
+//            else {
+//            //    mView.setBackgroundColor(Color.BLACK);
+//            }
+//        }
+//    }
 
 
     private void detectRotation(SensorEvent event) {
@@ -152,7 +185,7 @@ public class SensorFragment extends Fragment implements SensorEventListener {
                 mView.setBackgroundColor(Color.rgb(0, 100, 0));
             }
             else {
-                mView.setBackgroundColor(Color.BLACK);
+              //  mView.setBackgroundColor(Color.BLACK);
             }
         }
     }
