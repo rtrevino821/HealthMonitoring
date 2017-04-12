@@ -78,7 +78,15 @@ public class SensorFragment extends Fragment implements SensorEventListener {
         mView = inflater.inflate(R.layout.sensor, container, false);
 
         mTextTitle = (TextView) mView.findViewById(R.id.text_title);
-        mTextTitle.setText(mSensor.getStringType());
+        if(mSensor.getStringType().contains("rotation"))
+            mTextTitle.setText("Game Rotation\nSensor");
+        else if (mSensor.getStringType().contains("gyroscope"))
+            mTextTitle.setText("Gyroscope Sensor");
+        else if (mSensor.getStringType().contains("light"))
+            mTextTitle.setText("Light Sensor");
+        else if (mSensor.getStringType().contains("accelerometer"))
+            mTextTitle.setText("Accelerometer");
+        else mTextTitle.setText(mSensor.getStringType());
         mTextValues = (TextView) mView.findViewById(R.id.text_values);
         lightSensor = (TextView) mView.findViewById(R.id.bright_values);
 

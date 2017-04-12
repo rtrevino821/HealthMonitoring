@@ -6,17 +6,21 @@
     android:background="@drawable/watchface">
 
     <TextView android:id="@+id/text_title"
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="25dp"
         android:layout_centerHorizontal="true"
+        android:textAlignment="center"
         android:text="@string/init_title"
-        android:textColor="@color/colorAccentPink" />
+        android:textSize="25dp"
+        android:textColor="@color/white" />
 
     <TextView android:id="@+id/text_values"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/text_title"
+        android:textSize="20dp"
         android:text="@string/init_values"
         android:textColor="@color/colorAccentPink" />
 
