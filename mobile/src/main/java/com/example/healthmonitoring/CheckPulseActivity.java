@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 
 import static com.example.healthmonitoring.MyService.ACTION_TEXT_CHANGED;
+import static com.example.healthmonitoring.R.id.stepCountValue;
 import static com.example.healthmonitoring.R.id.tv_Heart_Rate;
 import static java.lang.Integer.parseInt;
 
@@ -47,6 +48,7 @@ public class CheckPulseActivity extends AppCompatActivity
     private TextView bpm;
     private String TAG = "CheckPulseActivity";
     private TextView tvHeartRate;
+    private TextView stepCountValue;
     private TeleportClient mTeleportClient;
     //private RippleBackground rippleBackground;
     int count = 0;
@@ -91,15 +93,8 @@ public class CheckPulseActivity extends AppCompatActivity
         mAnimationSet.play(fadeIn).after(fadeOut);
 
         tvHeartRate = (TextView) findViewById(tv_Heart_Rate);
-//        stopHR = (Button) findViewById(R.patientIdValue.btn_check_my_pulse_stop);
-//        stopHR.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                stopHR.setVisibility(View.GONE);
-//                getHR.setVisibility(View.VISIBLE);
-//                rippleBackground.stopRippleAnimation();
-//            }
-//        });
+        stepCountValue = (TextView) findViewById(R.id.stepCountValue);
+
         getHR = (Button) findViewById(R.id.btn_check_my_pulse);
         getHR.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,12 +213,19 @@ public class CheckPulseActivity extends AppCompatActivity
             }
 
             String content = intent.getStringExtra("content");
+            if(content != null)
             tvHeartRate.setText(content);
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            Log.d("shared TAG",content);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("HeartRate",content);
-            editor.commit();
+
+            String stepContent = intent.getStringExtra("stepContent");
+            if(stepContent != null)
+            stepCountValue.setText(stepContent);
+
+//            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+//            //Log.d("shared TAG",content);
+//            SharedPreferences.Editor editor = preferences.edit();
+//            editor.putString("HeartRate",content);
+//            editor.putString("StepCount", stepContent);
+//            editor.commit();
         }
     };
 

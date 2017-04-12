@@ -16,6 +16,7 @@ public class MyService extends WearableListenerService {
     public static final String ACTION_TEXT_CHANGED = "com.example.healthmonitoring.TEXT_CHANGED";
     private String TAG = "MyServiceActivity";
     private int heartRate;
+    private int stepCount;
 
 
 
@@ -31,6 +32,14 @@ public class MyService extends WearableListenerService {
                     heartRate = dataMap.getInt("heart-rate");
                     Log.d(TAG, "TimeLog!!!!!!!!: " + dataMap.getString("timestamp"));
                     retrieveMessage(Integer.toString(heartRate));
+                }
+
+                if(item.getUri().getPath().compareTo("/step-count") == 0){
+                    DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
+                    Log.d(TAG, "New Steps!!!!!!!!!!!: " + dataMap.getInt("step-count"));
+                    stepCount = dataMap.getInt("step-count");
+                    Log.d(TAG, "TimeLog!!!!!!!!: " + dataMap.getString("step-timestamp"));
+                    retrieveSteps(Integer.toString(stepCount));
                 }
                 /*DataMap dataMap = DataMapItem.fromDataItem(dataEvent.getDataItem()).getDataMap();
                 String path = dataEvent.getDataItem().getUri().getPath();
@@ -53,6 +62,13 @@ public class MyService extends WearableListenerService {
         Intent intent = new Intent();
         intent.setAction(ACTION_TEXT_CHANGED);
         intent.putExtra("content", message);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void retrieveSteps(String message) {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_TEXT_CHANGED);
+        intent.putExtra("stepContent", message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }
