@@ -28,8 +28,10 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.Wearable;
 import com.skyfishjy.library.RippleBackground;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -284,16 +286,17 @@ public class CheckPulseActivity extends AppCompatActivity
 
             try {
 
-
-                URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?id=" + userID + "&time="+ timeStamp.toString() +
-                "&heart="+ userHeartRate + "&flag=" + binary);
+                URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?id=" + userID + "&time=" +  timeStamp.toString() +
+                        "&heart=" + 70 + "&flag=" + binary );
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setRequestMethod("POST");
-                OutputStreamWriter out = new OutputStreamWriter(httpURLConnection.getOutputStream());
-                out.close();
-
+                if (200 <= httpURLConnection.getResponseCode()) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader((httpURLConnection.getInputStream())));
+                }else {
+                    BufferedReader br1 = new BufferedReader(new InputStreamReader((httpURLConnection.getErrorStream())));
+                }
 
 
                 /*

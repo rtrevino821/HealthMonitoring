@@ -628,8 +628,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Log.d("Tag", user.getPassword());
             admin = patientInfo.getString("admin");
 
-
-
             return patient;
         }
     }
