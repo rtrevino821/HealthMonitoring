@@ -15,5 +15,4 @@ class HeartData {
         this.date = date;
         this.heartRate = heartRate;
     }
-
 }
