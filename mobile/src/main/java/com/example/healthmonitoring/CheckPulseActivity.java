@@ -285,16 +285,16 @@ public class CheckPulseActivity extends AppCompatActivity
             try {
 
 
-                URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData");
+                URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?id=" + userID + "&time="+ timeStamp.toString() +
+                "&heart="+ userHeartRate + "&flag=" + binary);
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setRequestMethod("POST");
-                DataOutputStream out = new DataOutputStream(httpURLConnection.getOutputStream());
-                out.writeBytes("{\"id\":\"" + userID + "\",\"heartRate\":\"" + userHeartRate + "\",\"timeStamp\":\"" + timeStamp.toString() + "\"," +
-                        "\"flag\":\"" + binary + "\"}");
-                out.flush();
+                OutputStreamWriter out = new OutputStreamWriter(httpURLConnection.getOutputStream());
                 out.close();
+
+
 
                 /*
                 Connection conn = SQLConnection.doInBackground();
