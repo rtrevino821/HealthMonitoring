@@ -92,7 +92,9 @@ public class HeartHistoryActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... params) {
             try{
-                URL url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData");
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+                URL url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?id=" + preferences.getString("ID","") );
                 StringBuilder result2 = null;
 
                 HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
@@ -114,7 +116,7 @@ public class HeartHistoryActivity extends AppCompatActivity {
                 for(int i =0;i<heartDataArray.length();i++){
                     JSONObject data = (JSONObject) heartDataArray.get(i);
 
-                    heartData.add(new HeartData(data.getString("timeStamp"),data.getString(""),data.getString("heartRate")));
+                    heartData.add(new HeartData(data.getString("timeStamp"),data.getString("timeStamp"),data.getString("heartRate")));
                 }
             }catch(IOException e){
 

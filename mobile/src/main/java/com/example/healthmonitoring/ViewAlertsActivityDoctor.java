@@ -1,13 +1,26 @@
 package com.example.healthmonitoring;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -74,6 +87,40 @@ public class ViewAlertsActivityDoctor extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... params) {
 
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+            try {
+                URL url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?id=none");
+                StringBuilder result2 = null;
+
+                HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
+                BufferedReader reader2 = new BufferedReader(new InputStreamReader(url2.openStream()));
+                result2 = new StringBuilder();
+                String line2;
+                while ((line2 = reader2.readLine()) != null) {
+                    result2.append(line2);
+                }
+                String resultString2 = result2.toString();
+                //Log.d("TAG",resultString2);
+                JSONObject patientItem = new JSONObject(resultString2);
+
+                // Log.d("Tag", member.toString());
+                ObjectMapper mapper = new ObjectMapper();
+
+                JSONArray heartDataArray = patientItem.getJSONArray("Items");
+
+                for (int i = 0; i < heartDataArray.length(); i++) {
+                    JSONObject data = (JSONObject) heartDataArray.get(i);
+
+                    patientAlert.add(new PatientAlert(data.getString("name"),data.getString("username"),data.getString("hr_limit"),data.getString("heartRate"),data.getString("timeStamp")));
+                }
+            }catch(IOException e){
+                e.printStackTrace();
+            }catch (JSONException e1){
+                e1.printStackTrace();
+            }
+
+/*
             String sqlPatientQuery = "SELECT * FROM healthApp.HeartRateData " +
                     "inner join healthApp.Patient on HeartRateData.id = Patient.id " +
                     "inner join healthApp.Logins on HeartRateData.id = Logins.Id " +
@@ -97,7 +144,7 @@ public class ViewAlertsActivityDoctor extends AppCompatActivity {
 
             //Login Failed
             Log.d("Error", "asynctask ouside false");
-            return false;
+           */ return true;
 
         }
 

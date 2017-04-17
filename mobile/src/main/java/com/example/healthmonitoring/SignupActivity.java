@@ -10,6 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -84,19 +89,40 @@ public class SignupActivity extends AppCompatActivity {
         final String EmergencyPhone = _emergencyPhone.getText().toString();
 
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-                insert(Fname,L_name,UserAge,UserGender,UserAddress,UserCity,UserState, PhoneNum,EmergencyPhone);
-                insertLogin(UserEmail,Userpassword, Fname);
+                    insert(Fname,L_name,UserAge,UserGender,UserAddress,UserCity,UserState, PhoneNum,EmergencyPhone,UserEmail,Userpassword);
+                    //insertLogin(UserEmail,Userpassword, Fname);
 
-            }
-        }).start();
+                }
+            }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     protected void insert(String... params) {
+        try {
+            URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientInfo?f=" + params[0] + "&last=" + params[1] +
+                    "&age=" + params[2] + "&gender=" + params[3] + "&address=" + params[4] + "&city=" + params[5] + "&state=" + params[6] + "&phone=" + params[7] +
+            "&contact=" + params[8] + "&username=" + params[9] + "&pass=" + params[10] + "&admin=N&hr=65");
 
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setRequestMethod("POST");
+            if (200 <= httpURLConnection.getResponseCode()) {
+                BufferedReader br = new BufferedReader(new InputStreamReader((httpURLConnection.getInputStream())));
+            } else {
+                BufferedReader br1 = new BufferedReader(new InputStreamReader((httpURLConnection.getErrorStream())));
+                Log.d("money",br1.toString());
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        /*
         String sql = "INSERT INTO Patient (F_Name, L_Name, Age, Gender, Address, City, State, Phone, Emer_Contact)" +
                 " VALUES ('"+ params[0] +"' , '"+ params[1] +"', '"+ params[2] +"', '"+ params[3] +"', '"+ params[4] +
                 "', '"+ params[5] +"', '"+ params[6] +"', '"+params[7]+"','"+params[8]+"');";
@@ -119,7 +145,7 @@ public class SignupActivity extends AppCompatActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+*/
     }
 
     protected void insertLogin(String... params) {

@@ -12,6 +12,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -92,38 +104,50 @@ public class ViewProfileActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(String... params) {
-            String sqlHeartData = "SELECT * FROM healthApp.Patient WHERE Id = ?";
+            URL url2 = null;
             try {
-                Connection conn = SQLConnection.doInBackground();
-                PreparedStatement prepare = conn.prepareStatement(sqlHeartData);
-
-                String id = getPatientId();
-
-                prepare.setString(1, id);
-                Log.d("Patient ID: ", id);
-                ResultSet rs = prepare.executeQuery();
-
-                while (rs.next()) {
-                    textData.add(rs.getString("F_Name")); //First Name
-                    textData.add(rs.getString("L_Name")); //Last Name
-                    textData.add(rs.getString("Age")); //Age
-                    textData.add(rs.getString("Gender")); //Gender
-                    textData.add(rs.getString("Phone")); //Phone
-                    textData.add(rs.getString("Emer_Contact")); //Emer Contact
-                    textData.add(rs.getString("HR_Limits")); //HR_Limits
-                    textData.add(rs.getString("Address") + " " + rs.getString("City") + ", " + rs.getString("State")); //Address
-                }
-                rs.close();
-                return true;
-
-            } catch (SQLException e) {
-                Log.d("SQL Error", e.getMessage());
+                Log.d("url",getPatientId());
+                url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientInfo?username=none&id=" + getPatientId());
+            } catch (MalformedURLException e1) {
+                e1.printStackTrace();
             }
+            StringBuilder result2 = null;
 
-            //Login Failed
-            Log.d("Error", "asynctask ouside false");
-            return false;
+            try {
+                HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
+                BufferedReader reader2 = new BufferedReader(new InputStreamReader(url2.openStream()));
+                result2 = new StringBuilder();
+                String line2;
+                while ((line2 = reader2.readLine()) != null) {
+                    result2.append(line2);
+                }
+                String resultString2 = result2.toString();
+                //Log.d("TAG",resultString2);
+                JSONObject patientItem = new JSONObject(resultString2);
+                JSONObject patientInfo = patientItem.getJSONObject("Item");
 
+                // Log.d("Tag", member.toString());
+                ObjectMapper mapper = new ObjectMapper();
+
+                Patient patient = mapper.readValue(patientInfo.toString(), Patient.class);
+
+                textData.add(patient.getF_name()); //First Name
+                textData.add(patient.getL_name()); //Last Name
+                textData.add(patient.getAge()); //Age
+                textData.add(patient.getGender()); //Gender
+                textData.add(patient.getPhone()); //Phone
+                textData.add(patient.getEmer_contact()); //Emer Contact
+                textData.add(patient.getHr_limits()); //HR_Limits
+                textData.add(patient.getAddress() + " " + patient.getCity() + ", " + patient.getState());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e1) {
+
+            e1.printStackTrace();
+
+            }
+            return true;
         }
 
         @Override
