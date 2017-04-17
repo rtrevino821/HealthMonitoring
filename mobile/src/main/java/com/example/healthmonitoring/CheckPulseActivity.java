@@ -28,6 +28,11 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.Wearable;
 import com.skyfishjy.library.RippleBackground;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -267,17 +272,31 @@ public class CheckPulseActivity extends AppCompatActivity
 
             //get values for vars to insert
             getTimeStamp();
-           // getSharedPreference(context);
-            userID=getPatientId();
+            // getSharedPreference(context);
+            userID = getPatientId();
 
             checkThreshold();
-            if (binary==1) {
+            if (binary == 1) {
                 //sendSMS("2396826170","Patient " + getPatientId() +" heart rate is " + userHeartRate + " Bpm " );
-                if(getPatientEmergencyContact() != null)
-                    sendSMS(getPatientEmergencyContact(),"Patient " + getPatientId() +" heart rate is " + userHeartRate + " Bpm " );
+                if (getPatientEmergencyContact() != null)
+                    sendSMS(getPatientEmergencyContact(), "Patient " + getPatientId() + " heart rate is " + userHeartRate + " Bpm ");
             }
 
             try {
+
+
+                URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData");
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setRequestMethod("POST");
+                DataOutputStream out = new DataOutputStream(httpURLConnection.getOutputStream());
+                out.writeBytes("{\"id\":\"" + userID + "\",\"heartRate\":\"" + userHeartRate + "\",\"timeStamp\":\"" + timeStamp.toString() + "\"," +
+                        "\"flag\":\"" + binary + "\"}");
+                out.flush();
+                out.close();
+
+                /*
                 Connection conn = SQLConnection.doInBackground();
                 String SQL = "INSERT INTO healthApp.HeartRateData" +
                         "(`Id`,`HeartRate`,`TimeStamp`,`Flag`)" +
@@ -299,7 +318,13 @@ public class CheckPulseActivity extends AppCompatActivity
 
             Log.d(TAG, "asynctask ouside false");
             return true;
+    */
+            } catch (IOException e) {
+                e.printStackTrace();
 
+            }
+
+            return true;
         }
 
         @Override
@@ -337,11 +362,13 @@ public class CheckPulseActivity extends AppCompatActivity
 
     //sets flag
     private int checkThreshold() {
-
-        int HRLimit = 0;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int HRLimit = Integer.parseInt(preferences.getString("hr_limits",""));
         String id = getPatientId();
         Log.d("this patients ID is", id);
         binary = 0;
+
+/*
         try {
             Connection conn = SQLConnection.doInBackground();
             String SQL = "SELECT HR_Limits FROM healthApp.Patient WHERE Id = ?";
@@ -354,7 +381,7 @@ public class CheckPulseActivity extends AppCompatActivity
                 HRLimit = rs.getInt("HR_Limits");
                 Log.d("heartRateLimit", String.valueOf(HRLimit));
             }
-
+*/
             if (HRLimit < parseInt(userHeartRate)) {
 
                 binary = 1;
@@ -364,9 +391,7 @@ public class CheckPulseActivity extends AppCompatActivity
             }
 
 
-        } catch (SQLException e) {
-            Log.d(TAG, e.getMessage());
-        }
+
         return binary;
     }
 

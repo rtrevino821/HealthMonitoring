@@ -10,6 +10,7 @@ class HeartData {
     String date;
     String heartRate;
 
+
     HeartData(String timestamp, String date, String heartRate){
         this.timestamp = timestamp;
         this.date = date;

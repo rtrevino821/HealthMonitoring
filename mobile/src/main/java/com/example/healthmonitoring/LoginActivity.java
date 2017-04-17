@@ -439,6 +439,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     editor.putString("ID", patient.getId());
                     editor.putString("Admin", admin);
                     editor.putString("EmergencyContact", patient.getEmer_contact());
+                    editor.putString("hr_limit",patient.getHr_limits());
                     editor.commit();
 
                     return true;
