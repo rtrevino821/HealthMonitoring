@@ -106,8 +106,14 @@ public class SignupActivity extends AppCompatActivity {
 
     protected void insert(String... params) {
         try {
+            String[] split = params[4].split(" ");
+            String addy="";
+            for(int i=0;i<split.length;i++){
+                addy = addy.concat(split[i] + "/");
+            }
+
             URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/getPatientInfo?f=" + params[0] + "&last=" + params[1] +
-                    "&age=" + params[2] + "&gender=" + params[3] + "&address=" + params[4] + "&city=" + params[5] + "&state=" + params[6] + "&phone=" + params[7] +
+                    "&age=" + params[2] + "&gender=" + params[3] + "&address=" + addy + "&city=" + params[5] + "&state=" + params[6] + "&phone=" + params[7] +
             "&contact=" + params[8] + "&username=" + params[9] + "&pass=" + params[10] + "&admin=N&hr=65");
 
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
