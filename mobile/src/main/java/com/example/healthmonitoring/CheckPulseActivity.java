@@ -286,8 +286,11 @@ public class CheckPulseActivity extends AppCompatActivity
 
             try {
 
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
                 URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?id=" + userID + "&time=" +  timeStamp.toString().substring(0,4) +
-                        "&heart=" + 70 + "&flag=" + binary );
+                        "&heart=" + userHeartRate + "&flag=" + binary + "&hr_limit=" + preferences.getString("hr_limit","") + "&username=" + preferences.getString("username","") +
+                        "&name=" + preferences.getString("fname","") );
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -366,7 +369,7 @@ public class CheckPulseActivity extends AppCompatActivity
     //sets flag
     private int checkThreshold() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        int HRLimit = Integer.parseInt(preferences.getString("hr_limits",""));
+        int HRLimit = Integer.parseInt(preferences.getString("hr_limit",""));
         String id = getPatientId();
         Log.d("this patients ID is", id);
         binary = 0;

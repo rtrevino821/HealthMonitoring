@@ -443,6 +443,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     editor.putString("Admin", admin);
                     editor.putString("EmergencyContact", patient.getEmer_contact());
                     editor.putString("hr_limit",patient.getHr_limits());
+                    editor.putString("username",patient.getUsername());
+                    editor.putString("fname",patient.getF_name());
                     editor.commit();
 
                     return true;
