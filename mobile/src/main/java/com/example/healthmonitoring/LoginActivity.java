@@ -40,8 +40,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Connection;
@@ -90,8 +93,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private Connection conn;
     //final  String sqlUser = "SELECT ID,Username,Password,Admin FROM healthApp.Logins WHERE Username = ? and `Password` = ?;";
     final  String sqlUser = "SELECT Logins.Id,Username, Password, Admin, Emer_Contact " +
-                        "from healthApp.Logins join healthApp.Patient on Logins.Id = Patient.Id " +
-                        "where Username = ? and Password = ?;";
+            "from healthApp.Logins join healthApp.Patient on Logins.Id = Patient.Id " +
+            "where Username = ? and Password = ?;";
     String TAG = "/LoginActivity";
     String ID;
     private String username = "";
@@ -439,6 +442,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     editor.putString("ID", patient.getId());
                     editor.putString("Admin", admin);
                     editor.putString("EmergencyContact", patient.getEmer_contact());
+                    editor.putString("hr_limit",patient.getHr_limits());
+                    editor.putString("username",patient.getUsername());
+                    editor.putString("fname",patient.getF_name());
                     editor.commit();
 
                     return true;
@@ -455,21 +461,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 conn = SQLConnection.doInBackground();
                 PreparedStatement prepare = conn.prepareStatement(sqlUser);
-
                 getUsername();
                 getPassword();
-
                 prepare.setString(1, username);
                 prepare.setString(2, password);
                 Log.d("SQL", sqlUser);
                 Log.d(TAG, username);
                 Log.d(TAG, password);
                 ResultSet rs = prepare.executeQuery();
-
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
                 SharedPreferences.Editor editor = preferences.edit();
                 Log.d(TAG, "before resulset");
-
                 if (rs.next())
                 {
                     Log.d(TAG, String.valueOf(rs.getInt("ID")));
@@ -482,7 +484,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     editor.putString("Admin", String.valueOf(rs.getString("Admin")));
                     editor.putString("EmergencyContact", String.valueOf(rs.getString("Emer_Contact")));
                     editor.commit();
-
                     //Login Successful
                     rs.close();
                     return true;
@@ -492,7 +493,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     Log.d(TAG,"asynctask  inside false");
                     return false;
                 }
-
             } catch (SQLException e) {
                 Log.d(TAG, e.getMessage());
             }
@@ -503,31 +503,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
+        /**
+         * Represents an asynchronous login/registration task used to authenticate
+         * the user.
+         */
 /*    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
         private final String mEmail;
         private final String mPassword;
         private Context context;
-
         UserLoginTask(String email, String password, Context context) {
             mEmail = email;
             mPassword = password;
             this.context = context;
         }
-
-
-
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
             try {
                 conn = SQLConnection.doInBackground();
-
                 PreparedStatement prepare = conn.prepareStatement(sqlUser);
                 prepare.setString(1, username);
                 ResultSet rs = prepare.executeQuery();
@@ -536,20 +529,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //                                Context.MODE_PRIVATE);
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
                 SharedPreferences.Editor editor = prefs.edit();
-
                 while(rs.next())
                 {
                     ID = String.valueOf(rs.getInt("ID"));
                     Log.d(TAG, String.valueOf(rs.getInt("ID")));
                     Log.d(TAG,rs.getString("Username"));
                     Log.d(TAG,rs.getString("Password"));
-
                 }
                 editor.putString("name", "Stoney");
                 editor.putString("ID", ID);
                 editor.commit();
                 return true;
-
             }
             catch(SQLException e)
             {
@@ -569,35 +559,35 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // TODO: register the new account here.
 
 
-    @Override
-    protected void onPostExecute(Boolean result) {
-        //mAuthTask = null;
-        showProgress(false);
-        if (result) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            String admin = preferences.getString("Admin", "N");
-            if(admin.equalsIgnoreCase("Y")){
-                Log.d("OnPostAdmin", "Yes");
-                Intent mainDoctorIntent = new Intent(LoginActivity.this, MainActivityDoctor.class);
-                startActivity(mainDoctorIntent);
-                finish();
-            }else {
-                Log.d("OnPostAdmin", "Nah Fam");
-                Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(mainIntent);
-                finish();
+        @Override
+        protected void onPostExecute(Boolean result) {
+            //mAuthTask = null;
+            showProgress(false);
+            if (result) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                String admin = preferences.getString("Admin", "N");
+                if(admin.equalsIgnoreCase("Y")){
+                    Log.d("OnPostAdmin", "Yes");
+                    Intent mainDoctorIntent = new Intent(LoginActivity.this, MainActivityDoctor.class);
+                    startActivity(mainDoctorIntent);
+                    finish();
+                }else {
+                    Log.d("OnPostAdmin", "Nah Fam");
+                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(mainIntent);
+                    finish();
+                }
+            } else {
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
             }
-        } else {
-            mPasswordView.setError(getString(R.string.error_incorrect_password));
-            mPasswordView.requestFocus();
         }
-    }
 
-    @Override
-    protected void onCancelled() {
-        mAuthTask = null;
-        showProgress(false);
-    }
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
+            showProgress(false);
+        }
 
         public Patient login(String username) throws IOException, JSONException {
 
@@ -628,4 +618,3 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 }
-

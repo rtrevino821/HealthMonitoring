@@ -28,6 +28,13 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.Wearable;
 import com.skyfishjy.library.RippleBackground;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,7 +42,6 @@ import java.sql.SQLException;
 import java.util.Calendar;
 
 import static com.example.healthmonitoring.MyService.ACTION_TEXT_CHANGED;
-import static com.example.healthmonitoring.R.id.stepCountValue;
 import static com.example.healthmonitoring.R.id.tv_Heart_Rate;
 import static java.lang.Integer.parseInt;
 
@@ -48,11 +54,9 @@ public class CheckPulseActivity extends AppCompatActivity
     private TextView bpm;
     private String TAG = "CheckPulseActivity";
     private TextView tvHeartRate;
-    private TextView stepCountValue;
     private TeleportClient mTeleportClient;
     //private RippleBackground rippleBackground;
     int count = 0;
-
 
     private String userID;
     private String userHeartRate="00";
@@ -93,8 +97,15 @@ public class CheckPulseActivity extends AppCompatActivity
         mAnimationSet.play(fadeIn).after(fadeOut);
 
         tvHeartRate = (TextView) findViewById(tv_Heart_Rate);
-        stepCountValue = (TextView) findViewById(R.id.stepCountValue);
-
+//        stopHR = (Button) findViewById(R.patientIdValue.btn_check_my_pulse_stop);
+//        stopHR.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                stopHR.setVisibility(View.GONE);
+//                getHR.setVisibility(View.VISIBLE);
+//                rippleBackground.stopRippleAnimation();
+//            }
+//        });
         getHR = (Button) findViewById(R.id.btn_check_my_pulse);
         getHR.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +113,7 @@ public class CheckPulseActivity extends AppCompatActivity
                 getHR.setVisibility(View.GONE);
 //                stopHR.setVisibility(View.VISIBLE);
                 rippleBackground.startRippleAnimation();
-           //     startMeasure();
+                //     startMeasure();
                 initTimer();
 
             }
@@ -125,7 +136,7 @@ public class CheckPulseActivity extends AppCompatActivity
     private void initTimer() {
         startMeasure();
 
-        new CountDownTimer(14000, 50) {
+        new CountDownTimer(20500, 50) {
 
             public void onTick(long millisUntilFinished) {
                 Log.d(TAG, "final seconds remaining: " + (millisUntilFinished / 50));
@@ -207,25 +218,18 @@ public class CheckPulseActivity extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
             if(intent.getStringExtra("visible") != null)
             {
-                    Log.d(TAG,"Button apppear");
-                   getHR.setVisibility(View.VISIBLE);
-                   rippleBackground.stopRippleAnimation();
+                Log.d(TAG,"Button apppear");
+                getHR.setVisibility(View.VISIBLE);
+                rippleBackground.stopRippleAnimation();
             }
 
             String content = intent.getStringExtra("content");
-            if(content != null)
             tvHeartRate.setText(content);
-
-            String stepContent = intent.getStringExtra("stepContent");
-            if(stepContent != null)
-            stepCountValue.setText(stepContent);
-
-//            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-//            //Log.d("shared TAG",content);
-//            SharedPreferences.Editor editor = preferences.edit();
-//            editor.putString("HeartRate",content);
-//            editor.putString("StepCount", stepContent);
-//            editor.commit();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            Log.d("shared TAG",content);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("HeartRate",content);
+            editor.commit();
         }
     };
 
@@ -235,7 +239,7 @@ public class CheckPulseActivity extends AppCompatActivity
         Log.d(TAG, "StartPulse");
 
         mTeleportClient.sendMessage("startActivity", null);
-            Log.d(TAG, "StartPulse");
+        Log.d(TAG, "StartPulse");
     }
 
 
@@ -270,17 +274,34 @@ public class CheckPulseActivity extends AppCompatActivity
 
             //get values for vars to insert
             getTimeStamp();
-           // getSharedPreference(context);
-            userID=getPatientId();
+            // getSharedPreference(context);
+            userID = getPatientId();
 
             checkThreshold();
-            if (binary==1) {
-                //sendSMS("2396826170","Patient " + getPatientId() +" heart rate is " + userHeartRate + " Bpm " );
-                if(getPatientEmergencyContact() != null)
-                    sendSMS(getPatientEmergencyContact(),"Patient " + getPatientId() +" heart rate is " + userHeartRate + " Bpm " );
+            if (binary == 1) {
+                if (getPatientEmergencyContact() != null)
+                    sendSMS(getPatientEmergencyContact(), "Patient " + getPatientId() + " heart rate is " + userHeartRate + " Bpm ");
             }
 
             try {
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+                URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?id=" + userID + "&time=" +  timeStamp.toString().substring(11,19) +
+                        "&heart=" + userHeartRate + "&flag=" + binary + "&hr_limit=" + preferences.getString("hr_limit","") + "&username=" + preferences.getString("username","") +
+                        "&name=" + preferences.getString("fname","") );
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setRequestMethod("POST");
+                if (200 <= httpURLConnection.getResponseCode()) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader((httpURLConnection.getInputStream())));
+                }else {
+                    BufferedReader br1 = new BufferedReader(new InputStreamReader((httpURLConnection.getErrorStream())));
+                }
+
+
+                /*
                 Connection conn = SQLConnection.doInBackground();
                 String SQL = "INSERT INTO healthApp.HeartRateData" +
                         "(`Id`,`HeartRate`,`TimeStamp`,`Flag`)" +
@@ -291,18 +312,20 @@ public class CheckPulseActivity extends AppCompatActivity
                 prepare.setString(2, userHeartRate);
                 prepare.setString(3, timeStamp.toString());
                 prepare.setInt(4, binary);
-
                 prepare.executeUpdate();
                 return true;
-
-
             } catch (SQLException e) {
                 Log.d(TAG, e.getMessage());
             }
-
             Log.d(TAG, "asynctask ouside false");
             return true;
+    */
+            } catch (IOException e) {
+                e.printStackTrace();
 
+            }
+
+            return true;
         }
 
         @Override
@@ -325,6 +348,9 @@ public class CheckPulseActivity extends AppCompatActivity
         Log.d(TAG, timeStamp.toString());
     }
 
+
+
+
     //gets ID and HeartRate
     /*private void getSharedPreference(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -337,36 +363,34 @@ public class CheckPulseActivity extends AppCompatActivity
 
     //sets flag
     private int checkThreshold() {
-
-        int HRLimit = 0;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int HRLimit = Integer.parseInt(preferences.getString("hr_limit",""));
         String id = getPatientId();
         Log.d("this patients ID is", id);
         binary = 0;
+
+/*
         try {
             Connection conn = SQLConnection.doInBackground();
             String SQL = "SELECT HR_Limits FROM healthApp.Patient WHERE Id = ?";
-
             PreparedStatement prepare = conn.prepareStatement(SQL);
             prepare.setString(1, id);
             ResultSet rs = prepare.executeQuery();
-
             while (rs.next()) {
                 HRLimit = rs.getInt("HR_Limits");
                 Log.d("heartRateLimit", String.valueOf(HRLimit));
             }
+*/
+        if (HRLimit < parseInt(userHeartRate)) {
 
-            if (HRLimit < parseInt(userHeartRate)) {
+            binary = 1;
 
-                binary = 1;
-
-            } else {
-                binary = 0;
-            }
-
-
-        } catch (SQLException e) {
-            Log.d(TAG, e.getMessage());
+        } else {
+            binary = 0;
         }
+
+
+
         return binary;
     }
 
