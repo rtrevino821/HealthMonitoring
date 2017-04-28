@@ -90,7 +90,9 @@ public class ViewAlertsActivityDoctor extends AppCompatActivity {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
             try {
-                URL url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?id=none");
+              //  URL url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?id=none");
+                URL url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?name=none");
+
                 StringBuilder result2 = null;
 
                 HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
