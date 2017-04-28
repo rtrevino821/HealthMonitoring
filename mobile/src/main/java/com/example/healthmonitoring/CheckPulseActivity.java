@@ -290,7 +290,7 @@ public class CheckPulseActivity extends AppCompatActivity
 
                 URL url = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?id=" + userID + "&time=" +  timeStamp.toString().substring(0,4) +
                         "&heart=" + userHeartRate + "&flag=" + binary + "&hr_limit=" + preferences.getString("hr_limit","") + "&username=" + preferences.getString("username","") +
-                        "&name=" + preferences.getString("fname","") );
+                "&name=" + preferences.getString("fname","") );
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);

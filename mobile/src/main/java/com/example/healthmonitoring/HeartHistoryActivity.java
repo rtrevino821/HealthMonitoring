@@ -94,7 +94,7 @@ public class HeartHistoryActivity extends AppCompatActivity {
             try{
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-                URL url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?id=" + preferences.getString("ID","") );
+                URL url2 = new URL("https://q3igdv3op1.execute-api.us-east-1.amazonaws.com/prod/heartRateData?name=" + preferences.getString("fname","") );
                 StringBuilder result2 = null;
 
                 HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
