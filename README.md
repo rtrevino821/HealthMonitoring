@@ -16,10 +16,10 @@ The project started out as cool toy for kids to record their heart rate. It then
 2. Download Android Wear on Android Device
 2. Download Android Studio
 3. Clone Project
-3. Read Documentation to run the application on wwatch: https://developer.android.com/training/wearables/apps/creating.html
+3. Read Documentation to run the application on watch: https://developer.android.com/training/wearables/apps/creating.html
 4. Compile application on mobile
 5. Compile application on watch
-6. Start Application on moblie
+6. Start Application on mobile
 
 ## Contributors
 
