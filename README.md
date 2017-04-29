@@ -15,11 +15,11 @@ The project started out as cool toy for kids to record their heart rate. It then
 1. Must have Moto360 Android Smart Watch
 2. Download Android Wear on Android Device
 2. Download Android Studio
-3. Clone Project
-3. Read Documentation to run the application on watch: https://developer.android.com/training/wearables/apps/creating.html
+3. Clone project
+3. Read documentation to run the application on watch: https://developer.android.com/training/wearables/apps/creating.html
 4. Compile application on mobile
 5. Compile application on watch
-6. Start Application on mobile
+6. Start application on mobile
 
 ## Contributors
 
