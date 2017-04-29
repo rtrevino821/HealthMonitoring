@@ -1,13 +1,11 @@
 # HealthMonitoring
 ## Image
+![Alt text](https://github.com/rtrevino821/SpecsProject/blob/master/SpecsProject/OHMSpic1.PNG?raw=true"Picture1")
 
 ## Synopsis
 
 Our project aims to simplify a patient and their doctor’s relationship. Our goal includes reading its user’s heart rate and logging these data for the patient and their doctor. The doctor will be able to set
 parameters that they want their patients to stay within. If any parameter is violated the doctor will be notified.
-## Code Example
-
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
 
 ## Motivation
 
@@ -26,6 +24,8 @@ The project started out as cool toy for kids to record their heart rate. It then
 ## Contributors
 
 Rudy Trevino
+
 Steven Joy-Volk
+
 Merzier Petit-Frere
 
